@@ -1,0 +1,10 @@
+Package: benchmark
+Type: Package
+Title: Benchmark Experiments Toolbox
+Version: 0.01
+Date: 2008-08-10
+Author: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
+Maintainer: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
+Depends: R, reshape, relations, lattice
+Description: Benchmark experiment toolbox.
+License: GPL version 2 or newer
