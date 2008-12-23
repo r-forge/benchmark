@@ -15,7 +15,7 @@ densitychart.bench <- function(x, col=seq_along(x),
   yra <- range(sapply(l, function(a)a$y))
   
   plot(1, 1, type='n', xlim=xra, ylim=yra,
-       xlab=xlab, ylab=ylab)
+       xlab=xlab, ylab=ylab, ...)
   
   for ( i in seq_along(l) ) {
     lines(l[[i]], col=col[i], ...)

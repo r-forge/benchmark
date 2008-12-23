@@ -6,28 +6,29 @@ beplot <- function(x, ...) {
 
 beplot.bench <- function(x, col=1:ncol(x),
                          xlab='Podium', ylab=dimnames(x)$perf[1],
-                         lines.show=FALSE, lines.alpha=0.2, lines.lwd=1,
+                         lines.show=FALSE, lines.alpha=0.2, lines.lwd=1, lines.col=col,
                          dots.pch=19, dots.cex=1,
                          places.lty=2, places.col=1,
                          legendfn=function(algs, cols){
-                           legend('topleft', algs, lwd=1, col=cols)}) {
+                           legend('topleft', algs, lwd=1, col=cols, bg='white')}) {
 
   eval(ylab)
   
   x <- na.omit(x[,,1,1,drop=TRUE])
   beplot(x, col=col, xlab=xlab, ylab=ylab,
          lines.show=lines.show, lines.alpha=lines.alpha, lines.lwd=lines.lwd,
+         lines.col=lines.col,
          dots.pch=dots.pch, dots.cex=dots.cex,
          places.lty=places.lty, places.col=places.col, legendfn=legendfn)
 }
 
 
 beplot.default <- function(x, col=1:ncol(x), xlab='', ylab='',
-                           lines.show=FALSE, lines.alpha=0.2, lines.lwd=1,
+                           lines.show=FALSE, lines.alpha=0.2, lines.lwd=1, lines.col=col,
                            dots.pch=19, dots.cex=1,
                            places.lty=2, places.col=1,
                            legendfn=function(algs, cols){
-                             legend('topleft', algs, lwd=1, col=cols)}) {
+                             legend('topleft', algs, lwd=1, col=cols, bg='white')}) {
 
   nalgs <- ncol(x)
   algs <- colnames(x)
@@ -51,7 +52,7 @@ beplot.default <- function(x, col=1:ncol(x), xlab='', ylab='',
 
   barcols <- col
   dotcols <- col
-  linecols <- sapply(col,
+  linecols <- sapply(lines.col,
                      function(c) {
                        r <- col2rgb(c)
                        rgb(r[1], r[2], r[3],

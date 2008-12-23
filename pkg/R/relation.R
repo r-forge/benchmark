@@ -55,6 +55,28 @@ as.relation.relation_ensemble <- function(x) {
   return(as.relation(incArray))
 }
 
+as.relation.confint <- function(x) {
+  nalgs <- nrow(x)
+  algs <- rownames(x)
+
+  incArray <- array(0, dim=c(nalgs, nalgs),
+                    dimnames=list(algs, algs))
+
+  for ( i in 1:(nalgs-1) ) {
+    for ( j in (i+1):nalgs ) {
+      s <- max(x[i,1], x[j,1])
+      e <- min(x[i,2], x[j,2])
+
+      if ( e > s ) {
+        incArray[algs[i],algs[j]] <- 1
+        incArray[algs[j],algs[i]] <- 1
+      }
+    }
+  }
+
+  return(as.relation(incArray))
+}
+
 
 ### Symmetric difference:
 

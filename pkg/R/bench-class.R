@@ -12,6 +12,7 @@ melt.bench <- function(data, na.rm=TRUE, ...) {
 
   df <- melt.array(unclass(data))
   df$samp <- factor(df$samp)
+  df$alg <- factor(df$alg, levels=dimnames(data)$alg)
   
   if ( na.rm ) {
     df <- na.omit(df)
