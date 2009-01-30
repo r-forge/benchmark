@@ -7,10 +7,10 @@ make.lmer.ibea <- function() {
   if ( !require(multcomp) )
     stop('need package', sQuote('multcomp'), '.')
 
-  
   ### Lmer ibea framework:
   ibea <- make.ibea('Lmer')
 
+  
   ## Model:
   ibea$model <- function(bench) {
     if ( dim(bench)[3] > 1 )
@@ -28,38 +28,65 @@ make.lmer.ibea <- function() {
     return(model)
   }
 
+  
   ## Tests:
-  ibea$test.global <- function(model) {
+  ibea$gtest <- function(model) {
     stop('not yet implemented.')
   }
 
-  ibea$test.pairwise <- function(model) {
+  ibea$ptest <- function(model) {
     return(glht(model, linfct=mcp(alg='Tukey')))
   }
 
-  ## Relations:
-  ibea$relation.pairwise <- function(test, alpha) {
+  
+  ## Test results:
+  as.matrix <- function(values, algs) {
+    nalgs <- length(algs)
+    
+    m <- matrix(NA, nrow=nalgs, ncol=nalgs,
+                dimnames=list(algs, algs))
+
+    for ( i in seq_along(values) ) {
+      as <- strsplit(names(values[i]), ' - ', fixed=TRUE)[[1]]
+      m[as[2],as[1]] <- values[i]
+    }
+
+    return(m)
+  }
+
+  ibea$ptest.pmatrix <- function(test) {
     s <- summary(test)
 
-    p <- list(pvalues=s$test$pvalues,
-              tstats=s$test$tstat,
-              alpha=alpha,
-              algs=levels(test$model@frame$alg))
-    attr(p$pvalues, 'names') <- attr(p$tstat, 'names')
-    class(p) <- 'tpairs'
-
-    return(as.relation(p))
+    return(structure(as.matrix(structure(s$test$pvalues,
+                                         names=names(s$test$tstat)),
+                               levels(test$model@frame$alg)),
+                     class=c('pmatrix', 'matrix')))
   }
 
-  ## All-in-one:
-  ibea$relation <- function(x, alpha) {
-      m <- ibea$model(x)
-      t <- ibea$test.pairwise(m)
-      r <- ibea$relation.pairwise(t, alpha)
+  ibea$ptest.smatrix <- function(test) {
+    s <- summary(test)
 
-      return(r)
+    return(structure(as.matrix(s$test$tstat,
+                               levels(test$model@frame$alg)),
+                     class=c('smatrix', 'matrix')))
+  }
+
+  ibea$ptest.ciarray <- function(test, level=0.95) {
+    algs <- levels(test$model@frame$alg)
+    
+    ci <- confint(test, level=level)
+    lwr <- as.matrix(ci$confint[,'lwr'], algs)
+    upr <- as.matrix(ci$confint[,'upr'], algs)
+
+    a <- array(NA, dim=c(length(algs),length(algs),2),
+               dimnames=list(algs, algs, c('lwr','upr')))
+    a[,,1] <- lwr
+    a[,,2] <- upr
+
+    
+    return(structure(a, class=c('ciarray', 'array')))
   }
   
-
+  
   return(ibea)
 }

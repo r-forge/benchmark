@@ -8,3 +8,4 @@ Maintainer: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
 Depends: R, reshape, relations, lattice
 Description: Benchmark experiment toolbox.
 License: GPL version 2 or newer
+Revision: 0

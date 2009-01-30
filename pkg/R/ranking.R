@@ -1,4 +1,40 @@
 
+ranking <- function(x, ...) {
+  UseMethod('ranking')
+}
+
+ranking.totallessr <- function(x) {
+  return(ranking(relation_scores(x, decreasing=FALSE)))
+}
+
+ranking.default <- function(x) {
+  return(structure(sort(rank(x, ties.method='min')),
+                   class='ranking'))
+}
+
+
+
+### Pretty printer:
+
+sequence <- function(x, ...) {
+  UseMethod('sequence')
+}
+
+sequence.ranking <- function(x) {
+  cl <- split(names(x), x)
+  
+  return(paste(lapply(cl, paste, collapse=' - '),
+               collapse=' < '))
+}
+
+
+
+
+
+
+
+### Deprecated?
+
 as.ranking <- function(x, ...) {
   UseMethod('as.ranking')
 }

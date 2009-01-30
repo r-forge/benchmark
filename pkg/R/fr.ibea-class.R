@@ -7,19 +7,18 @@ make.fr.ibea <- function() {
   if ( !require(multcomp) )
     stop('need packages', sQuote('multcomp'))
 
-
-  ### Lmer ibea framework:
+  ### Friedman-based ibea framework:
   ibea <- make.ibea('Friedman-based')
 
 
   ## Tests:
-  ibea$test.global <- function(bench) {
+  ibea$gtest <- function(bench) {
     data <- melt(bench)
     
     return(friedman_test(value ~ alg | samp, data=data))
   }
 
-  ibea$test.pairwise <- function(bench) {
+  ibea$ptest <- function(bench) {
 
     if ( dim(bench)[3] > 1 | dim(bench)[4] > 1 )
       stop('only one performance measure on one data set is handled.')
@@ -40,26 +39,35 @@ make.fr.ibea <- function() {
     return(rtt)
   }
 
-  ## Relations:
-  ibea$relation.pairwise <- function(test, alpha) {
   
-    p <- list(pvalues=pvalue(test, method='single-step')[,1],
-              tstats=statistic(test, type = 'linear')[,1],
-              alpha=alpha,
-              algs=levels(test@statistic@x$alg))
-    class(p) <- 'tpairs'
-
-    return(as.relation(p))
-  }
-
-  ## All-in-one:
-  ibea$relation <- function(x, alpha) {
-      t <- ibea$test.pairwise(x)
-      r <- ibea$relation.pairwise(t, alpha)
-
-      return(r)
-  }
+  ## Test results:
+  as.matrix <- function(values, algs) {
+    nalgs <- length(algs)
     
+    m <- matrix(NA, nrow=nalgs, ncol=nalgs,
+                dimnames=list(algs, algs))
 
+    for ( i in seq_along(values) ) {
+      as <- strsplit(names(values[i]), ' - ', fixed=TRUE)[[1]]
+      m[as[2],as[1]] <- values[i]
+    }
+
+    return(m)
+  }
+
+  
+  ibea$ptest.pmatrix <- function(test) {
+    return(structure(as.matrix(pvalue(test, method='single-step')[,1],
+                               levels(test@statistic@x$alg)),
+                     class=c('pmatrix', 'matrix')))
+  }
+
+  ibea$ptest.smatrix <- function(test) {
+    return(structure(as.matrix(statistic(test, type='linear')[,1],
+                               levels(test@statistic@x$alg)),
+                     class=c('smatrix', 'matrix')))
+  }
+
+  
   return(ibea)
 }
