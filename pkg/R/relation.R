@@ -145,7 +145,7 @@ merge.relation_ensemble<- function(x, y=NULL, ...) {
 
 
 
-sequence <- function(r) {
+sequence.old <- function(r) {
   r <- transitive_reduction(r)
   i <- relation_incidence(r)
   # TODO: test for properties!
