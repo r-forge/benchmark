@@ -69,7 +69,7 @@ beplot.default <- function(x, col=1:ncol(x), xlab='', ylab='',
   # Figure 1: 
   par(mar=c(0, mar[2], mar[3], mar[4]))
   plot(dotplotborders, rep(max(x), nalgs+1),
-       type='n', ylim=c(0,max(x)), ylab=ylab, xlab='', axes=F)
+       type='n', ylim=range(x)), ylab=ylab, xlab='', axes=F)
   axis(1, at=dotplotborders, labels=NA, lwd=par('lwd'))
   axis(2, lwd=par('lwd'))
   box()

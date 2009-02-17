@@ -7,6 +7,10 @@ ranking.totallessr <- function(x) {
   return(ranking(relation_scores(x, decreasing=FALSE)))
 }
 
+ranking.relation <- function(x) {
+  return(ranking(relation_scores(x, decreasing=FALSE)))
+}
+
 ranking.default <- function(x) {
   return(structure(sort(rank(x, ties.method='min')),
                    class='ranking'))

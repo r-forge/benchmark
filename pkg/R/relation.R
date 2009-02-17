@@ -29,6 +29,17 @@ approxr.ciarray <- function(x, relevance=0) {
   return(approxr(m))
 }
 
+approxr.ranking <- function(x) {
+
+  i <- diag(length(x))
+  dimnames(i) <- list(names(x), names(x))
+
+  for ( r in names(x) )
+    i[r,x[r] == x] <- i[x[r] == x,r] <- 1
+
+  return(approxr(i))
+}
+
 approxr.default <- function(x) {
   r <- relation(incidence=x)
 
@@ -36,7 +47,7 @@ approxr.default <- function(x) {
   if ( relation_is_equivalence(r) )
     cl <- c('totalapproxr', cl)
   else
-    message('Relation is not a total approxr.')
+    warning('Relation is not a total approxr.')
 
   
   return(structure(r, class=cl))
@@ -95,6 +106,17 @@ lessr.ciarray <- function(x, relevance=0) {
   return(lessr(m1 + m2))
 }
 
+lessr.ranking <- function(x) {
+
+  i <- matrix(0, nrow=length(x), ncol=length(x),
+              dimnames=list(names(x), names(x)))
+
+  for ( r in names(x) )
+    i[r, x[r] < x] <- 1
+
+  return(lessr(i))
+}
+
 lessr.default <- function(x) {
   r <- relation(incidence=x)
 
@@ -102,7 +124,7 @@ lessr.default <- function(x) {
   if ( relation_is_strict_weak_order(r) )
     cl <- c('totallessr', cl)
   else
-    message('Relation is not a total lessr.')
+    warning('Relation is not a total lessr.')
   
   
   return(structure(r, class=cl))
