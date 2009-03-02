@@ -94,6 +94,9 @@ as.bench.matrix <- function(x, perf='', ds='', ...) {
 as.bench.array <- function(x) {
   # TODO: verify x
 
+  dimnames(x) <- list(samp=NULL, alg=dimnames(x)[[2]],
+                      perf=dimnames(x)[[3]], ds=dimnames(x)[[4]])
+  
   return(structure(x, class='bench'))
 }
 
