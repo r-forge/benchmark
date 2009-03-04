@@ -4,148 +4,104 @@ bsplot <- function(x, ...) {
 }
 
 
-bsplot.relation_ensemble <- function(x, perf=NULL, ...) {
+bsplot.relation_ensemble <- function(x, stat=NULL, ds.order=NULL, ...) {
+  algs <- unlist(relation_domain(x)[[1]])
+  rm <- sapply(x,
+               function(x) {
+                 ranking(x)[algs]
+               })
 
-  algs <- sort(as.character(relation_domain(x[[1]])[[1]]))
+  if ( !is.null(ds.order) ) {
+    rm <- rm[,ds.order]
+    stat <- stat[,ds.order]
+  }
 
-  ### Rank matrix:
-  rankings <- lapply(tsort(x), as.ranking)
-  rmatrix <- sapply(rankings, function(r)r[algs])
-
-  
-  ### Performance matrix:
-  if ( is.null(perf) )
-    pmatrix <- rmatrix
-  else
-    pmatrix <- perf
-  
-
-  ### Call "old" prototype code:
-  .old.bsplot(rmatrix, performance=pmatrix, ...)
+  bsplot(rm, stat=stat, ...)
 }
 
 
-.old.bsplot <- function(ranking, performance, ylab=NULL,
-                        col=NULL, perfcol=col,
-                        success.rate=FALSE,
-                        sig.lwd=3,
-                        axis.lwd=1,
-                        per.dataset=FALSE,
-                        horizontal=FALSE,
-                        xlas=2, ylas=2,
-                        datasets.order=NULL, ...) {
+bsplot.default <- function(x, stat=NULL,
+                           col=structure(seq_len(nrow(x))+1, names=rownames(x)),
+                           ylab='Datasets', xlab='Podium', sig.lwd=4, stat.col=NULL, ...) {
+
+  griddim <- dim(x)
+  nalgs <- griddim[1]
+  nds <- griddim[2]
+
+  rtable <- apply(x, 2, function(y)names(sort(y)))
+ 
   
-  ndatasets = ncol(ranking)
-  nalgorithms = nrow(ranking)
+  ### Grid:
+  rmargin <- 0.1
+  rwidth <- 1
+  rheight <- 1 - 2 * rmargin
   
-  datasets = colnames(ranking)
-  algorithms = rownames(ranking)
-  
-  max.performance = {
-    if ( per.dataset )
-      apply(performance, 2, max)
-    else
-      rep(max(performance), ndatasets)
+  xleft <- (seq_len(nalgs)-1) * rwidth
+  xright <- seq_len(nalgs) * rwidth
+  ybottom <- rep(rmargin, nalgs)
+  ytop <- rep((1-rmargin), nalgs)
+
+  gxleft <- rep(xleft, nds)
+  gxright <- rep(xright, nds)
+  gybottom <- rep(ybottom, nds) + rep(seq_len(nds)-1, each=nalgs)
+  gytop <- rep(ytop, nds) + rep(seq_len(nds)-1, each=nalgs)
+
+
+  ### Significant lines:
+  sx <- apply(x, 2, sort)
+  nosig <- matrix(FALSE, nrow=nalgs, ncol=nds)
+
+  for ( i in 1:(nalgs-1) )
+    nosig[i,] <- sx[i,] == sx[i+1,]
+
+  nosig[nalgs,] <- TRUE
+  nosig <- as.vector(nosig)
+
+  lx <- gxright[!nosig]
+  lytop <- gytop[!nosig]
+  lybottom <- gybottom[!nosig]
+
+
+  ### Statistic bars:
+  if ( !is.null(stat) ) {
+    s <- matrix(NA, nrow=nalgs, ncol=nds)
+
+    for ( i in seq_len(nds) )
+      s[,i] <- stat[rtable[,i],i]
+
+    sxleft <- gxleft
+    sxright <- rep(seq_len(nalgs)-1,nds) + as.vector((s / max(s) * rwidth))
+    sybottom <- gybottom + 0.1
+    sytop <- gytop - 0.1
   }
 
-  performance.order = apply(apply(performance, 2,
-    function(x){sort(x, index.return=T, decreasing=success.rate)$ix}), 2,
-    function(x){rownames(performance)[x]})
-
-  if ( is.null(datasets.order) )
-    datasets.order = do.call('order', lapply(1:nalgorithms,
-      function(i) t(performance.order)[,i]))
   
-            
-  # Calculate plot attributes:
-  rect.width = 1
-  rect.height = 1
-  space = 0
-  irect.width = 0.6
-  
-  if ( !horizontal ) {  
-    rects.ybottom = seq(rect.width, nalgorithms*rect.width, by=rect.width) - rect.width
-    rects.xleft = seq(rect.height+space, ndatasets*(rect.height+space),
-      by=(rect.height+space)) - (rect.height+space)
-    xlim = c(min(rects.xleft), max(rects.xleft) + rect.width)
-    ylim = c(min(rects.ybottom), max(rects.ybottom) + rect.height)
-    
-    myrect = rect
+  ### Plot:
+  plot(1, type='n', xlim=c(0,nalgs), ylim=c(0,nds),
+       axes=FALSE, xlab=xlab, ylab=ylab)
 
-    dataset.axis = 1
-    algorithm.axis = 2
-    
-    xlab = ''
-    ylab = 'Podium'
-  }
-  else {
-    rects.ybottom = seq(rect.height, nalgorithms*rect.height, by=rect.height) - rect.height
-    rects.xleft = seq(rect.width+space, ndatasets*(rect.width+space),
-      by=(rect.width+space)) - (rect.width+space)
-    ylim = c(min(rects.xleft), max(rects.xleft) + rect.width)
-    xlim = c(min(rects.ybottom), max(rects.ybottom) + rect.height)
-    
-    myrect = function(xleft, ybottom, xright, ytop, ...)
-      rect(ybottom, xleft, ytop, xright, ...)
-
-    dataset.axis = 2
-    algorithm.axis = 1
-
-    xlab = 'Podium'
-    ylab = ''
-  }
-
-            
-  # Plot it:
-  plot.new()
-  plot.window(xlim, ylim)
-                      
-  for ( j in 1:ndatasets ) {
-    i = datasets.order[j]
-    xleft = rep(rects.xleft[j], nalgorithms)
-                            
-    myrect(xleft,                               # xleft
-           rects.ybottom,                       # ybottom
-           xleft + rect.width,                  # xright
-           rects.ybottom + rect.height,         # ytop
-           col=col[performance.order[,i]],
-           border=NA)
-
-    myrect(xleft + (rect.width - irect.width) / 2,
-           rects.ybottom,
-           xleft + (rect.width - irect.width) / 2 + irect.width,
-           rects.ybottom + performance[performance.order[,i],i] / max.performance[i],
-           col=perfcol[performance.order[,i]],
-           border=NA)
-    
-    sig = table(ranking[performance.order[,i],i])
-    nsig = length(sig)
-    sig.rects.ytop = cumsum(sig) * rect.height
-    sig.rects.ybottom = c(0, sig.rects.ytop[-nsig])
-    
-    myrect(xleft[nsig],
-           sig.rects.ybottom,
-           xleft[nsig] + rect.width,
-           sig.rects.ytop,
-           lwd=sig.lwd, border=gray(0))
-  }
-            
-  axis(dataset.axis, at=rects.xleft+(rect.width/2),
-       tick=FALSE, labels=NA, lwd=axis.lwd)
-  for ( i in 1:ndatasets )
-    mtext(datasets[datasets.order[i]], side=dataset.axis,
-          line=1, at=rects.xleft[i]+(rect.width/2), las=xlas)
-                 
-  axis(algorithm.axis, at=c(0, rects.ybottom+rect.height),
-       labels=NA, lwd=axis.lwd)
-  
-  for ( i in 1:nalgorithms )
-    mtext(paste(i, '.', sep=''), side=algorithm.axis, line=1,
-          at=rects.ybottom[i]+(rect.height/2), las=ylas)
-           
+  axis(1, labels=FALSE)
+  mtext(paste(seq_len(nalgs), '.', sep=''),1,
+        at=0.5+(seq_len(nalgs)-1), line=1)
+  axis(2, at=0.5+(seq_len(nds)-1), labels=colnames(x))
   box()
-  title(xlab=xlab, ylab=ylab)
   
-  invisible(perfcol)
+  rect(gxleft, gybottom, gxright, gytop,
+       col=col[as.vector(rtable)], border=NA)
+
+  if ( !is.null(stat) )
+    rect(sxleft, sybottom, sxright, sytop,
+         col=stat.col[as.vector(rtable)], border=NA)
+ 
+  mapply(function(x, yb, yt) {
+           lines(rep(x,2), c(yb,yt), lend='butt', lwd=sig.lwd)
+         },
+         lx, lybottom, lytop)
+ 
+
+  invisible(NULL)
 }
+
+
+
 
