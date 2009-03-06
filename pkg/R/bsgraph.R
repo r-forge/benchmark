@@ -1,67 +1,72 @@
 
+bsgraph <- function(x, ...) {
+  UseMethod('bsgraph')
+}
 
-### "Old" prototype code: 
-bsgraph <- function (dist,
-                     layers=sort(unique(dist)),
-                     nlayers=length(layers),
-                     edgecol=rep(1, nlayers), edgelwd=rep(1, nlayers), upper.bound=+Inf,
-                     nodefillcol=NULL, ...) {
 
-  data = as.matrix(dist)
-  nodes = colnames(data)
+bsgraph.dist <- function(x, ndists.show=length(sort(unique(x))),
+                         edge.col=gray(0.7), edge.lwd=1,
+                         node.fill=NULL, ...) {
 
-  layers = sort(unique(dist))
-  layers = layers[layers < upper.bound]
-  nlayers = length(layers)
-
-  col = edgecol[1:nlayers]
-  lwd = edgelwd[1:nlayers]
-  len = ceiling((1.2)^(0:(nlayers-1)))
-  weight = nlayers:1
-  lty = c(rep('solid', sum(!is.na(col))), rep('blank', sum(is.na(col))))
-
+  data <- as.matrix(x)
   
-  graph = new('graphNEL', nodes=nodes, edgemode='undirected')
-  edgeAttrs = list()
-  nodeAttrs = list()
+  nodes <- colnames(data)
+  nnodes <- length(nodes)
+  
+  dists <- sort(unique(x))
+  ndists <- length(dists)
+  dshow <- dists[seq_len(ndists.show)]
+  ndshow <- length(dshow)
+  
+  edge.col <- rep(edge.col, ndshow)
+  edge.lwd <- rep(edge.lwd, ndshow)
+  edge.len <- ceiling((1.2)^(seq_len(ndists)-1))
+  edge.weight <- rev(seq_len(ndists))
+  edge.lty <- c(rep('solid', ndshow),
+                rep('blank', length(dists)-ndshow))
 
-  for ( i in 1:(length(nodes)-1) ) {
-    for ( j in (i+1):length(nodes) ) {
-      s = data[i,j]
+  graph <- new('graphNEL', nodes=nodes, edgemode='undirected')
+  edgeAttrs <- list()
+  nodeAttrs <- list()
 
-      if ( s < upper.bound ) {
-        t = which(s == layers)
+  for ( i in 1:(nnodes-1) ) {
+    for ( j in (i+1):nnodes ) {
+      s <- data[i,j]
 
-        graph = addEdge(nodes[i], nodes[j], graph, weight[t])
+      if ( s <= dist.upper ) {
+        t <- which(s == dists)
 
-        n = paste(nodes[i], nodes[j], sep='~')
-        edgeAttrs$len[n] = len[t]
-        edgeAttrs$color[n] = col[t]
-        edgeAttrs$lwd[n] = lwd[t]
-        edgeAttrs$lty[n] = lty[t]
+        graph <- addEdge(nodes[i], nodes[j], graph, edge.weight[t])
+
+        n <- paste(nodes[i], nodes[j], sep='~')
+        edgeAttrs$len[n] <- edge.len[t]
+        edgeAttrs$color[n] <- edge.col[t]
+        edgeAttrs$lwd[n] <- edge.lwd[t]
+        edgeAttrs$lty[n] <- edge.lty[t]
       }
     }
-
-    if ( !is.null(nodefillcol) )
-      nodeAttrs$fillcolor[nodes[i]] = nodefillcol[i]
   }
 
-  if ( !is.null(nodefillcol) )
-    nodeAttrs$fillcolor[nodes[i+1]] = nodefillcol[i+1]
-  
+  if ( !is.null(node.fill) )
+    nodeAttrs$fillcolor[nodes] <- node.fill
 
-  agraph = agopen(graph, '', edgeAttrs=edgeAttrs, nodeAttrs=nodeAttrs, layoutType='neato')
-  
-  plot(agraph, ...)
+  bsgraph(graph, nodeAttrs=nodeAttrs, edgeAttrs=edgeAttrs)
+}
 
-  # Redraw nodes only for beauty:
+
+bsgraph.default <- function(x, layoutType='neato', ...) {
+  
+  agraph <- agopen(x, '', layoutType=layoutType, ...)
+  plot(agraph)
+
+  # Redraw nodes for beauty:
   par(new=TRUE)
   agraph2 <- agraph
   agraph2@AgEdge <- list()
-  plot(agraph2, ...)
+  plot(agraph2)
+
 
   invisible(agraph)
 }
-
 
 

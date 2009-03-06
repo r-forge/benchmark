@@ -5,11 +5,7 @@ bsplot <- function(x, ...) {
 
 
 bsplot.relation_ensemble <- function(x, stat=NULL, ds.order=NULL, ...) {
-  algs <- unlist(relation_domain(x)[[1]])
-  rm <- sapply(x,
-               function(x) {
-                 ranking(x)[algs]
-               })
+  rm <- ranking(x)
 
   if ( !is.null(ds.order) ) {
     rm <- rm[,ds.order]

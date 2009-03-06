@@ -11,6 +11,15 @@ ranking.relation <- function(x) {
   return(ranking(relation_scores(x, decreasing=FALSE)))
 }
 
+ranking.relation_ensemble <- function(x) {
+  algs <- unlist(relation_domain(x)[[1]])
+  rm <- sapply(x,
+               function(x) {
+                 ranking(x)[algs]
+               })
+  return(rm) 
+}
+
 ranking.default <- function(x) {
   return(structure(sort(rank(x, ties.method='min')),
                    class='ranking'))
