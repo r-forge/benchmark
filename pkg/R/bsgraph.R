@@ -33,7 +33,7 @@ bsgraph.dist <- function(x, ndists.show=length(sort(unique(x))),
     for ( j in (i+1):nnodes ) {
       s <- data[i,j]
 
-      if ( s <= dist.upper ) {
+      if ( s %in% dshow ) {
         t <- which(s == dists)
 
         graph <- addEdge(nodes[i], nodes[j], graph, edge.weight[t])
