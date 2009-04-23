@@ -10,14 +10,21 @@
 
 melt.bench <- function(data, na.rm=TRUE, ...) {
 
+  if ( na.rm ) {
+    nas <- unique(which(is.na(data), arr.ind=TRUE)[,1])
+    
+    if ( length(nas) > 0 )
+      data <- data[-nas,,,]
+  }
+
   df <- melt.array(unclass(data))
   df$samp <- factor(df$samp)
   df$alg <- factor(df$alg, levels=dimnames(data)$alg)
   
-  if ( na.rm ) {
-    df <- na.omit(df)
-    df$samp <- df$samp[,drop=TRUE]
-  }
+  #if ( na.rm ) {
+  #  df <- na.omit(df)
+  #  df$samp <- df$samp[,drop=TRUE]
+  #}
   
   return(df)
 }
