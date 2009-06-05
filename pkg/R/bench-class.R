@@ -1,4 +1,26 @@
 
+#' Benchmark experiment base class.
+#'
+#' The \code{bench} \code{S3} class is a four dimensional array with the
+#' dimensions \eqn{samples \times algorithms \times performances \times
+#' datasets}{samples x algorithms x performances x datasets}.
+#'
+#' \code{\link{as.bench}} is the constructor function to create an object
+#' of this class.
+#' 
+#' @name bench-class
+#' @aliases bench
+#' @seealso \code{\link{as.bench}}
+{}
+
+
+#' @param x An object of class \code{\link{bench}}
+#' @param ... Ignored
+#' @param drop Coerced to the lowest possible dimension
+#' @return The subset, either as \code{\link{bench}} object (\code{drop=FALSE})
+#'   or as lowest possible object (\code{drop=TRUE})
+#' @method [ bench
+#' @rdname bench-class
 `[.bench` <- function(x, ..., drop=FALSE) {
   y <- unclass(x)[...,drop=drop]
 
@@ -8,36 +30,25 @@
   return(y)
 }
 
-melt.bench <- function(data, na.rm=TRUE, ...) {
 
-  if ( na.rm ) {
-    nas <- unique(which(is.na(data), arr.ind=TRUE)[,1])
-    
-    if ( length(nas) > 0 )
-      data <- data[-nas,,,]
-  }
+#' @param x An object of class \code{\link{bench}}
+#' @param ... Ignored
+#' @method print bench
+#' @rdname bench-class
+print.bench <- function(x, ...) {
 
-  df <- melt.array(unclass(data))
-  df$samp <- factor(df$samp)
-  df$alg <- factor(df$alg, levels=dimnames(data)$alg)
-  
-  #if ( na.rm ) {
-  #  df <- na.omit(df)
-  #  df$samp <- df$samp[,drop=TRUE]
-  #}
-  
-  return(df)
-}
-
-print.bench <- function(object, ...) {
-
-  d <- dim(object)
+  d <- dim(x)
   names(d) <- c('samples', 'algorithms', 'performances', 'data sets')
 
   cat('Benchmark experiment\n\n')
   print(d)  
 }
 
+
+#' @param object An object of class \code{\link{bench}}
+#' @param ... Ignored
+#' @method summary bench
+#' @rdname bench-class
 summary.bench <- function(object, ...) {
 
   d <- dim(object)
@@ -65,30 +76,103 @@ summary.bench <- function(object, ...) {
   print(a)
 }
 
+
+#' @param x An object of class \code{\link{bench}}
+#' @return The names of the algorithms
+#' @rdname bench-class
 algorithms <- function(x) {
   return(dimnames(x)$alg)
 }
 
+
+#' @param x An object of class \code{\link{bench}}
+#' @return The names of the performance measures
+#' @rdname bench-class
 performances <- function(x) {
   return(dimnames(x)$perf)
 }
 
+
+#' @param x An object of class \code{\link{bench}}
+#' @return The names of the data sets
+#' @rdname bench-class
 datasets <- function(x) {
   return(dimnames(x)$ds)
 }
 
+
+#' @param x An object of class \code{\link{bench}}
+#' @return The number of samples
+#' @rdname bench-class
 nsamples <- function(x) {
   return(dim(x)[1])
 }
 
 
-### Cast functions:
 
+###
+### Reshape functions:
+###
+
+
+#' Melt the bench object into the long format.
+#'
+#' @param data An object of class \code{\link{bench}}
+#' @param na.rm Indicating whether \code{NA} values should be stripped
+#' @param ... Ignored
+#' @method melt bench
+#' @seealso \code{\link[reshape]{melt.array}}, \code{\link[reshape]{melt}} 
+melt.bench <- function(data, na.rm=TRUE, ...) {
+
+  if ( na.rm ) {
+    nas <- unique(which(is.na(data), arr.ind=TRUE)[,1])
+    
+    if ( length(nas) > 0 )
+      data <- data[-nas,,,]
+  }
+
+  df <- melt.array(unclass(data))
+  df$samp <- factor(df$samp)
+  df$alg <- factor(df$alg, levels=dimnames(data)$alg)
+  
+  #if ( na.rm ) {
+  #  df <- na.omit(df)
+  #  df$samp <- df$samp[,drop=TRUE]
+  #}
+  
+  return(df)
+}
+
+
+
+###
+### Cast functions:
+###
+
+
+#' Object constructor.
+#'
+#' @param x The object to cast
+#' @param ... Ignored
+#' @return The \code{\link{bench}} object
+#' @export
 as.bench <- function(x, ...) {
   UseMethod('as.bench')
 }
 
-as.bench.matrix <- function(x, perf='', ds='', ...) {
+
+#' as.bench.matrix
+#'
+#' Converts a matrix with samples as rows and algorithms
+#' as columns, i.e., a benchmark experiment on one data set,
+#' into a \code{\link{bench}} object.
+#'
+#' @param x A matrix
+#' @param perf The name of the performance measure
+#' @param ds The name of the data set
+#' @method as.bench matrix
+#' @rdname as.bench
+as.bench.matrix <- function(x, perf='', ds='') {
   y <- array(dim=c(dim(x), 1, 1),
              dimnames=list(samp=NULL, alg=colnames(x),
                perf=perf, ds=ds))
@@ -98,6 +182,15 @@ as.bench.matrix <- function(x, perf='', ds='', ...) {
   return(structure(y, class='bench'))
 }
 
+
+#' as.bench.arry
+#'
+#' Converts an array, already in the correct format,
+#' into a \code{\link{bench}} object.
+#' 
+#' @param x An array (already in correct format)
+#' @method as.bench array
+#' @rdname as.bench
 as.bench.array <- function(x) {
   # TODO: verify x
 
@@ -107,7 +200,18 @@ as.bench.array <- function(x) {
   return(structure(x, class='bench'))
 }
 
-as.bench.list <- function(x, perf='', ...) {
+
+#' as.bench.list
+#'
+#' Converts a list of matrices (with equal dimensions)
+#' of benchmark experiments on different data sets into
+#' a \code{\link{bench}} object.
+#'
+#' @param x A list of matrices with equal dimensions
+#' @param perf The name of the performance measure
+#' @method as.bench list
+#' @rdname as.bench
+as.bench.list <- function(x, perf='') {
   # HACK: until now only casts list of matrices
   # with equal number of rows.
   

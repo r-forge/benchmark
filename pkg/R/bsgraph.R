@@ -1,4 +1,13 @@
 
+#' Benchmark experiment graph.
+#'
+#' The benchmark summary plot takes the individual benchmark
+#' experiment results into account. The y-axis represents the
+#' data sets, the x-axis a podium with as many places as
+#' candidate algorithms.
+#'
+#' @param x The object to plot.
+#' @export
 bsgraph <- function(x, ...) {
   UseMethod('bsgraph')
 }

@@ -1,9 +1,22 @@
 
+#' @param x An object of class \code{\link{bench}}
+#' @export
+#' @nord
 densitychart <- function(x, ...) {
   UseMethod('densitychart')
 }
 
-densitychart.bench <- function(x, col=seq_along(x),
+
+#' @param x An object of class \code{\link{bench}}
+#' @param col Color for each algorithm
+#' @param xlab A title for the x axis
+#' @param ylab A title for the y axis
+#' @param dargs Arguments passed to the \code{\link[stats]{density}} function
+#' @param ... Passed to underlying plot functions
+#' @return Undefined
+#' @method densitychart bench
+#' @rdname basicplots
+densitychart.bench <- function(x, col=ncol(x),
                                xlab=dimnames(x)$perf[1], ylab='Density',
                                dargs=list(), ...) {  
   d <- dim(x)
@@ -22,6 +35,18 @@ densitychart.bench <- function(x, col=seq_along(x),
   }
 }
 
+
+#' @param x An object of class \code{\link{bench}}
+#' @param data Unused.
+#' @param xlab A title for the x axis
+#' @param ylab A title for the y axis
+#' @param plot.points Specifying whether or not the data points
+#'   should be plotted along with the estimated density
+#' @param auto.key Key drawing, see \code{\link[lattice]{xyplot}}
+#' @param ... Passed to underlying plot function
+#' @return The value of the underlying \code{\link[lattice]{densityplot}} function
+#' @method densityplot bench
+#' @rdname basicplots
 densityplot.bench <- function(x, data=NULL,
                               xlab='Performance', ylab='Density',
                               plot.points=FALSE, auto.key=TRUE, ...) {

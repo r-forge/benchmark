@@ -1,9 +1,35 @@
 
+#' Benchmark experiment plot.
+#'
+#' The benchmark experiment plot visualizes each benchmark
+#' experiment run. The x-axis is a podium with as many places
+#' as algorithms. For each benchmark run, the algorithms are
+#' sorted according to their performance values and a dot is
+#' drawn on the corresponding place. To visualize the count of
+#' an algorithm on a specific position, a bar plot is shown for
+#' each of podium places.
+#'
+#' @param x The object to plot.
+#' @export
 beplot <- function(x, ...) {
   UseMethod('beplot')
 }
 
 
+#' @param x A \code{\link{bench}} object
+#' @param xlab A title for the x axis
+#' @param ylab A title for the y axis
+#' @param lines.show Connect dots of same benchmark runs
+#' @param lines.col Line color
+#' @param lines.alpha Alpha value of the line color
+#' @param lines.lwd Line width
+#' @param dots.pch Dot symbol
+#' @param dots.cex Dot symbol expansion
+#' @param places.lty Type of separator line between podium places
+#' @param places.col Color of separator line between podium places
+#' @param legendfn Function which draws a legend
+#' @method beplot bench
+#' @rdname beplot
 beplot.bench <- function(x, col=1:ncol(x),
                          xlab='Podium', ylab=dimnames(x)$perf[1],
                          lines.show=FALSE, lines.alpha=0.2, lines.lwd=1, lines.col=col,
@@ -23,12 +49,26 @@ beplot.bench <- function(x, col=1:ncol(x),
 }
 
 
-beplot.default <- function(x, col=1:ncol(x), xlab='', ylab='',
-                           lines.show=FALSE, lines.alpha=0.2, lines.lwd=1, lines.col=col,
-                           dots.pch=19, dots.cex=1,
-                           places.lty=2, places.col=1,
-                           legendfn=function(algs, cols){
-                             legend('topleft', algs, lwd=1, col=cols, bg='white')}) {
+#' @param x A \code{\link{bench}} object
+#' @param xlab A title for the x axis
+#' @param ylab A title for the y axis
+#' @param lines.show Connect dots of same benchmark runs
+#' @param lines.col Line color
+#' @param lines.alpha Alpha value of the line color
+#' @param lines.lwd Line width
+#' @param dots.pch Dot symbol
+#' @param dots.cex Dot symbol expansion
+#' @param places.lty Type of separator line between podium places
+#' @param places.col Color of separator line between podium places
+#' @param legendfn Function which draws a legend
+#' @method beplot matrix
+#' @rdname beplot
+beplot.matrix <- function(x, col=1:ncol(x), xlab='', ylab='',
+                          lines.show=FALSE, lines.alpha=0.2, lines.lwd=1, lines.col=col,
+                          dots.pch=19, dots.cex=1,
+                          places.lty=2, places.col=1,
+                          legendfn=function(algs, cols){
+                            legend('topleft', algs, lwd=1, col=cols, bg='white')}) {
 
   nalgs <- ncol(x)
   algs <- colnames(x)
