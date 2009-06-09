@@ -6,13 +6,21 @@
 #' data sets, the x-axis a podium with as many places as
 #' candidate algorithms.
 #'
-#' @param x The object to plot.
+#' @param x The object to plot
 #' @export
 bsgraph <- function(x, ...) {
   UseMethod('bsgraph')
 }
 
 
+#' @param x A \code{\link{dist}} object
+#' @param ndists.show The number of distance levels to show
+#' @param edge.col The color of edges (one or one for each distance level)
+#' @param edge.lwd The line width of edges (one or one for each distance level)
+#' @param node.fill The colors of nodes
+#' @return The return value of \code{\link{bsgraph.graphNEL}}
+#' @method bsgraph dist
+#' @rdname bsgraph
 bsgraph.dist <- function(x, ndists.show=length(sort(unique(x))),
                          edge.col=gray(0.7), edge.lwd=1,
                          node.fill=NULL, ...) {
@@ -63,7 +71,12 @@ bsgraph.dist <- function(x, ndists.show=length(sort(unique(x))),
 }
 
 
-bsgraph.default <- function(x, layoutType='neato', ...) {
+#' @param x A \code{\link[graph]{graphNEL} object
+#' @param layoutType Defines the layout engine
+#' @return Invisible return of the \code{\link[graph]{Ragraph}} object
+#' @method bsgraph graphNEL
+#' @rdname bsgraph
+bsgraph.graphNEL <- function(x, layoutType='neato', ...) {
   
   agraph <- agopen(x, '', layoutType=layoutType, ...)
   plot(agraph)

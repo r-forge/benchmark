@@ -1,5 +1,4 @@
 
-
 # Test for a strict weak order.
 relation_is_strict_weak_order <- function(x) {
   return(relation_is_endorelation(x) &&
@@ -8,8 +7,6 @@ relation_is_strict_weak_order <- function(x) {
          relation_is_transitive(x) &&
          relation_is_negatively_transitive(x))
 }
-
-
 
 relation_classes <- function (x) {
     ids <- relation_class_ids(x)
@@ -20,7 +17,7 @@ relation_classes <- function (x) {
 }
 
 
-#  A strict weak order also has equivalence classes.
+# A strict weak order also has equivalence classes.
 relation_class_ids <- function (x) {
     if (!is.relation(x)) 
         stop("Argument 'x' must be a relation.")
