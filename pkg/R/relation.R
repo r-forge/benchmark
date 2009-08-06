@@ -1,12 +1,12 @@
 
 
-#' "Equivalence" relation for benchmark experiments.
-#'
 #' A relation which is reflexive and symmetrix is called an "approx"
 #' relation. If the relation is even transitive, then it is called
 #' a "totalapproxr" relation.
 #'
+#' @title "Equivalence" relation for benchmark experiments.
 #' @param x Object to cast to the approxr relation
+#' @return A \code{\link{relation}} object
 #' @aliases totalapproxr
 #' @export
 approxr <- function(x, ...) {
@@ -17,6 +17,7 @@ approxr <- function(x, ...) {
 #' @param x A \code{\link{pmatrix}} consisting of p-values
 #' @param alpha Significance level
 #' @method approxr pmatrix
+#' @S3method approxr pmatrix
 #' @rdname approxr
 approxr.pmatrix <- function(x, alpha) {
  
@@ -33,6 +34,7 @@ approxr.pmatrix <- function(x, alpha) {
 #' @param x An \code{\link{ciarray}} consisting of confidence intervals
 #' @param relevance Relevance level
 #' @method approxr ciarray
+#' @S3method approxr ciarray
 #' @rdname approxr
 approxr.ciarray <- function(x, relevance=0) {
 
@@ -50,7 +52,8 @@ approxr.ciarray <- function(x, relevance=0) {
 
 
 #' @param x A \code{\link{ranking}} object
-#' @method approxr ranking 
+#' @method approxr ranking
+#' @S3method approxr ranking
 #' @rdname approxr
 approxr.ranking <- function(x) {
 
@@ -66,6 +69,7 @@ approxr.ranking <- function(x) {
 
 #' @param x An incidence matrix
 #' @method approxr matrix
+#' @S3method approxr matrix
 #' @rdname approxr
 approxr.matrix <- function(x) {
   r <- relation(incidence=x)
@@ -94,24 +98,27 @@ print.totalapproxr <- function(x) {
 
 
 
-#' "Order" relation for benchmark experiments.
-#'
 #' A relation which is irreflexive and asymmetrix is called a "lessr"
 #' relation. If the relation is even transitive and negative
 #' transitive, it is called a "totallessr" relation.
 #'
+#' @title "Order" relation for benchmark experiments.
 #' @param x Object to cast to the lessr relation
-#' @aliasses totallessr
+#' @return A \code{\link{relation}} object
+#' @aliases totallessr
+#' @seealso \code{\link{ranking}}
 #' @export
 lessr <- function(x, ...) {
   UseMethod('lessr')
 }
 
 
+
 #' @param x A \code{\link{pmatrix}} consisting of p-values
 #' @param y A \code{\link{smatrix}} consisting of test statistics
 #' @param alpha Significance level
 #' @method lessr pmatrix
+#' @S3method lessr pmatrix
 #' @rdname lessr
 lessr.pmatrix <- function(x, y, alpha) {
 
@@ -134,6 +141,7 @@ lessr.pmatrix <- function(x, y, alpha) {
 #' @param x An \code{\link{ciarray}} consisting of confidence intervals
 #' @param relevance Relevance level
 #' @method lessr ciarray
+#' @S3method lessr ciarray
 #' @rdname lessr
 lessr.ciarray <- function(x, relevance=0) {
 
@@ -157,7 +165,8 @@ lessr.ciarray <- function(x, relevance=0) {
 
 
 #' @param x A \code{\link{ranking}} object
-#' @method lessr ranking 
+#' @method lessr ranking
+#' @S3method lessr ranking
 #' @rdname lessr
 lessr.ranking <- function(x) {
 
@@ -173,6 +182,7 @@ lessr.ranking <- function(x) {
 
 #' @param x An incidence matrix
 #' @method lessr matrix
+#' @S3method lessr matrix
 #' @rdname lessr
 lessr.matrix <- function(x) {
   r <- relation(incidence=x)

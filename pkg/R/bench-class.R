@@ -20,6 +20,7 @@
 #' @return The subset, either as \code{\link{bench}} object (\code{drop=FALSE})
 #'   or as lowest possible object (\code{drop=TRUE})
 #' @method [ bench
+#' @S3method [ bench
 #' @rdname bench-class
 `[.bench` <- function(x, ..., drop=FALSE) {
   y <- unclass(x)[...,drop=drop]
@@ -34,6 +35,7 @@
 #' @param x An object of class \code{\link{bench}}
 #' @param ... Ignored
 #' @method print bench
+#' @S3method print bench
 #' @rdname bench-class
 print.bench <- function(x, ...) {
 
@@ -48,6 +50,7 @@ print.bench <- function(x, ...) {
 #' @param object An object of class \code{\link{bench}}
 #' @param ... Ignored
 #' @method summary bench
+#' @S3method summary bench
 #' @rdname bench-class
 summary.bench <- function(object, ...) {
 
@@ -80,6 +83,7 @@ summary.bench <- function(object, ...) {
 #' @param x An object of class \code{\link{bench}}
 #' @return The names of the algorithms
 #' @rdname bench-class
+#' @export
 algorithms <- function(x) {
   return(dimnames(x)$alg)
 }
@@ -88,6 +92,7 @@ algorithms <- function(x) {
 #' @param x An object of class \code{\link{bench}}
 #' @return The names of the performance measures
 #' @rdname bench-class
+#' @export
 performances <- function(x) {
   return(dimnames(x)$perf)
 }
@@ -96,6 +101,7 @@ performances <- function(x) {
 #' @param x An object of class \code{\link{bench}}
 #' @return The names of the data sets
 #' @rdname bench-class
+#' @export
 datasets <- function(x) {
   return(dimnames(x)$ds)
 }
@@ -104,6 +110,7 @@ datasets <- function(x) {
 #' @param x An object of class \code{\link{bench}}
 #' @return The number of samples
 #' @rdname bench-class
+#' @export
 nsamples <- function(x) {
   return(dim(x)[1])
 }
@@ -121,6 +128,7 @@ nsamples <- function(x) {
 #' @param na.rm Indicating whether \code{NA} values should be stripped
 #' @param ... Ignored
 #' @method melt bench
+#' @S3method melt bench
 #' @seealso \code{\link[reshape]{melt.array}}, \code{\link[reshape]{melt}} 
 melt.bench <- function(data, na.rm=TRUE, ...) {
 
@@ -171,6 +179,7 @@ as.bench <- function(x, ...) {
 #' @param perf The name of the performance measure
 #' @param ds The name of the data set
 #' @method as.bench matrix
+#' @S3method as.bench matrix
 #' @rdname as.bench
 as.bench.matrix <- function(x, perf='', ds='') {
   y <- array(dim=c(dim(x), 1, 1),
@@ -190,6 +199,7 @@ as.bench.matrix <- function(x, perf='', ds='') {
 #' 
 #' @param x An array (already in correct format)
 #' @method as.bench array
+#' @S3method as.bench array
 #' @rdname as.bench
 as.bench.array <- function(x) {
   # TODO: verify x
@@ -210,6 +220,7 @@ as.bench.array <- function(x) {
 #' @param x A list of matrices with equal dimensions
 #' @param perf The name of the performance measure
 #' @method as.bench list
+#' @S3method as.bench list
 #' @rdname as.bench
 as.bench.list <- function(x, perf='') {
   # HACK: until now only casts list of matrices

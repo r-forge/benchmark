@@ -6,6 +6,7 @@
 #' @param ... Passed to underlying plot function
 #' @return The value of the underlying \code{\link[graphics]{stripchart}} function
 #' @method stripchart bench
+#' @S3method stripchart bench
 #' @rdname basicplots
 stripchart.bench <- function(x, col=ncol(x),
                              ylab='Candidates', xlab=dimnames(x)$perf[1], ...) {
@@ -22,6 +23,7 @@ stripchart.bench <- function(x, col=ncol(x),
 #' @param ... Passed to underlying plot function
 #' @return The value of the underlying \code{\link[lattice]{stripplot}} function
 #' @method stripplot bench
+#' @S3method stripplot bench
 #' @rdname basicplots
 stripplot.bench <- function(x, data=NULL,
                             xlab='Candidates', ylab='Performance', ...) {

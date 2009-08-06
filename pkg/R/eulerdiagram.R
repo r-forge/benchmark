@@ -1,8 +1,14 @@
 
+#' Eulerdiagram of relations.
+#' @export
 eulerdiagram <- function(x, ...) {  
   UseMethod('eulerdiagram')
 }
 
+#' @param x A \code{\link{relation}} object
+#' @method eulerdiagram ranking
+#' @S3method eulerdiagram relation
+#' @rdname eulerdiagram
 eulerdiagram.relation <- function(x, ...) {
 
   if ( !relation_is_equivalence(x) )

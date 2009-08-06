@@ -20,6 +20,7 @@ bsgraph <- function(x, ...) {
 #' @param node.fill The colors of nodes
 #' @return The return value of \code{\link{bsgraph.graphNEL}}
 #' @method bsgraph dist
+#' @S3method bsgraph dist
 #' @rdname bsgraph
 bsgraph.dist <- function(x, ndists.show=length(sort(unique(x))),
                          edge.col=gray(0.7), edge.lwd=1,
@@ -75,6 +76,7 @@ bsgraph.dist <- function(x, ndists.show=length(sort(unique(x))),
 #' @param layoutType Defines the layout engine
 #' @return Invisible return of the \code{\link[graph]{Ragraph}} object
 #' @method bsgraph graphNEL
+#' @S3method bsgraph graphNEL
 #' @rdname bsgraph
 bsgraph.graphNEL <- function(x, layoutType='neato', ...) {
   

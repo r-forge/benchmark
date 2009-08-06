@@ -18,6 +18,7 @@ bsplot <- function(x, ...) {
 #'   the algorithms, columns the data sets)
 #' @param ds.order Data set order
 #' @method bsplot relation_ensemble
+#' @S3method bsplot relation_ensemble
 #' @rdname bsplot
 bsplot.relation_ensemble <- function(x, stat=NULL, ds.order=NULL, ...) {
   rm <- ranking(x)
@@ -40,6 +41,7 @@ bsplot.relation_ensemble <- function(x, stat=NULL, ds.order=NULL, ...) {
 #' @param sig.lwd Line width of the significance sperator line
 #' @param stat.col Colors of the statistics
 #' @method bsplot matrix
+#' @S3method bsplot matrix
 #' @rdname bsplot
 bsplot.matrix <- function(x, stat=NULL,
                            col=structure(seq_len(nrow(x))+1, names=rownames(x)),

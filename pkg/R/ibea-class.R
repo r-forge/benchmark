@@ -1,4 +1,13 @@
 
+#' An \code{ibea} object is an environment which
+#' encapsulates all methods for an individual
+#' inferential analysis.
+#' @title Inferential benchmark experiment analysis
+#'   framework.
+#' @param name The framework name
+#' @export
+#' @rdname ibea
+#' @aliases ibea
 make.ibea <- function(name='Empty') {
   ibea <- new.env(parent=emptyenv())
   ibea$name <- name

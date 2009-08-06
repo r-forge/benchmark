@@ -10,6 +10,7 @@
 #' @param ... Passed to underlying plot function
 #' @return The value of the underlying \code{\link[lattice]{parallel}} function
 #' @method parallel bench
+#' @S3method parallel bench
 #' @rdname basicplots
 parallel.bench <- function(x, data=NULL,
                            xlab='Candidates', ylab=dimnames(x)$perf[1],

@@ -6,6 +6,7 @@
 #' @param ... Passed to underlying plot function
 #' @return The value of the underlying \code{\link[graphics]{boxplot}} function
 #' @method boxplot bench
+#' @S3method boxplot bench
 #' @rdname basicplots
 boxplot.bench <- function(x, col=ncol(x),
                           xlab='Candidates', ylab=dimnames(x)$perf[1], ...) {
@@ -22,6 +23,7 @@ boxplot.bench <- function(x, col=ncol(x),
 #' @param ... Passed to underlying plot function
 #' @return The value of the underlying \code{\link[lattice]{bwplot}} function
 #' @method bwplot bench
+#' @S3method bwplot bench
 #' @rdname basicplots
 bwplot.bench <- function(x, data=NULL,
                          xlab='Candidates', ylab='Performance', ...) {

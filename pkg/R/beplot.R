@@ -29,6 +29,7 @@ beplot <- function(x, ...) {
 #' @param places.col Color of separator line between podium places
 #' @param legendfn Function which draws a legend
 #' @method beplot bench
+#' @S3method beplot bench
 #' @rdname beplot
 beplot.bench <- function(x, col=1:ncol(x),
                          xlab='Podium', ylab=dimnames(x)$perf[1],
@@ -62,6 +63,7 @@ beplot.bench <- function(x, col=1:ncol(x),
 #' @param places.col Color of separator line between podium places
 #' @param legendfn Function which draws a legend
 #' @method beplot matrix
+#' @S3method beplot matrix
 #' @rdname beplot
 beplot.matrix <- function(x, col=1:ncol(x), xlab='', ylab='',
                           lines.show=FALSE, lines.alpha=0.2, lines.lwd=1, lines.col=col,

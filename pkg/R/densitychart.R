@@ -15,6 +15,7 @@ densitychart <- function(x, ...) {
 #' @param ... Passed to underlying plot functions
 #' @return Undefined
 #' @method densitychart bench
+#' @S3method densitychart bench
 #' @rdname basicplots
 densitychart.bench <- function(x, col=ncol(x),
                                xlab=dimnames(x)$perf[1], ylab='Density',
@@ -46,6 +47,7 @@ densitychart.bench <- function(x, col=ncol(x),
 #' @param ... Passed to underlying plot function
 #' @return The value of the underlying \code{\link[lattice]{densityplot}} function
 #' @method densityplot bench
+#' @S3method densityplot bench
 #' @rdname basicplots
 densityplot.bench <- function(x, data=NULL,
                               xlab='Performance', ylab='Density',
