@@ -1,4 +1,27 @@
+#' @include ibea-class.R
+{}
 
+
+#' "Mixed-effects model"-based inferential benchmark experiment
+#' analysis framework.
+#'
+#' This framework provides the calculation of a mixed-effects
+#' model based on the \code{\link{bench}} object by function
+#' \code{model(bench)}.
+#'
+#' Based on the model, functions \code{gtest(model)} and
+#' \code{ptest(model)} calculate a globa and a pairwise test
+#' respectively.
+#'
+#' For pairwise test results, functions \code{ptest.pmatrix(test)}
+#' and \code{ptest.smatrix(test)} calculate the matrix of p-values
+#' and test-statistics respectively. Function
+#' \code{ptest.ciarry(test, level)} calculates the confidence
+#' intervals for a given significance level \code{level}.
+#'
+#' @export
+#' @seealso \code{\link{ibea}}, \code{\link{fr.ibea-class}}
+#' @aliases lmer.ibea-class
 make.lmer.ibea <- function() {
 
   if ( !require(lme4) )

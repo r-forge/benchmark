@@ -1,0 +1,3 @@
+
+o add an `empty.bench()` function which construct a correct bench
+  array.

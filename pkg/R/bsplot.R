@@ -7,6 +7,7 @@
 #' candidate algorithms.
 #'
 #' @param x The object to plot.
+#' @param ... Unused
 #' @export
 bsplot <- function(x, ...) {
   UseMethod('bsplot')

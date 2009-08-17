@@ -5,6 +5,7 @@
 #' @param ylab A title for the y axis
 #' @param horizontal.axis Indicating whether the
 #'   parallel axes should be laid out horizontally or vertically
+#' @param lines.col Line colors
 #' @param common.scale Whether a common scale should be used for
 #'   the axis
 #' @param ... Passed to underlying plot function

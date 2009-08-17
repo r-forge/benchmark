@@ -1,13 +1,23 @@
 
-#' An \code{ibea} object is an environment which
-#' encapsulates all methods for an individual
-#' inferential analysis.
+#' An \code{ibea} object is an environment which encapsulates all
+#' methods for an individual inferential analysis.
+#'
+#' Available \emph{inferential benchmark experiment analysis frameworks}
+#' are:
+#' \describe{
+#'   \item{\code{\link{fr.ibea-class}}}{Friedman-based framework for
+#'     nonparametric analyses}
+#'   \item{code{\link{lmer.ibea-class}}}{"mixed-effects model"-based
+#'     framework for parametric analyses}
+#' }
+#'
 #' @title Inferential benchmark experiment analysis
 #'   framework.
 #' @param name The framework name
 #' @export
 #' @rdname ibea
-#' @aliases ibea
+#' @aliases ibea pmatrix smatrix ciarray
+#' @seealso \code{\link{fr.ibea-class}}, \code{\link{lmer.ibea-class}}
 make.ibea <- function(name='Empty') {
   ibea <- new.env(parent=emptyenv())
   ibea$name <- name

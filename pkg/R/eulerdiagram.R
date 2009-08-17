@@ -5,8 +5,10 @@ eulerdiagram <- function(x, ...) {
   UseMethod('eulerdiagram')
 }
 
-#' @param x A \code{\link{relation}} object
-#' @method eulerdiagram ranking
+#' @param x A \code{\link[relations]{relation}} object
+#' @param ... Passed to underlying \code{\link[graphics]{pie}}
+#'   function
+#' @method eulerdiagram relation
 #' @S3method eulerdiagram relation
 #' @rdname eulerdiagram
 eulerdiagram.relation <- function(x, ...) {

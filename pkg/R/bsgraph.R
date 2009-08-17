@@ -7,6 +7,7 @@
 #' candidate algorithms.
 #'
 #' @param x The object to plot
+#' @param ... Unused
 #' @export
 bsgraph <- function(x, ...) {
   UseMethod('bsgraph')
@@ -67,7 +68,7 @@ bsgraph.dist <- function(x, ndists.show=length(sort(unique(x))),
 
   if ( !is.null(node.fill) )
     nodeAttrs$fillcolor[nodes] <- node.fill
-
+  
   bsgraph(graph, nodeAttrs=nodeAttrs, edgeAttrs=edgeAttrs)
 }
 
@@ -79,7 +80,7 @@ bsgraph.dist <- function(x, ndists.show=length(sort(unique(x))),
 #' @S3method bsgraph graphNEL
 #' @rdname bsgraph
 bsgraph.graphNEL <- function(x, layoutType='neato', ...) {
-  
+
   agraph <- agopen(x, '', layoutType=layoutType, ...)
   plot(agraph)
 

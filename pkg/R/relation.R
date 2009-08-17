@@ -6,7 +6,8 @@
 #'
 #' @title "Equivalence" relation for benchmark experiments.
 #' @param x Object to cast to the approxr relation
-#' @return A \code{\link{relation}} object
+#' @param ... Unused
+#' @return A \code{\link[relations]{relation}} object
 #' @aliases totalapproxr
 #' @export
 approxr <- function(x, ...) {
@@ -19,7 +20,7 @@ approxr <- function(x, ...) {
 #' @method approxr pmatrix
 #' @S3method approxr pmatrix
 #' @rdname approxr
-approxr.pmatrix <- function(x, alpha) {
+approxr.pmatrix <- function(x, alpha, ...) {
  
   sig <- x > alpha
   sig[is.na(sig)] <- 0
@@ -36,7 +37,7 @@ approxr.pmatrix <- function(x, alpha) {
 #' @method approxr ciarray
 #' @S3method approxr ciarray
 #' @rdname approxr
-approxr.ciarray <- function(x, relevance=0) {
+approxr.ciarray <- function(x, relevance=0, ...) {
 
   nsig <- (x[,,'lwr'] < 0 & x[,,'upr'] > 0)
   nrel <- nsig | (x[,,'lwr'] > -relevance & x[,,'upr'] < relevance)
@@ -55,7 +56,7 @@ approxr.ciarray <- function(x, relevance=0) {
 #' @method approxr ranking
 #' @S3method approxr ranking
 #' @rdname approxr
-approxr.ranking <- function(x) {
+approxr.ranking <- function(x, ...) {
 
   i <- diag(length(x))
   dimnames(i) <- list(names(x), names(x))
@@ -71,7 +72,7 @@ approxr.ranking <- function(x) {
 #' @method approxr matrix
 #' @S3method approxr matrix
 #' @rdname approxr
-approxr.matrix <- function(x) {
+approxr.matrix <- function(x, ...) {
   r <- relation(incidence=x)
 
   cl <- c('approxr', class(r))
@@ -85,12 +86,12 @@ approxr.matrix <- function(x) {
 }
 
 
-print.approxr <- function(x) {
+print.approxr <- function(x, ...) {
   cat('An approxr relation of size ', paste(dim(x), collapse=' x '), '.\n', sep='')
 }
 
 
-print.totalapproxr <- function(x) {
+print.totalapproxr <- function(x, ...) {
   cat('A total approxr relation of size ', paste(dim(x), collapse=' x '), '.\n', sep='')
   cat('Equivalence classes:\n')
   print(relation_classes(x))
@@ -104,7 +105,8 @@ print.totalapproxr <- function(x) {
 #'
 #' @title "Order" relation for benchmark experiments.
 #' @param x Object to cast to the lessr relation
-#' @return A \code{\link{relation}} object
+#' @param ... Unused
+#' @return A \code{\link[relations]{relation}} object
 #' @aliases totallessr
 #' @seealso \code{\link{ranking}}
 #' @export
@@ -120,7 +122,7 @@ lessr <- function(x, ...) {
 #' @method lessr pmatrix
 #' @S3method lessr pmatrix
 #' @rdname lessr
-lessr.pmatrix <- function(x, y, alpha) {
+lessr.pmatrix <- function(x, y, alpha, ...) {
 
   sig <- x < alpha
   dir1 <- y > 0
@@ -143,7 +145,7 @@ lessr.pmatrix <- function(x, y, alpha) {
 #' @method lessr ciarray
 #' @S3method lessr ciarray
 #' @rdname lessr
-lessr.ciarray <- function(x, relevance=0) {
+lessr.ciarray <- function(x, relevance=0, ...) {
 
   sig <- !(x[,,'lwr'] < 0 & x[,,'upr'] > 0)
   rel <- sig & !(x[,,'lwr'] > -relevance & x[,,'upr'] < relevance)
@@ -168,7 +170,7 @@ lessr.ciarray <- function(x, relevance=0) {
 #' @method lessr ranking
 #' @S3method lessr ranking
 #' @rdname lessr
-lessr.ranking <- function(x) {
+lessr.ranking <- function(x, ...) {
 
   i <- matrix(0, nrow=length(x), ncol=length(x),
               dimnames=list(names(x), names(x)))
@@ -184,7 +186,7 @@ lessr.ranking <- function(x) {
 #' @method lessr matrix
 #' @S3method lessr matrix
 #' @rdname lessr
-lessr.matrix <- function(x) {
+lessr.matrix <- function(x, ...) {
   r <- relation(incidence=x)
 
   cl <- c('lessr', class(r))
@@ -198,12 +200,12 @@ lessr.matrix <- function(x) {
 }
 
 
-print.lessr <- function(x) {
+print.lessr <- function(x, ...) {
   cat('A lessr relation of size ', paste(dim(x), collapse=' x '), '.\n', sep='')
 }
 
 
-print.totallessr <- function(x) {
+print.totallessr <- function(x, ...) {
   cat('A total lessr relation of size ', paste(dim(x), collapse=' x '), '.\n', sep='')
   cat('Equivalence classes:\n')
   print(relation_classes(x))

@@ -9,7 +9,8 @@
 #' an algorithm on a specific position, a bar plot is shown for
 #' each of podium places.
 #'
-#' @param x The object to plot.
+#' @param x The object to plot
+#' @param ... Unused
 #' @export
 beplot <- function(x, ...) {
   UseMethod('beplot')
@@ -17,6 +18,7 @@ beplot <- function(x, ...) {
 
 
 #' @param x A \code{\link{bench}} object
+#' @param col Dot colors
 #' @param xlab A title for the x axis
 #' @param ylab A title for the y axis
 #' @param lines.show Connect dots of same benchmark runs
@@ -37,7 +39,7 @@ beplot.bench <- function(x, col=1:ncol(x),
                          dots.pch=19, dots.cex=1,
                          places.lty=2, places.col=1,
                          legendfn=function(algs, cols){
-                           legend('topleft', algs, lwd=1, col=cols, bg='white')}) {
+                           legend('topleft', algs, lwd=1, col=cols, bg='white')}, ...) {
 
   eval(ylab)
   
@@ -51,6 +53,7 @@ beplot.bench <- function(x, col=1:ncol(x),
 
 
 #' @param x A \code{\link{bench}} object
+#' @param col Dot colors
 #' @param xlab A title for the x axis
 #' @param ylab A title for the y axis
 #' @param lines.show Connect dots of same benchmark runs
@@ -70,14 +73,14 @@ beplot.matrix <- function(x, col=1:ncol(x), xlab='', ylab='',
                           dots.pch=19, dots.cex=1,
                           places.lty=2, places.col=1,
                           legendfn=function(algs, cols){
-                            legend('topleft', algs, lwd=1, col=cols, bg='white')}) {
+                            legend('topleft', algs, lwd=1, col=cols, bg='white')}, ...) {
 
   nalgs <- ncol(x)
   algs <- colnames(x)
 
 
   # Medals table (see table.bench): 
-  ranks <- t(apply(x, 1, as.ranking, ties='random', sorted=FALSE))
+  ranks <- t(apply(x, 1, rank, ties='random'))
   nranks <- apply(ranks, 2, function(y)table(factor(y, levels=1:nalgs)))
 
   # Simple rank based global algorithm order

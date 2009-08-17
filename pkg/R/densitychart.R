@@ -1,7 +1,7 @@
 
 #' @param x An object of class \code{\link{bench}}
+#' @rdname basicplots
 #' @export
-#' @nord
 densitychart <- function(x, ...) {
   UseMethod('densitychart')
 }
@@ -55,6 +55,6 @@ densityplot.bench <- function(x, data=NULL,
 
   d <- melt(x)
   densityplot(~ value | perf * ds, data=d,
-              xlab=xlab, ylab=ylab, groups=alg,
+              xlab=xlab, ylab=ylab, groups='alg',
               plot.points=plot.points, auto.key=auto.key, ...)
 }

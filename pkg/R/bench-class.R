@@ -20,7 +20,7 @@
 #' @return The subset, either as \code{\link{bench}} object (\code{drop=FALSE})
 #'   or as lowest possible object (\code{drop=TRUE})
 #' @method [ bench
-#' @S3method [ bench
+#' @S3method "[" bench
 #' @rdname bench-class
 `[.bench` <- function(x, ..., drop=FALSE) {
   y <- unclass(x)[...,drop=drop]
@@ -181,7 +181,7 @@ as.bench <- function(x, ...) {
 #' @method as.bench matrix
 #' @S3method as.bench matrix
 #' @rdname as.bench
-as.bench.matrix <- function(x, perf='', ds='') {
+as.bench.matrix <- function(x, perf='', ds='', ...) {
   y <- array(dim=c(dim(x), 1, 1),
              dimnames=list(samp=NULL, alg=colnames(x),
                perf=perf, ds=ds))
@@ -201,7 +201,7 @@ as.bench.matrix <- function(x, perf='', ds='') {
 #' @method as.bench array
 #' @S3method as.bench array
 #' @rdname as.bench
-as.bench.array <- function(x) {
+as.bench.array <- function(x, ...) {
   # TODO: verify x
 
   dimnames(x) <- list(samp=NULL, alg=dimnames(x)[[2]],
@@ -222,7 +222,7 @@ as.bench.array <- function(x) {
 #' @method as.bench list
 #' @S3method as.bench list
 #' @rdname as.bench
-as.bench.list <- function(x, perf='') {
+as.bench.list <- function(x, perf='', ...) {
   # HACK: until now only casts list of matrices
   # with equal number of rows.
   
