@@ -20,6 +20,8 @@
 #' @export
 #' @seealso \code{\link{ibea}}, \code{\link{lmer.ibea-class}}
 #' @aliases fr.ibea-class
+#' @usage
+#' ibea <- make.fr.ibea()
 make.fr.ibea <- function() {
 
   if ( !require(coin) )

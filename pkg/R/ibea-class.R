@@ -7,7 +7,7 @@
 #' \describe{
 #'   \item{\code{\link{fr.ibea-class}}}{Friedman-based framework for
 #'     nonparametric analyses}
-#'   \item{code{\link{lmer.ibea-class}}}{"mixed-effects model"-based
+#'   \item{\code{\link{lmer.ibea-class}}}{"mixed-effects model"-based
 #'     framework for parametric analyses}
 #' }
 #'

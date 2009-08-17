@@ -22,6 +22,8 @@
 #' @export
 #' @seealso \code{\link{ibea}}, \code{\link{fr.ibea-class}}
 #' @aliases lmer.ibea-class
+#' @usage
+#' ibea <- make.lmer.ibea()
 make.lmer.ibea <- function() {
 
   if ( !require(lme4) )
