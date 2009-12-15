@@ -1,6 +1,6 @@
 
 
-as.dataset <- function(formula, data, ordered.as.factor = TRUE) {
+as.dataset <- function(formula, data, ordered.as.factor = TRUE, integer.as.numeric = TRUE) {
 
   ### Dataset base:
   ds <- new.env(parent = emptyenv())
@@ -13,6 +13,9 @@ as.dataset <- function(formula, data, ordered.as.factor = TRUE) {
                       function(var) {
                         if ( is.ordered(var) & ordered.as.factor )
                           return('factor')
+
+                        if ( is.integer(var) & integer.as.numeric )
+                          return('numeric')
 
                         class(var)
                     })
@@ -83,14 +86,17 @@ as.dataset <- function(formula, data, ordered.as.factor = TRUE) {
     eval(parse(text = g))
   }
 
-  ds$data <- function(x = NULL) {
+  ds$data <- function(x = NULL, index = NULL) {
     vars <- ds$variables(x)
+
+    if ( is.null(index) )
+      index <- seq(length = nrow(ds$.data))
 
     d <- lapply(vars,
                 function(v)
                 structure(lapply(v,
                                  function(.)
-                                 ds$.data[, ., drop = ('.' %in% x)]),
+                                 ds$.data[index, ., drop = ('.' %in% x)]),
                           names = names(v)))
     return(d)
   }
@@ -101,87 +107,11 @@ as.dataset <- function(formula, data, ordered.as.factor = TRUE) {
 }
 
 
-map <- function(x, y, ...) {
-  UseMethod('map')
+print.dataset <- function(x, ...) {
+  cat('Dataset object:\n')
+  print(x$.formula)
+
+  invisible(x)
 }
 
 
-map.dataset <- function(x, y, verbose = TRUE, ...) {
-  stopifnot(is(y, 'characteristics'))
-
-  traverse.tree <- function(tree, level = NULL) {
-    l <- lapply(names(tree),
-                function(nodename) {
-                  if ( is(tree[[nodename]], 'list') )
-                    return(traverse.tree(tree[[nodename]],
-                                         c(level, nodename)))
-
-                  if ( verbose )
-                    cat(sprintf('map: %s -> %s\n', paste(level, collapse = '.'),
-                                                   nodename))
-
-                  d <- x$data(level)
-
-                  if ( length(d) == 0 )
-                    return(NA)
-
-                  sapply(d, function(x) do.call(tree[[nodename]], unname(x)))
-              })
-
-    structure(l, names = names(tree))
-  }
-
-  structure(traverse.tree(y$map),
-            class = c('mapped.dataset', 'list'))
-}
-
-
-reduce <- function(x, y, ...) {
-  UseMethod('reduce')
-}
-
-
-reduce.mapped.dataset <- function(x, y, verbose = TRUE, ...) {
-  stopifnot(is(y, 'characteristics'))
-
-  traverse.tree <- function(tree, level = NULL) {
-    lapply(names(tree),
-           function(nodename) {
-             if ( is(tree[[nodename]], 'list') )
-               return(traverse.tree(tree[[nodename]],
-                                    c(level, nodename)))
-
-             if ( verbose )
-               cat(sprintf('reduce: %s\n', paste(c(level, nodename), collapse = '.')))
-
-             f <- tree[[nodename]]
-
-             if ( is.function(f) )
-               x[[c(level, nodename)]] <<- f(x[[c(level, nodename)]])
-
-             if ( is.null(f) )
-               x[[c(level, nodename)]] <<- NULL
-
-             if ( is(f, 'p') )
-               x[[c(level, nodename)]] <<- do.call(f$fn,
-                                                   lapply(f$args,
-                                                          function(.) x[[.]]))
-           })
-  }
-
-  traverse.tree(y$reduce)
-
-  structure(x, class = c('reduced.dataset', class(x)))
-}
-
-
-characterize <- function(x, y, ...) {
-  UseMethod('characterize')
-}
-
-
-characterize.dataset <- function(x, y, verbose = FALSE, ...) {
-  stopifnot(is(y, 'characteristics'))
-
-  as.data.frame(reduce(map(x, y, verbose = verbose), y, verbose = verbose))
-}

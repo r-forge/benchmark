@@ -17,6 +17,9 @@ characteristics <- function() {
 }
 
 
+
+### Statlog characteristics:
+
 statlog <- function() {
   library(e1071)
   library(entropy)
@@ -28,14 +31,16 @@ statlog <- function() {
                        attr = ncol,
                        factor = list(attr = ncol,
                                      . = list(nlevels = nlevels,
-                                              entropy = o(na.omit, as.integer, entropy.empirical))),
+                                              entropy = o(na.omit, as.integer,
+                                                          entropy.empirical))),
                        numeric = list(attr = ncol,
                                       mac = mac,
                                       . = list(skewness = o(na.omit, skewness),
                                                kurtosis = o(na.omit, kurtosis))))
 
   ch$map$response <- list(factor = list(. = list(cl = nlevels,
-                                                 entropy = o(na.omit, as.integer, entropy.empirical))))
+                                                 entropy = o(na.omit, as.integer,
+                                                             entropy.empirical))))
 
   ch$map$input2response <- list(numeric2factor = list(fcc = fcc,
                                                       frac1 = frac1),
@@ -45,11 +50,11 @@ statlog <- function() {
   ### Reduce:
   ch$reduce$input <- list(n = identity,
                           attr = identity,
-                          factor = list(attr = identity,
+                          factor = list(attr = na0,
                                         . = list(bin = p(binary, list(c('input', 'factor', '.', 'nlevels'))),
                                                  entropy = identity,
                                                  nlevels = NULL)),
-                          numeric = list(attr = identity,
+                          numeric = list(attr = na0,
                                          mac = mean,
                                          . = list(skewness = mean,
                                                   kurtosis = mean)))
@@ -60,7 +65,8 @@ statlog <- function() {
   ch$reduce$input2response <- list(numeric2factor = list(fcc = identity,
                                                          frac1 = identity),
                                    factor2factor = list(. = list(mi = mean),
-                                                        enattr = p(enattr, list(c('response', 'factor', '.', 'entropy'),
+                                                        enattr = p(enattr, list(c('response',
+                                                                                  'factor', '.', 'entropy'),
                                                                                 c('input2response', 'factor2factor', '.', 'mi'))),
                                                         nsratio = p(nsratio, list(c('input', 'factor', '.', 'entropy'),
                                                                                   c('input2response', 'factor2factor', '.', 'mi')))))
@@ -72,6 +78,10 @@ statlog <- function() {
 
 ### Implementation of needed characteristics:
 
+na0 <- function(x) {
+  ifelse(is.na(x), 0, x)
+}
+
 enc <- function(x) {
   y <- matrix(0, nrow=length(x), ncol=nlevels(x))
   y[cbind(seq(length(x)), as.numeric(x))] <- 1
@@ -80,6 +90,9 @@ enc <- function(x) {
 
 mac <- function(x) {
   x <- as.matrix(x)
+
+  if ( ncol(x) == 1 )
+    return(NA)
 
   drop(sapply(seq(length = ncol(x)),
               function(i)
@@ -107,7 +120,7 @@ mi <- function(x, y) {
 }
 
 binary <- function(x, ...) {
-  sum(x == 2)
+  na0(sum(x == 2))
 }
 
 enattr <- function(x, y, ...) {
