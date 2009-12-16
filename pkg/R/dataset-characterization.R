@@ -85,11 +85,22 @@ characterize.dataset <- function(x, y, verbose = FALSE, index = NULL, ...) {
   d <- as.data.frame(reduce(map(x, y, verbose = verbose, index = index),
                             y, verbose = verbose))
 
-  structure(d, class = c('characterized.dataset', class(d)))
+  structure(d, class = c('characterization.data.frame', class(d)))
 }
 
 
-c.characterized.dataset <- function(...) {
-  structure(rbind(...), class = c('characterized.dataset', class(d)))
+c.characterization.data.frame <- function(...) {
+  structure(rbind(...), class = c('characterization.data.frame', 'data.frame'))
+}
+
+
+print.characterization.data.frame <- function(x, ...) {
+  n <- nrow(x)
+  m <- ncol(x)
+
+  cat('Characterization data frame:\n')
+  cat(sprintf('%s dataset%s by %s characteristic%s\n',
+              n, ifelse(n == 1, '', 's'),
+              m, ifelse(m == 1, '', 's')))
 }
 

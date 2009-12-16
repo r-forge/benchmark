@@ -17,6 +17,35 @@ characteristics <- function() {
 }
 
 
+print.characteristics <- function(x, ...) {
+  cat(sQuote(attr(x, 'name')), 'characteristics')
+}
+
+
+summary.characteristics <- function(object, ...) {
+  traverse.tree <- function(tree, level = NULL) {
+    lapply(names(tree),
+           function(nodename) {
+             class <- class(tree[[nodename]])
+             ws <- paste(rep('  ', length(level)), collapse = '')
+
+             cat(sprintf('%s%s%s%s',
+                         ws,
+                         ifelse(class != 'list', '', ''),
+                         nodename,
+                         ifelse(class == 'list', ':', '')), '\n')
+
+             if ( class == 'list' )
+               return(traverse.tree(tree[[nodename]],
+                                    c(level, nodename)))
+           })
+  }
+
+  cat(sQuote(attr(object, 'name')), 'characteristics:\n\n')
+  invisible(traverse.tree(object$map))
+}
+
+
 
 ### Statlog characteristics:
 
@@ -71,7 +100,8 @@ statlog <- function() {
                                                         nsratio = p(nsratio, list(c('input', 'factor', '.', 'entropy'),
                                                                                   c('input2response', 'factor2factor', '.', 'mi')))))
 
-  structure(ch, class = c('statlog.characteristics', class(ch)))
+  structure(ch, name = 'StatLog',
+            class = c('statlog.characteristics', class(ch)))
 }
 
 

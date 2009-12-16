@@ -2,9 +2,14 @@
 
 as.dataset <- function(formula, data, ordered.as.factor = TRUE, integer.as.numeric = TRUE) {
 
+  call <- match.call()
+
+
   ### Dataset base:
   ds <- new.env(parent = emptyenv())
   ds$.data <- data
+  ds$.dataname <- call$data
+  ds$.call <- call
 
 
   ### Dataset structure:
@@ -109,9 +114,12 @@ as.dataset <- function(formula, data, ordered.as.factor = TRUE, integer.as.numer
 
 print.dataset <- function(x, ...) {
   cat('Dataset object:\n')
+  cat(x$.dataname, '-> ')
   print(x$.formula)
 
   invisible(x)
 }
+
+
 
 

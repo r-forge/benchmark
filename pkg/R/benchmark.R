@@ -3,6 +3,7 @@
 benchmark <- function(formula, data, B, algorithms, performance,
                       data.characterize = TRUE, data.characteristics = statlog()) {
 
+  call <- match.call()
   n <- nrow(data)
 
   L.index <- lapply(1:B, function(.) sample(1:n, replace = TRUE))
@@ -18,8 +19,7 @@ benchmark <- function(formula, data, B, algorithms, performance,
   attr(data, 'terms') <- NULL
 
   nalgs <- length(algorithms)
-  bench <- matrix(NA, ncol = nalgs, nrow = B,
-                  dimnames = list(NULL, names(algorithms)))
+  bench <- matrix(NA, ncol = nalgs, nrow = B)
 
   for ( i in seq(length = B) ) {
     if ( data.characterize )
@@ -36,10 +36,15 @@ benchmark <- function(formula, data, B, algorithms, performance,
   }
 
 
-  if ( data.characterize )
-    return(list(bench = as.bench(bench),
-                dataset = dataset.ch[-1, ]))
+  colnames(bench) <- as.character(call$algorithms)[-1]
+  bench <- as.bench(bench, perf = as.character(call$performance),
+                    ds = as.character(call$data))
 
-  return(as.bench(bench))
+  if ( data.characterize )
+      return(structure(list(bench = bench,
+                            dataset = dataset.ch[-1, ]),
+                       class = 'psychobench'))
+
+  return(bench)
 }
 
