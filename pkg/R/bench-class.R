@@ -7,7 +7,7 @@
 #'
 #' \code{\link{as.bench}} is the constructor function to create an object
 #' of this class.
-#' 
+#'
 #' @name bench-class
 #' @aliases bench
 #' @seealso \code{\link{as.bench}}
@@ -43,7 +43,7 @@ print.bench <- function(x, ...) {
   names(d) <- c('samples', 'algorithms', 'performances', 'data sets')
 
   cat('Benchmark experiment\n\n')
-  print(d)  
+  print(d)
 }
 
 
@@ -56,7 +56,7 @@ summary.bench <- function(object, ...) {
 
   d <- dim(object)
   dn <- dimnames(object)
-  
+
   cat('Benchmark experiment\n\n')
 
   cat('Number of samples:', d[1], '\n\n')
@@ -66,13 +66,13 @@ summary.bench <- function(object, ...) {
   names(a) <- seq_along(a)
   print(a)
   cat('\n')
- 
+
   cat('Performance measures:\n')
   a <- performances(object)
   names(a) <- seq_along(a)
   print(a)
   cat('\n')
-  
+
   cat('Data sets:\n')
   a <- datasets(object)
   names(a) <- seq_along(a)
@@ -129,12 +129,12 @@ nsamples <- function(x) {
 #' @param ... Ignored
 #' @method melt bench
 #' @S3method melt bench
-#' @seealso \code{\link[reshape]{melt.array}}, \code{\link[reshape]{melt}} 
+#' @seealso \code{\link[reshape]{melt.array}}, \code{\link[reshape]{melt}}
 melt.bench <- function(data, na.rm=TRUE, ...) {
 
   if ( na.rm ) {
     nas <- unique(which(is.na(data), arr.ind=TRUE)[,1])
-    
+
     if ( length(nas) > 0 )
       data <- data[-nas,,,]
   }
@@ -142,12 +142,12 @@ melt.bench <- function(data, na.rm=TRUE, ...) {
   df <- melt.array(unclass(data))
   df$samp <- factor(df$samp)
   df$alg <- factor(df$alg, levels=dimnames(data)$alg)
-  
+
   #if ( na.rm ) {
   #  df <- na.omit(df)
   #  df$samp <- df$samp[,drop=TRUE]
   #}
-  
+
   return(df)
 }
 
@@ -187,7 +187,7 @@ as.bench.matrix <- function(x, perf='', ds='', ...) {
                perf=perf, ds=ds))
   y[,,1,1] <- x
 
-  
+
   return(structure(y, class='bench'))
 }
 
@@ -196,7 +196,7 @@ as.bench.matrix <- function(x, perf='', ds='', ...) {
 #'
 #' Converts an array, already in the correct format,
 #' into a \code{\link{bench}} object.
-#' 
+#'
 #' @param x An array (already in correct format)
 #' @method as.bench array
 #' @S3method as.bench array
@@ -206,7 +206,7 @@ as.bench.array <- function(x, ...) {
 
   dimnames(x) <- list(samp=NULL, alg=dimnames(x)[[2]],
                       perf=dimnames(x)[[3]], ds=dimnames(x)[[4]])
-  
+
   return(structure(x, class='bench'))
 }
 
@@ -225,7 +225,7 @@ as.bench.array <- function(x, ...) {
 as.bench.list <- function(x, perf='', ...) {
   # HACK: until now only casts list of matrices
   # with equal number of rows.
-  
+
   y <- array(dim=c(dim(x[[1]]), 1, length(x)),
              dimnames=list(samp=NULL, alg=colnames(x[[1]]),
                perf=perf, ds=names(x)))
@@ -233,6 +233,6 @@ as.bench.list <- function(x, perf='', ...) {
   for ( i in 1:length(x) )
     y[,,,i] <- x[[i]]
 
-  
+
   return(structure(y, class='bench'))
 }
