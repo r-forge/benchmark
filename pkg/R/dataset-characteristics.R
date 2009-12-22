@@ -18,7 +18,7 @@ characteristics <- function() {
 
 
 print.characteristics <- function(x, ...) {
-  cat(sQuote(attr(x, 'name')), 'characteristics')
+  cat(sQuote(attr(x, 'name')), 'characteristics\n')
 }
 
 

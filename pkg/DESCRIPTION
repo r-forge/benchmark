@@ -5,7 +5,7 @@ Version: 0.1
 Date: 2008-08-10
 Author: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
 Maintainer: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
-Depends: graphics, reshape, relations, lattice, Rgraphviz, psychotree
+Depends: graphics, reshape, relations, lattice, Rgraphviz, psychotree, ggplot2
 Suggests: coin, multcomp, lme4
 Description: Benchmark experiment toolbox.
 License: GPL version 2 or newer

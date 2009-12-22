@@ -31,7 +31,8 @@ map.dataset <- function(x, y, verbose = TRUE, index = NULL, ...) {
   }
 
   structure(traverse.tree(y$map),
-            class = c('mapped.dataset', 'list'))
+            class = c('mapped.dataset', 'list'),
+            name = attr(y, 'name'))
 }
 
 
@@ -70,7 +71,8 @@ reduce.mapped.dataset <- function(x, y, verbose = TRUE, ...) {
 
   traverse.tree(y$reduce)
 
-  structure(x, class = c('reduced.dataset', class(x)))
+  structure(x, class = c('reduced.dataset', class(x)),
+            name = attr(y, 'name'))
 }
 
 
@@ -85,44 +87,53 @@ characterize.dataset <- function(x, y, verbose = FALSE, index = NULL, ...) {
   d <- as.data.frame(reduce(map(x, y, verbose = verbose, index = index),
                             y, verbose = verbose))
 
-  structure(d, class = c('characterization.data.frame', class(d)))
+  structure(d, class = c('characterization.frame', class(d)),
+            name = attr(y, 'name'))
 }
 
 
-c.characterization.data.frame <- function(...) {
-  structure(rbind(...), class = c('characterization.data.frame', 'data.frame'))
+c.characterization.frame <- function(...) {
+  structure(rbind(...), class = c('characterization.frame', 'data.frame'))
 }
 
 
-print.characterization.data.frame <- function(x, ...) {
+print.characterization.frame <- function(x, ...) {
   n <- nrow(x)
   m <- ncol(x)
 
-  cat('Characterization data frame:\n')
+  cat('Characterization frame:\n')
   cat(sprintf('%s dataset%s by %s characteristic%s\n',
               n, ifelse(n == 1, '', 's'),
               m, ifelse(m == 1, '', 's')))
 }
 
 
-plot.characterization.data.frame <- function(x, y = NULL, lty = 1, col = 1,
-                                             var.label = TRUE,  ...) {
+scale.characterization.frame <- function(x) {
   rx <- apply(x, 2L, range, na.rm = TRUE)
-  x2 <- apply(x, 2L,
-              function(x) (x - min(x, na.rm = TRUE))/(max(x,
-                                      na.rm = TRUE) - min(x, na.rm = TRUE)))
-  x2[is.na(x)] <- -1
-  x2[
+  sx <- apply(x, 2L,
+              function(x)
+              (x - min(x, na.rm = TRUE)) /
+              (max(x, na.rm = TRUE) - min(x, na.rm = TRUE)))
 
-  matplot(1L:ncol(x), t(x), type = "l", col = col, lty = lty,
-          xlab = "", ylab = "", axes = FALSE, ...)
-  axis(1, at = 1L:ncol(x), labels = colnames(x))
-  for (i in 1L:ncol(x)) {
-    lines(c(i, i), c(0, 1), col = "grey70")
-    if (var.label)
-        text(c(i, i), c(0, 1), labels = format(rx[, i], digits = 3),
-             xpd = NA, offset = 0.3, pos = c(1, 3), cex = 0.7)
-  }
+  sx[is.na(x)] <- -1
 
-  invisible(x)
+  m <- matrix(FALSE, nrow = nrow(x), ncol = ncol(x))
+  m[, apply(rx, 2, function(x) length(unique(x)) == 1)] <- TRUE
+  sx[m] <- 1
+
+  sx
 }
+
+
+plot.characterization.frame <- function(x, y = NULL, ...) {
+  data <- melt(scale(x))
+
+  qplot(X2, value, data = data, group = X1, geom = c('point', 'line')) +
+      facet_grid(X1 ~ .) +
+      scale_y_continuous('') +
+      scale_x_discrete(sprintf('%s Characteristics', attr(x, 'name'))) +
+      theme_update(axis.text.x = theme_text(angle = 90, hjust = 1))
+}
+
+
+
