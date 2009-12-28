@@ -19,7 +19,7 @@ map.dataset <- function(x, y, verbose = TRUE, index = NULL, ...) {
                     cat(sprintf('map: %s -> %s\n', paste(level, collapse = '.'),
                                                    nodename))
 
-                  d <- x$data(level, index = index)
+                  d <- x$dataparts(level, index = index)
 
                   if ( length(d) == 0 )
                     return(NA)

@@ -21,8 +21,8 @@ as.paircomp.relation <- function(x) {
 }
 
 
-as.paircomp.bench <- function(x) {
-  stopifnot(all(dim(x)[c(3, 4)] == 1))
+as.paircomp.becp <- function(x) {
+  stopifnot(all(dim(x)[c(1, 4)] == 1))
 
   x <- x[, , , , drop = TRUE]
   n <- ncol(x)

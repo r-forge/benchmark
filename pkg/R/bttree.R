@@ -21,8 +21,12 @@ btReg2 <- function(type = "loglin", ref = NULL, undecided = NULL, position = NUL
             undecidable <- TRUE
 
         ## call btReg.fit()
-        z <- psychotree:::btReg.fit(y = y, weights = weights, type = type, ref = ref,
-                                    undecided = undecided, position = position)
+        z <- withCallingHandlers(psychotree:::btReg.fit(y = y, weights = weights,
+                                                        type = type, ref = ref,
+                                                        undecided = undecided,
+                                                        position = position),
+                      warning = function(w) {print("warning"); undecidable <<- TRUE})
+
 	z$ModelEnv <- object
 	z$addargs <- list(...)
 
@@ -74,18 +78,25 @@ bttree2.default <- function(formula, data, na.action = na.pass,
 ######################################################################
 
 
-as.bttreedata <- function(...) {
+as.bttreedata <- function(x, ...) {
   UseMethod('as.bttreedata')
 }
 
-as.bttreedata.psychobench <- function(...) {
-  pc <- do.call(c, lapply(lapply(list(...), '[[', 'bench'), as.paircomp))
-  ds <- do.call(rbind, lapply(list(...), '[[', 'dataset'))
+as.bttreedata.bec <- function(x, ...) {
+  stopifnot(!is.null(x$becp))
+  stopifnot(!is.null(x$becc))
 
-  r <- as.data.frame(ds)
-  r$preference <- pc
+  stopifnot(all(dim(x$becp)[c(1, 4)] == 1))
+  stopifnot(dim(x$becc)[1] == 1)
 
-  structure(r, class = c('bttreedata', class(r)))
+  ds <- as.data.frame(x$becc[1, ,])
+  ds$preference <- as.paircomp(x$becp)
+
+  structure(ds, class = c('bttreedata', class(ds)))
 }
 
-
+rbind.bttreedata <- function(...) {
+  x <- rbind.data.frame(...)
+  x$preference <- do.call(c, lapply(list(...), '[[', 'preference'))
+  structure(x, class = c('bttreedata', class(x)))
+}

@@ -14,9 +14,9 @@
 #' @method boxplot becp
 #' @S3method boxplot becp
 #' @rdname basicplots
-boxplot.becp <- function(x, col = ncol(x),
+boxplot.becp <- function(x, col = 1,
                          xlab = 'Candidates', ylab = dimnames(x)$perf[1], ...) {
-  d <- melt(x[,,1,1])
+  d <- melt(x[1, , , 1])
   boxplot(value ~ alg, data = d,
           border = col, ylab = ylab, xlab = xlab,  ...)
 }
@@ -65,7 +65,7 @@ densitychart <- function(x, ...) {
 #' @method densitychart becp
 #' @S3method densitychart becp
 #' @rdname basicplots
-densitychart.becp <- function(x, col = ncol(x),
+densitychart.becp <- function(x, col = 1:ncol(x),
                               xlab = dimnames(x)$perf[1], ylab = 'Density',
                               dargs = list(), ...) {
   d <- dim(x)
@@ -127,7 +127,7 @@ parallel.becp <- function(x, data = NULL,
                           horizontal.axis = FALSE, lines.col = 1,
                           common.scale = TRUE, ...) {
 
-  d <- x[, , 1, 1, drop = TRUE]
+  d <- x[1, , , 1, drop = TRUE]
 
   parallel(d, xlab = xlab, ylab = ylab, horizontal.axis = horizontal.axis,
            col = lines.col, common.scale = common.scale, ...)
@@ -143,9 +143,9 @@ parallel.becp <- function(x, data = NULL,
 #' @method stripchart becp
 #' @S3method stripchart becp
 #' @rdname basicplots
-stripchart.becp <- function(x, col = ncol(x),
+stripchart.becp <- function(x, col = 1,
                             ylab = 'Candidates', xlab = dimnames(x)$perf[1], ...) {
-  d <- melt(x[,,1,1])
+  d <- melt(x[1, , , 1])
   stripchart(value ~ alg, data = d,
              col = col, ylab = ylab, xlab = xlab, ...)
 }

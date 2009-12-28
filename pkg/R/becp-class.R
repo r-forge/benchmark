@@ -63,9 +63,10 @@ summary.becp <- function(object, ...) {
   a <- datasets(object)
   names(a) <- seq_along(a)
   print(a)
+  cat('\n')
 
   cat('Number of samples:\n')
-  print(d[1])
+  print(d[2])
   cat('\n')
 
 
@@ -79,7 +80,6 @@ summary.becp <- function(object, ...) {
   a <- performances(object)
   names(a) <- seq_along(a)
   print(a)
-  cat('\n')
 }
 
 

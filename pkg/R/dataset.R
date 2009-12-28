@@ -8,7 +8,7 @@ as.dataset <- function(formula, data, ordered.as.factor = TRUE, integer.as.numer
   ### Dataset base:
   ds <- new.env(parent = emptyenv())
   ds$.data <- data
-  ds$.dataname <- as.character(call$data)
+  ds$.dataname <- deparse(call$data)
   ds$.call <- call
 
 
@@ -72,14 +72,14 @@ as.dataset <- function(formula, data, ordered.as.factor = TRUE, integer.as.numer
   input.details <- details(input, 'input')
   response.details <- details(response, 'response')
 
-  ds$.structure <- list(list(variables),
+  ds$.structure <- list(list(list(variables)),
                         list(input = input.details,
                              response = response.details,
                              input2response = i2r.details(input.details,
                                                           response.details)))
 
   attributes(formula) <- NULL
-  ds$.formula <- formula
+  ds$.formula <- as.formula(formula)
 
 
   ### Dataset getter:
@@ -91,7 +91,7 @@ as.dataset <- function(formula, data, ordered.as.factor = TRUE, integer.as.numer
     eval(parse(text = g))
   }
 
-  ds$data <- function(x = NULL, index = NULL) {
+  ds$dataparts <- function(x = NULL, index = NULL) {
     vars <- ds$variables(x)
 
     if ( is.null(index) )
@@ -104,6 +104,22 @@ as.dataset <- function(formula, data, ordered.as.factor = TRUE, integer.as.numer
                                  ds$.data[index, ., drop = ('.' %in% x)]),
                           names = names(v)))
     return(d)
+  }
+
+  ds$formula <- function() {
+    ds$.formula
+  }
+
+  ds$input <- function(index = NULL) {
+    ds$dataparts('input', index = index)[[c(1, 1)]]
+  }
+
+  ds$response <- function(index = NULL) {
+    ds$dataparts('response', index = index)[[c(1, 1)]]
+  }
+
+  ds$data <- function(index = NULL) {
+    ds$dataparts(index = index)[[c(1, 1)]]
   }
 
 
