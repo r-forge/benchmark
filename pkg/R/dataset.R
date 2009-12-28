@@ -8,7 +8,7 @@ as.dataset <- function(formula, data, ordered.as.factor = TRUE, integer.as.numer
   ### Dataset base:
   ds <- new.env(parent = emptyenv())
   ds$.data <- data
-  ds$.dataname <- call$data
+  ds$.dataname <- as.character(call$data)
   ds$.call <- call
 
 

@@ -14,14 +14,14 @@ bsplot <- function(x, ...) {
 }
 
 
-#' @param x A \code{\link{bench}} object
+#' @param x A \code{\link{becp}} object
 #' @param stat A matrix with statistics to display (rows are
 #'   the algorithms, columns the data sets)
 #' @param ds.order Data set order
 #' @method bsplot relation_ensemble
 #' @S3method bsplot relation_ensemble
 #' @rdname bsplot
-bsplot.relation_ensemble <- function(x, stat=NULL, ds.order=NULL, ...) {
+bsplot.relation_ensemble <- function(x, stat = NULL, ds.order = NULL, ...) {
   rm <- ranking(x)
 
   if ( !is.null(ds.order) ) {
@@ -33,7 +33,7 @@ bsplot.relation_ensemble <- function(x, stat=NULL, ds.order=NULL, ...) {
 }
 
 
-#' @param x A \code{\link{bench}} object
+#' @param x A \code{\link{becp}} object
 #' @param stat A matrix with statistics to display (rows are
 #'   the algorithms, columns the data sets)
 #' @param col Colors of the algorithms
@@ -44,23 +44,24 @@ bsplot.relation_ensemble <- function(x, stat=NULL, ds.order=NULL, ...) {
 #' @method bsplot matrix
 #' @S3method bsplot matrix
 #' @rdname bsplot
-bsplot.matrix <- function(x, stat=NULL,
-                           col=structure(seq_len(nrow(x))+1, names=rownames(x)),
-                           ylab='Datasets', xlab='Podium', sig.lwd=4,
-                           stat.col=NULL, ...) {
+bsplot.matrix <- function(x, stat = NULL,
+                           col = structure(seq_len(nrow(x)) + 1,
+                           names = rownames(x)),
+                           ylab = 'Datasets', xlab = 'Podium', sig.lwd = 4,
+                           stat.col = NULL, ...) {
 
   griddim <- dim(x)
   nalgs <- griddim[1]
   nds <- griddim[2]
 
   rtable <- apply(x, 2, function(y)names(sort(y)))
- 
-  
+
+
   ### Grid:
   rmargin <- 0.1
   rwidth <- 1
   rheight <- 1 - 2 * rmargin
-  
+
   xleft <- (seq_len(nalgs)-1) * rwidth
   xright <- seq_len(nalgs) * rwidth
   ybottom <- rep(rmargin, nalgs)
@@ -100,7 +101,7 @@ bsplot.matrix <- function(x, stat=NULL,
     sytop <- gytop - 0.1
   }
 
-  
+
   ### Plot:
   plot(1, type='n', xlim=c(0,nalgs), ylim=c(0,nds),
        axes=FALSE, xlab=xlab, ylab=ylab)
@@ -110,19 +111,19 @@ bsplot.matrix <- function(x, stat=NULL,
         at=0.5+(seq_len(nalgs)-1), line=1)
   axis(2, at=0.5+(seq_len(nds)-1), labels=colnames(x))
   box()
-  
+
   rect(gxleft, gybottom, gxright, gytop,
        col=col[as.vector(rtable)], border=NA)
 
   if ( !is.null(stat) )
     rect(sxleft, sybottom, sxright, sytop,
          col=stat.col[as.vector(rtable)], border=NA)
- 
+
   mapply(function(x, yb, yt) {
            lines(rep(x,2), c(yb,yt), lend='butt', lwd=sig.lwd)
          },
          lx, lybottom, lytop)
- 
+
 
   invisible(NULL)
 }

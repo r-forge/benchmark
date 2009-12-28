@@ -23,20 +23,20 @@ bsgraph <- function(x, ...) {
 #' @method bsgraph dist
 #' @S3method bsgraph dist
 #' @rdname bsgraph
-bsgraph.dist <- function(x, ndists.show=length(sort(unique(x))),
-                         edge.col=gray(0.7), edge.lwd=1,
-                         node.fill=NULL, ...) {
+bsgraph.dist <- function(x, ndists.show = length(sort(unique(x))),
+                         edge.col = gray(0.7), edge.lwd = 1,
+                         node.fill = NULL, ...) {
 
   data <- as.matrix(x)
-  
+
   nodes <- colnames(data)
   nnodes <- length(nodes)
-  
+
   dists <- sort(unique(x))
   ndists <- length(dists)
   dshow <- dists[seq_len(ndists.show)]
   ndshow <- length(dshow)
-  
+
   edge.col <- rep(edge.col, ndshow)
   edge.lwd <- rep(edge.lwd, ndshow)
   edge.len <- ceiling((1.2)^(seq_len(ndists)-1))
@@ -68,7 +68,7 @@ bsgraph.dist <- function(x, ndists.show=length(sort(unique(x))),
 
   if ( !is.null(node.fill) )
     nodeAttrs$fillcolor[nodes] <- node.fill
-  
+
   bsgraph(graph, nodeAttrs=nodeAttrs, edgeAttrs=edgeAttrs)
 }
 
@@ -79,7 +79,7 @@ bsgraph.dist <- function(x, ndists.show=length(sort(unique(x))),
 #' @method bsgraph graphNEL
 #' @S3method bsgraph graphNEL
 #' @rdname bsgraph
-bsgraph.graphNEL <- function(x, layoutType='neato', ...) {
+bsgraph.graphNEL <- function(x, layoutType = 'neato', ...) {
 
   agraph <- agopen(x, '', layoutType=layoutType, ...)
   plot(agraph)

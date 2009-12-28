@@ -2,7 +2,7 @@
 
 benchmark <- function(formula, data, algorithms, performance, sampling,
                       data.characterize = TRUE, data.characteristics = statlog(),
-                      verbose = TRUE) {
+                      verbose = TRUE, seed = NULL) {
 
   .msg <- function(x = '', newline = FALSE) {
     if ( verbose )
@@ -14,63 +14,73 @@ benchmark <- function(formula, data, algorithms, performance, sampling,
 
   .msg(deparse(call), newline = TRUE)
 
-  if ( data.characterize ) {
-    dataset <- as.dataset(formula, data)
-    dataset.ch <- characterize(dataset, data.characteristics)
-  }
+  if ( !is.null(seed) )
+    set.seed(seed)
+
 
   data <- model.frame(formula, data = data)
   response <- attr(attributes(data)$terms, 'response')
   attr(data, 'terms') <- NULL
 
   n <- nrow(data)
-
   samples <- sampling(n)
   B <- length(samples$L)
-
   nalgs <- length(algorithms)
-  bench <- matrix(NA, ncol = nalgs, nrow = B)
+
+  becp <- as.becp(NULL,
+                  ds = as.character(call$data),
+                  B = B,
+                  algs = as.character(call$algorithms)[-1],
+                  perf = as.character(call$performance))
+
+  if ( data.characterize ) {
+    dataset <- as.dataset(formula, data)
+    becc <- as.becc(characterize(dataset, data.characteristics), B)
+  }
 
   for ( i in seq(length = B) ) {
-    .msg(sprintf('%s: ', i))
+    .msg('.')
 
-    if ( data.characterize ) {
-      .msg('-')
+    if ( data.characterize )
+      becc[1, i, ] <- characterize(dataset, data.characteristics,
+                                   index = samples$L[[i]])
 
-      dataset.ch <- c(dataset.ch,
-                      characterize(dataset, data.characteristics,
-                                   index = samples$L[[i]]))
-
-    }
 
     for ( j in seq(length = nalgs) ) {
-      .msg('.')
-
       m <- algorithms[[j]](formula, data = data[samples$L[[i]], ])
       p <- predict(m, newdata = data[samples$T[[i]], -response])
 
-      bench[i, j] <- performance(p, data[samples$T[[i]], response])
+      becp[1, i, j, ] <- performance(p, data[samples$T[[i]], response])
     }
-
-    .msg(newline = TRUE)
   }
 
 
-  colnames(bench) <- as.character(call$algorithms)[-1]
-  bench <- as.bench(bench, perf = as.character(call$performance),
-                    ds = as.character(call$data))
+  ret <- structure(list(call = call,
+                        becp = becp),
+                   class = 'bec')
 
   if ( data.characterize )
-      return(structure(list(bench = bench,
-                            dataset = dataset.ch[-1, ]),
-                       class = 'psychobench'))
+    ret$becc <- becc
 
-  return(bench)
+
+  return(ret)
+}
+
+
+print.bec <- function(x, full = TRUE, ...) {
+  cat('Benchmark experiment container\n\n')
+  cat(sprintf('%s%s', deparse(x$call), '\n'))
+  cat('\n')
+
+  if ( full )
+    print(x[-1])
 }
 
 
 
+###
 ### Sampling schemes:
+###
 
 bs.sampling <- function(B) {
   function(n) {

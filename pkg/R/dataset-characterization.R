@@ -76,6 +76,11 @@ reduce.mapped.dataset <- function(x, y, verbose = TRUE, ...) {
 }
 
 
+
+###
+### User interface:
+###
+
 characterize <- function(x, y, ...) {
   UseMethod('characterize')
 }
@@ -84,38 +89,38 @@ characterize <- function(x, y, ...) {
 characterize.dataset <- function(x, y, verbose = FALSE, index = NULL, ...) {
   stopifnot(is(y, 'characteristics'))
 
-  d <- as.data.frame(reduce(map(x, y, verbose = verbose, index = index),
-                            y, verbose = verbose))
+  d <- reduce(map(x, y, verbose = verbose, index = index),
+              y, verbose = verbose)
+  d <- as.matrix(as.data.frame(d))
+  rownames(d) <- x$.dataname
 
-  structure(d, class = c('characterization.frame', class(d)),
+  structure(d, class = c('characterization.matrix', class(d)),
             name = attr(y, 'name'))
 }
 
 
-c.characterization.frame <- function(...) {
-  structure(rbind(...), class = c('characterization.frame', 'data.frame'))
+print.characterization.matrix <- function(x, ...) {
+  d <- dim(x)
+  names(d) <- c('datasets', 'characteristics')
+
+  cat('Dataset characterization matrix\n\n')
+  print(d)
 }
 
 
-print.characterization.frame <- function(x, ...) {
-  n <- nrow(x)
-  m <- ncol(x)
-
-  cat('Characterization frame:\n')
-  cat(sprintf('%s dataset%s by %s characteristic%s\n',
-              n, ifelse(n == 1, '', 's'),
-              m, ifelse(m == 1, '', 's')))
+c.characterization.matrix <- function(...) {
+  structure(rbind(...), class = c('characterization.matrix', 'matrix'))
 }
 
 
-scale.characterization.frame <- function(x) {
+scale.characterization.matrix <- function(x) {
   rx <- apply(x, 2L, range, na.rm = TRUE)
   sx <- apply(x, 2L,
               function(x)
               (x - min(x, na.rm = TRUE)) /
               (max(x, na.rm = TRUE) - min(x, na.rm = TRUE)))
 
-  sx[is.na(x)] <- -1
+  sx[is.na(x)] <- -0.2
 
   m <- matrix(FALSE, nrow = nrow(x), ncol = ncol(x))
   m[, apply(rx, 2, function(x) length(unique(x)) == 1)] <- TRUE
@@ -125,15 +130,36 @@ scale.characterization.frame <- function(x) {
 }
 
 
-plot.characterization.frame <- function(x, y = NULL, ...) {
+plot.characterization.matrix <- function(x, y = NULL, facet = FALSE, colour = !facet,
+                     null.line = TRUE, null.line.col = gray(0.7),
+                     ...) {
   data <- melt(scale(x))
+  data$X1 <- as.factor(data$X1)
 
-  qplot(X2, value, data = data, group = X1, geom = c('point', 'line')) +
-      facet_grid(X1 ~ .) +
-      scale_y_continuous('') +
-      scale_x_discrete(sprintf('%s Characteristics', attr(x, 'name'))) +
-      theme_update(axis.text.x = theme_text(angle = 90, hjust = 1))
+  p <- {
+    if ( colour )
+      ggplot(data, aes(X2, value, group = X1, colour = X1))
+    else
+      ggplot(data, aes(X2, value, group = X1))
+  }
+
+  if ( null.line )
+    p <- p + geom_hline(aes(yintercept = 0), colour = null.line.col)
+
+  p <- p + geom_line()
+  p <- p + geom_point()
+
+  p <- p + scale_y_continuous('', breaks = c(-0.2, seq(0, 1, by = 0.2)),
+                              labels = c('NA', seq(0, 1, by = 0.2))) +
+           scale_x_discrete(sprintf('%s Characteristics', attr(x, 'name'))) +
+           theme_update(axis.text.x = theme_text(angle = 90, hjust = 1))
+
+  if ( facet )
+    p <- p + facet_grid(X1 ~ .)
+
+  if ( colour )
+    p <- p + scale_colour_hue('Datasets')
+
+  p
 }
-
-
 

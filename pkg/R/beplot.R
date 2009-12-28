@@ -17,7 +17,7 @@ beplot <- function(x, ...) {
 }
 
 
-#' @param x A \code{\link{bench}} object
+#' @param x A \code{\link{becp}} object
 #' @param col Dot colors
 #' @param xlab A title for the x axis
 #' @param ylab A title for the y axis
@@ -30,29 +30,31 @@ beplot <- function(x, ...) {
 #' @param places.lty Type of separator line between podium places
 #' @param places.col Color of separator line between podium places
 #' @param legendfn Function which draws a legend
-#' @method beplot bench
-#' @S3method beplot bench
+#' @method beplot becp
+#' @S3method beplot becp
 #' @rdname beplot
-beplot.bench <- function(x, col=1:ncol(x),
-                         xlab='Podium', ylab=dimnames(x)$perf[1],
-                         lines.show=FALSE, lines.alpha=0.2, lines.lwd=1, lines.col=col,
-                         dots.pch=19, dots.cex=1,
-                         places.lty=2, places.col=1,
-                         legendfn=function(algs, cols){
-                           legend('topleft', algs, lwd=1, col=cols, bg='white')}, ...) {
+beplot.becp <- function(x, col = 1:ncol(x),
+                        xlab = 'Podium', ylab = dimnames(x)$perf[1],
+                        lines.show = FALSE, lines.alpha = 0.2,
+                        lines.lwd = 1, lines.col = col,
+                        dots.pch = 19, dots.cex = 1,
+                        places.lty = 2, places.col = 1,
+                        legendfn = function(algs, cols){
+                          legend('topleft', algs, lwd = 1, col = cols, bg = 'white')},
+                        ...) {
 
   eval(ylab)
-  
-  x <- na.omit(x[,,1,1,drop=TRUE])
-  beplot(x, col=col, xlab=xlab, ylab=ylab,
-         lines.show=lines.show, lines.alpha=lines.alpha, lines.lwd=lines.lwd,
-         lines.col=lines.col,
-         dots.pch=dots.pch, dots.cex=dots.cex,
-         places.lty=places.lty, places.col=places.col, legendfn=legendfn)
+
+  x <- na.omit(x[, , 1, 1, drop = TRUE])
+  beplot(x, col = col, xlab = xlab, ylab = ylab,
+         lines.show = lines.show, lines.alpha = lines.alpha, lines.lwd = lines.lwd,
+         lines.col = lines.col,
+         dots.pch = dots.pch, dots.cex = dots.cex,
+         places.lty = places.lty, places.col = places.col, legendfn = legendfn)
 }
 
 
-#' @param x A \code{\link{bench}} object
+#' @param x A \code{\link{becp}} object
 #' @param col Dot colors
 #' @param xlab A title for the x axis
 #' @param ylab A title for the y axis
@@ -68,18 +70,20 @@ beplot.bench <- function(x, col=1:ncol(x),
 #' @method beplot matrix
 #' @S3method beplot matrix
 #' @rdname beplot
-beplot.matrix <- function(x, col=1:ncol(x), xlab='', ylab='',
-                          lines.show=FALSE, lines.alpha=0.2, lines.lwd=1, lines.col=col,
-                          dots.pch=19, dots.cex=1,
-                          places.lty=2, places.col=1,
-                          legendfn=function(algs, cols){
-                            legend('topleft', algs, lwd=1, col=cols, bg='white')}, ...) {
+beplot.matrix <- function(x, col = 1:ncol(x), xlab = '', ylab = '',
+                          lines.show = FALSE, lines.alpha = 0.2,
+                          lines.lwd = 1, lines.col = col,
+                          dots.pch = 19, dots.cex = 1,
+                          places.lty = 2, places.col = 1,
+                          legendfn = function(algs, cols){
+                            legend('topleft', algs, lwd = 1, col = cols, bg = 'white')},
+                          ...) {
 
   nalgs <- ncol(x)
   algs <- colnames(x)
 
 
-  # Medals table (see table.bench): 
+  # Medals table (see table.becp):
   ranks <- t(apply(x, 1, rank, ties='random'))
   nranks <- apply(ranks, 2, function(y)table(factor(y, levels=1:nalgs)))
 
@@ -88,7 +92,7 @@ beplot.matrix <- function(x, col=1:ncol(x), xlab='', ylab='',
   barranks <- rank(colSums(x * (nalgs:1)/nalgs), ties='random')
   barorder <- order(barranks)
 
-  
+
   ### Plot:
   dotplotborders <- (0:nalgs) * nalgs
 
@@ -103,15 +107,15 @@ beplot.matrix <- function(x, col=1:ncol(x), xlab='', ylab='',
                        rgb(r[1], r[2], r[3],
                            alpha=round(255*lines.alpha),
                            maxColorValue=255)
-                     })  
+                     })
 
-  
+
   ## Draw it:
   opar <- par(no.readonly = TRUE)
   layout(matrix(c(1,2), nrow=2, byrow=TRUE), height=c(1,0.4))
   mar <- par('mar')
-  
-  # Figure 1: 
+
+  # Figure 1:
   par(mar=c(0, mar[2], mar[3], mar[4]))
   plot(dotplotborders, rep(max(x), nalgs+1),
        type='n', ylim=range(x), ylab=ylab, xlab='', axes=F)
@@ -128,12 +132,12 @@ beplot.matrix <- function(x, col=1:ncol(x), xlab='', ylab='',
     n <- length(x)
     segments(x[-n], y[-n], x[-1], y[-1], ...)
   }
-  
+
   drawthe <- function(fn, col, ...) {
     for ( i in 1:nrow(x) ) {
       r <- ranks[i,]
       o <- order(r)
-    
+
       performances <- (x[i,])[o]
       places <- (dotplaces[names(r)] + ((r - 1) * nalgs))[o]
 
@@ -143,13 +147,13 @@ beplot.matrix <- function(x, col=1:ncol(x), xlab='', ylab='',
 
   if ( lines.show )
     drawthe(linesegments, linecols, lwd=lines.lwd)
-  
+
   drawthe(points, dotcols,
           pch=dots.pch, cex=dots.cex)
 
   legendfn(names(barranks)[barorder], dotcols[barorder])
 
-  
+
   # Figure 2:
   par(mar=c(mar[1], mar[2], 0, mar[4]))
   barplot(t(nranks[,barorder]), beside=TRUE, width=1,
