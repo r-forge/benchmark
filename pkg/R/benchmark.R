@@ -111,5 +111,34 @@ print.bec <- function(x, full = TRUE, ...) {
 ### Sampling schemes:
 ###
 
-	
+bs.sampling <- function(B) {
+  function(n) {
+    L <- lapply(1:B, function(.) sample(1:n, replace = TRUE))
+
+    list(L = L,
+         T = lapply(L, function(.) setdiff(1:n, .)))
+  }
+}
+
+
+sub.sampling <- function(B, psize) {
+  function(n) {
+    size <- ceiling(n * psize)
+    L <- lapply(1:B, function(.) sample(1:n, size, replace = FALSE))
+
+    list(L = L,
+         T = lapply(L, function(.) setdiff(1:n, .)))
+  }
+}
+
+
+cv.sampling <- function(k) {
+  function(n) {
+    T <- split(sample(1:n), rep(1:k, length = n))
+
+    list(L = lapply(T.index, function(.) setdiff(1:n, .)),
+         T = T)
+  }
+}
+
 
