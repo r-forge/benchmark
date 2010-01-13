@@ -81,7 +81,7 @@ statlog <- function() {
                           attr = identity,
                           factor = list(attr = na0,
                                         . = list(bin = p(binary, list(c('input', 'factor', '.', 'nlevels'))),
-                                                 entropy = identity,
+                                                 entropy = mean,
                                                  nlevels = NULL)),
                           numeric = list(attr = na0,
                                          mac = mean,

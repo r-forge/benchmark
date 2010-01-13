@@ -76,11 +76,6 @@ reduce.mapped.dataset <- function(x, y, verbose = TRUE, ...) {
 }
 
 
-
-###
-### User interface:
-###
-
 characterize <- function(x, y, ...) {
   UseMethod('characterize')
 }
@@ -131,8 +126,8 @@ scale.characterization.matrix <- function(x) {
 
 
 plot.characterization.matrix <- function(x, y = NULL, facet = FALSE, colour = !facet,
-                     null.line = TRUE, null.line.col = gray(0.7),
-                     ...) {
+                                         null.line = TRUE, null.line.col = gray(0.7),
+                                         ...) {
   data <- melt(scale(x))
   data$X1 <- as.factor(data$X1)
 

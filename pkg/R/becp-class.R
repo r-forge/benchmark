@@ -32,6 +32,15 @@
 }
 
 
+c.becp <- function(...) {
+  along <- which(unlist(dimnames(b)) != unlist(dimnames(a)))
+
+  stopifnot(along == 1)
+
+
+}
+
+
 #' @param x An object of class \code{\link{becp}}
 #' @param ... Ignored
 #' @method print becp

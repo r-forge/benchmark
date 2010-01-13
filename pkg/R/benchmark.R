@@ -50,18 +50,20 @@ benchmark <- function(data, algorithms, performances, sampling,
 
   ### The loop:
   for ( m in seq(along = data) ) {
-    .msg(sprintf('data set: %s\n', m))
+    .msg(sprintf('m = %s\n', m))
 
     samples <- sampling(nrow(data[[m]]$data()))
 
     for ( b in seq(length = B) ) {
-      .msg('.')
+      .msg(sprintf('  b = %s\n', b))
 
       if ( data.characterize )
         becc[m, b, ] <- characterize(data[[m]], data.characteristics,
                                      index = samples$L[[b]])
 
       for ( k in seq(along = algorithms) ) {
+        .msg(sprintf('    k = %s\n', k))
+
         fit <- algorithms[[k]](data[[m]]$formula(),
                                data = data[[m]]$data(index = samples$L[[b]]))
 
@@ -69,6 +71,8 @@ benchmark <- function(data, algorithms, performances, sampling,
                         newdata = data[[m]]$input(index = samples$T[[b]]))
 
         for ( p in seq(along = performances ) ) {
+           .msg(sprintf('      p = %s\n', p))
+
             becp[m, b, k, p] <- performances[[p]](pred,
                                                   data[[m]]$response(index =
                                                                      samples$T[[b]])[[1]])
@@ -107,33 +111,5 @@ print.bec <- function(x, full = TRUE, ...) {
 ### Sampling schemes:
 ###
 
-bs.sampling <- function(B) {
-  function(n) {
-    L <- lapply(1:B, function(.) sample(1:n, replace = TRUE))
-
-    list(L = L,
-         T = lapply(L, function(.) setdiff(1:n, .)))
-  }
-}
-
-
-sub.sampling <- function(B, psize) {
-  function(n) {
-    size <- ceiling(n * psize)
-    L <- lapply(1:B, function(.) sample(1:n, size, replace = FALSE))
-
-    list(L = L,
-         T = lapply(L, function(.) setdiff(1:n, .)))
-  }
-}
-
-
-cv.sampling <- function(k) {
-  function(n) {
-    T <- split(sample(1:n), rep(1:k, length = n))
-
-    list(L = lapply(T.index, function(.) setdiff(1:n, .)),
-         T = T)
-  }
-}
+	
 
