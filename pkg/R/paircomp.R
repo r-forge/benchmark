@@ -25,22 +25,23 @@ as.paircomp.becp <- function(x) {
   stopifnot(all(dim(x)[c(1, 4)] == 1))
 
   x <- x[, , , , drop = TRUE]
-  n <- ncol(x)
-  tri <- lower.tri(matrix(nrow = n, ncol = n))
+  x <- rbind(x)
 
-  r <- t(sapply(seq(length = nrow(x)),
-                function(i) {
-                  eq <- t(outer(x[i, ], x[i, ], '=='))[tri]
-                  g <- t(outer(x[i, ], x[i, ], '>'))[tri]
+  comprow <- function(x, tri) {
+      eq <- outer(x, x, '==')[tri]
+      g <- outer(x, x, '>')[tri]
 
-                  r <- as.numeric(!eq)
-                  r[!eq & g] <- 1
-                  r[!eq & !g] <- -1
-                  r
-                }))
+      r <- as.numeric(!eq)
+      r[!eq & g] <- 1
+      r[!eq & !g] <- -1
 
-  if ( nrow(r) != nrow(x) )
-    r <- t(r)
+      r
+  }
+
+  tri <- upper.tri(matrix(nrow = ncol(x),
+                          ncol = ncol(x)))
+
+  r <- t(apply(x, 1, comprow, tri))
 
   paircomp(r, labels = colnames(x), mscale = c(-1, 0, 1))
 }
