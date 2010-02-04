@@ -127,7 +127,7 @@ scale.characterization.matrix <- function(x) {
 
 plot.characterization.matrix <- function(x, y = NULL, facet = FALSE, colour = !facet,
                                          null.line = TRUE, null.line.col = gray(0.7),
-                                         ...) {
+                                         lines = TRUE, points = TRUE, ...) {
   data <- melt(scale(x))
   data$X1 <- as.factor(data$X1)
 
@@ -141,8 +141,11 @@ plot.characterization.matrix <- function(x, y = NULL, facet = FALSE, colour = !f
   if ( null.line )
     p <- p + geom_hline(aes(yintercept = 0), colour = null.line.col)
 
-  p <- p + geom_line()
-  p <- p + geom_point()
+  if ( lines )
+    p <- p + geom_line()
+
+  if ( points )
+    p <- p + geom_point()
 
   p <- p + scale_y_continuous('', breaks = c(-0.2, seq(0, 1, by = 0.2)),
                               labels = c('NA', seq(0, 1, by = 0.2))) +

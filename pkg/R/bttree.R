@@ -2,6 +2,8 @@
 
 ### psychotree changes: ##############################################
 
+
+
 btReg2 <- function(type = "loglin", ref = NULL, undecided = NULL, position = NULL) {
   new("StatModel",
     #capabilities = new("StatModelCapabilities"),
@@ -10,30 +12,38 @@ btReg2 <- function(type = "loglin", ref = NULL, undecided = NULL, position = NUL
     dpp = ModelEnvFormula,
     fit = function(object, weights = NULL, ...){
 
+        save(object, weights, ref, undecided, position,
+             file = 'btReg2-backup.RData')
+
         ## extract response (there are no regressors)
         y <- object@get("response")[[1]]
 
-        print('---fit---')
-        undecidable <- FALSE
+        #print('---fit---')
+        #undecidable <- FALSE
 
-        if ( !is.null(weights) )
-          if ( length(table(y[weights == 1])) < length(labels(y)) )
-            undecidable <- TRUE
+        #if ( !is.null(weights) )
+        #  if ( length(table(y[weights == 1])) < length(labels(y)) )
+        #    undecidable <- TRUE
 
         ## call btReg.fit()
-        z <- withCallingHandlers(psychotree:::btReg.fit(y = y, weights = weights,
-                                                        type = type, ref = ref,
-                                                        undecided = undecided,
-                                                        position = position),
-                      warning = function(w) {print("warning"); undecidable <<- TRUE})
+        #z <- withCallingHandlers(psychotree:::btReg.fit(y = y, weights = weights,
+        #                                                type = type, ref = ref,
+        #                                                undecided = undecided,
+        #                                                position = position),
+        #              warning = function(w) {print("warning"); undecidable <<- TRUE})
+        tryCatch(
+        z <- btReg.fit(y = y, weights = weights, type = type,
+                       ref = ref, undecided = undecided, position = position),
+                 error = function(e) save.image(file = sprintf('btReg-Error-%s.RData',
+                                                as.integer(Sys.time()))))
 
 	z$ModelEnv <- object
 	z$addargs <- list(...)
 
         class(z) <- c('btReg2', class(z))
 
-        if ( undecidable )
-          class(z) <- c('try-error', class(z))
+        #if ( undecidable )
+        #  class(z) <- c('try-error', class(z))
 
         z
     }
@@ -100,3 +110,6 @@ rbind.bttreedata <- function(...) {
   x$preference <- do.call(c, lapply(list(...), '[[', 'preference'))
   structure(x, class = c('bttreedata', class(x)))
 }
+
+
+

@@ -1,7 +1,8 @@
 
 
-benchmark <- function(data, algorithms, performances, sampling,
+benchmark <- function(data, sampling,
                       data.characterize = TRUE, data.characteristics = statlog(),
+                      algorithms.test = TRUE, algorithms = NULL, performances = NULL,
                       verbose = TRUE, seed = NULL) {
 
   .msg <- function(x = '', newline = FALSE) {
@@ -37,11 +38,12 @@ benchmark <- function(data, algorithms, performances, sampling,
 
 
   ### Benchmark experiment containers:
-  becp <- as.becp(NULL,
-                  ds = .args(call$data),
-                  B = B,
-                  algs = .args(call$algorithms),
-                  perf = .args(call$performances))
+  if ( algorithms.test )
+    becp <- as.becp(NULL,
+                    ds = .args(call$data),
+                    B = B,
+                    algs = .args(call$algorithms),
+                    perf = .args(call$performances))
 
   if ( data.characterize )
     becc <- as.becc(do.call(c, lapply(data, characterize,
@@ -61,21 +63,23 @@ benchmark <- function(data, algorithms, performances, sampling,
         becc[m, b, ] <- characterize(data[[m]], data.characteristics,
                                      index = samples$L[[b]])
 
-      for ( k in seq(along = algorithms) ) {
-        .msg(sprintf('    k = %s\n', k))
+      if ( algorithms.test ) {
+        for ( k in seq(along = algorithms) ) {
+          .msg(sprintf('    k = %s\n', k))
 
-        fit <- algorithms[[k]](data[[m]]$formula(),
-                               data = data[[m]]$data(index = samples$L[[b]]))
+          fit <- algorithms[[k]](data[[m]]$formula(),
+                                 data = data[[m]]$data(index = samples$L[[b]]))
 
-        pred <- predict(fit,
-                        newdata = data[[m]]$input(index = samples$T[[b]]))
+          pred <- predict(fit,
+                          newdata = data[[m]]$input(index = samples$T[[b]]))
 
-        for ( p in seq(along = performances ) ) {
-           .msg(sprintf('      p = %s\n', p))
+          for ( p in seq(along = performances ) ) {
+             .msg(sprintf('      p = %s\n', p))
 
-            becp[m, b, k, p] <- performances[[p]](pred,
-                                                  data[[m]]$response(index =
-                                                                     samples$T[[b]])[[1]])
+              becp[m, b, k, p] <- performances[[p]](pred,
+                                                    data[[m]]$response(index =
+                                                                       samples$T[[b]])[[1]])
+          }
         }
       }
     }
@@ -84,9 +88,10 @@ benchmark <- function(data, algorithms, performances, sampling,
   }
 
 
-  ret <- structure(list(call = call,
-                        becp = becp),
-                   class = 'bec')
+  ret <- structure(list(call = call), class = 'bec')
+
+  if ( algorithms.test )
+    ret$becp <- becp
 
   if ( data.characterize )
     ret$becc <- becc

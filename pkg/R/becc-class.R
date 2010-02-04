@@ -24,21 +24,22 @@ print.becc <- function(x, ...) {
 }
 
 
-plot.becc <- function(x, ds = 1, highlight = TRUE, highlight.col = 'red', ...) {
+plot.becc <- function(x, ds = 1, highlight = TRUE, highlight.col = 'red', 
+                      highlight.alpha = 1, ...) {
   data <- x[ds, , ]
   data <- rbind(data, attr(x, 'base'))
   data <- structure(data,
                     class = c('characterization.matrix', 'matrix'),
                     dimnames = list(NULL, colnames(data)))
 
-  p <- plot(data, colour = FALSE)
+  p <- plot(data, colour = FALSE, ...)
 
   if ( highlight ) {
     msdata <- melt(scale(data))
     p <- p + geom_line(data = subset(msdata, subset = (X1 == nrow(data))),
-                       colour = 'red')
+                       colour = highlight.col, alpha = highlight.alpha)
     p <- p + geom_point(data = subset(msdata, subset = (X1 == nrow(data))),
-                       colour = 'red')
+                       colour = highlight.col, alpha = highlight.alpha)
   }
 
   p
