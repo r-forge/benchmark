@@ -1,6 +1,7 @@
 
 library(proto)
 library(reshape)
+library(ggplot2)
 
 be <- BenchmarkExperiment(sprintf("ds%s", 1:4), 5,
                           algorithms = sprintf("alg%s", 1:3),
@@ -25,7 +26,7 @@ bewh$viewAlgorithmPerformance(datasets = "ds1")
 load("uci621raw.RData")
 
 
-u <- bewarehouse("monks3", 250,
+u <- bewarehouse(c("monks3", "BreastCancer"), 250,
                  algorithms = c("lda", "rf", "knn", "rpart", "svm", "nnet"),
                  performances = c("Misclassification", "Time"))
 
@@ -39,16 +40,51 @@ u$data$BreastCancer$AlgorithmPerformance <- tmp
 
 
 
-
 dat <- u$viewAlgorithmPerformance()
 
 boxplot(dat)
-boxplot(subset(dat, datasets = "BreastCancer"))
+boxplot(subset(dat,
+               datasets = "BreastCancer"))
 
 densityplot(dat)
-densityplot(subset(dat, datasets = "monks3", performances = "Misclassification"))
+densityplot(subset(dat,
+                   datasets = "monks3",
+                   performances = "Misclassification"))
 
 stripchart(dat)
-stripchart(subset(dat, datasets = "monks3", performances = "Misclassification"))
-pcplot(subset(dat, datasets = "monks3", performances = "Misclassification"))
+stripchart(subset(dat,
+                  datasets = "monks3",
+                  performances = "Misclassification"))
+
+pcplot(subset(dat,
+              datasets = "monks3",
+              performances = "Misclassification"))
+
+
+
+a <- friedman.ibea(subset(dat,
+                     datasets = "monks3",
+                     performances = "Misclassification"))
+a$globalTest()
+a$pairwiseTest()
+
+globalTest(a)
+pairwiseTest(a)
+
+
+b <- lmer.ibea(subset(dat,
+                      datasets = "monks3",
+                      performances = "Misclassification"))
+b$model
+b$pairwiseTest()
+b$globalTest()
+
+globalTest(b)
+plot(pairwiseTest(b))
+
+paircomp.test
+paircomp.point
+
+preference.point(
+preference.test(
 

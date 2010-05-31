@@ -1,3 +1,7 @@
+# TODO: algorithms.orderby = mean, median, etc.
+# TODO: strip text by facet for one
+# TODO: show sample dependencies
+
 
 
 boxplot.AlgorithmPerformance <- function(x, ...) {

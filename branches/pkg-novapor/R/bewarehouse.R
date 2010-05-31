@@ -44,7 +44,7 @@ setViewAlgorithmPerformance <- function(object) {
                                               datasets = NULL,
                                               algorithms = NULL,
                                               performances = NULL) {
-    
+
     if ( is.null(datasets) )
       datasets <- .$meta$datasets
 
@@ -53,7 +53,7 @@ setViewAlgorithmPerformance <- function(object) {
 
     if ( is.null(performances) )
       performances <- .$meta$performances
-    
+
 
     view <- lapply(.$data[datasets],
                    function(ds)
@@ -65,10 +65,11 @@ setViewAlgorithmPerformance <- function(object) {
 
     view <- melt(view)
     view$datasets <- as.factor(view$datasets)
+    view$samples <- as.factor(view$samples)
 
     view <- view[, c("samples", "datasets", "algorithms", "performances", "value")]
 
-    
+
     structure(view, class = c("AlgorithmPerformance", class(view)))
   }
 
