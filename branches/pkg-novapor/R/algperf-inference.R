@@ -112,3 +112,7 @@ lmer.ibea <- function(x) {
 
   as.ibea(LmerIbea$proto(data = x, model = model))
 }
+
+
+
+

@@ -61,6 +61,9 @@ pcplot(subset(dat,
               performances = "Misclassification"))
 
 
+dat1 <- subset(dat,
+               datasets = "monks3",
+               performances = "Misclassification")
 
 a <- friedman.ibea(subset(dat,
                      datasets = "monks3",
@@ -68,8 +71,10 @@ a <- friedman.ibea(subset(dat,
 a$globalTest()
 a$pairwiseTest()
 
-globalTest(a)
-pairwiseTest(a)
+ga <- globalTest(a)
+pa <- pairwiseTest(a)
+
+
 
 
 b <- lmer.ibea(subset(dat,
@@ -81,10 +86,48 @@ b$globalTest()
 
 globalTest(b)
 plot(pairwiseTest(b))
+pb <- pairwiseTest(b)
 
-paircomp.test
-paircomp.point
 
-preference.point(
-preference.test(
+
+
+
+sapply(pe, function(a) sapply(pe, function(b) a - b))
+
+
+
+
+engine <- FriedmanTestPaircomp$new(dat1, "<", 0.05)
+engine$decision()
+
+engine <- FriedmanTestPaircomp$new(dat1, "=", 0.05)
+engine$decision()
+
+engine <- GenericPointPaircomp$new(dat1, "=", "mean", tolerance = 0.001)
+engine$decision()
+
+engine <- LmerTestPaircomp$new(dat1, "<", 0.05, relevance = 0.01)
+engine$decision()
+
+engine <- LmerTestPaircomp$new(dat1, "=", 0.05)
+engine$decision()
+
+engine <- PercintTestPaircomp$new(dat1, "=", 0.2)
+engine$globalTest()
+engine$pairwiseTest()
+engine$desicion()
+
+engine <- PercintTestPaircomp$new(dat1, "<", 0.49)
+engine$desicion()
+
+plot(engine$ci)
+
+
+ci <- t(sapply(split(dat1$value, dat1$algorithms), pci, 0.05))
+
+which.min(ci[, 'lwr'])
+which.max(ci[, 'upr'])
+
+overlap(ci[which.min(ci[, 'lwr']), ],
+        ci[which.max(ci[, 'upr']), ])
 
