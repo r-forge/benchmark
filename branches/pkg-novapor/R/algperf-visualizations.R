@@ -1,7 +1,8 @@
 # * DONE algorithms.orderby = mean, median, etc.
 # * TODO strip text by facet for one (change facet_strip, Hadley?)
 # * DONE show sample dependencies
-# * DONE color by algorithms not places
+# * TODO color by algorithms not places
+# * TODO benchplot in ggplot2 style?
 
 
 
@@ -10,9 +11,9 @@ boxplot.AlgorithmPerformance <- function(x, order.by = NULL,
                                          dependence.col = alpha("black", 0.1), ...) {
 
   dependence.show <- match.arg(dependence.show)
-  
+
   x <- order.algorithms.by(x, order.by)
-  
+
   p <- ggplot(x, aes(algorithms, value))
   p <- p + facet_grid(performances ~ datasets, scales = "free")
 
@@ -26,10 +27,10 @@ boxplot.AlgorithmPerformance <- function(x, order.by = NULL,
 
     p <- p + geom_line(aes(group = samples), data = ox, colour = dependence.col)
   }
-  
+
   p <- p + geom_boxplot(aes(fill = algorithms)) +
     scale_fill_manual(values = attr(x, "algorithm_colors"))
-  
+
   p
 }
 
@@ -53,11 +54,11 @@ densityplot.AlgorithmPerformance <- function(x, ...) {
 stripchart.AlgorithmPerformance <- function(x, order.by = NULL,
                                             dependence.show = c("none", "all"),
                                             dependence.col = alpha("black", 0.1), ...) {
-  
+
   dependence.show <- match.arg(dependence.show)
-  
+
   x <- order.algorithms.by(x, order.by)
-  
+
   p <- ggplot(x, aes(x = algorithms, y = value, colour = algorithms))
   p <- p + facet_grid(performances ~ datasets, scales = "free")
 
@@ -81,10 +82,10 @@ order.algorithms.by <- function(x, order.by) {
   order.by <- match.fun(order.by)
 
   x <- na.omit(x)
-  
+
   o <- order(sapply(split(x$value, x$algorithms), order.by))
   l <- levels(x$algorithms)
-  
+
   x$algorithms <- factor(x$algorithms,
                          ordered = TRUE,
                          levels = l[o])
@@ -95,7 +96,7 @@ order.algorithms.by <- function(x, order.by) {
 
 
 which.outlier <- function(x) {
-  # Based on base:::boxplot.stats  
+  # Based on base:::boxplot.stats
   coef <- 1.5
   nna <- !is.na(x)
   n <- sum(nna)

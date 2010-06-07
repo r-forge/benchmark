@@ -7,7 +7,7 @@ library(relations)
 sapply(list.files("../R", pattern = ".R", full.names = TRUE), source)
 
 
-### Warehouse: 
+### Warehouse:
 
 bewh <- warehouse(c("ds1", "ds2"), 4,
                   algorithms = c("alg1", "alg2"),
@@ -65,9 +65,9 @@ stripchart(subset(dat,
                   datasets = "BreastCancer",
                   performances = "Misclassification"), order.by = mean)
 
-pcplot(subset(dat,
-              datasets = "monks3",
-              performances = "Misclassification"))
+
+
+
 
 
 ### Inference:
@@ -112,13 +112,14 @@ d3 <- paircomp(dat1, family = GenericPointPaircomp, type = "<", estimator = "mea
 
 ### Preference relations: ############################################
 
-library(relations)
-
 r1 <- as.relation(d1)
 relation_classes(r1)
 as.ranking(r1)
 
 r2 <- as.relation(d2)
+r2
+plot(r2)
+
 relation_class_ids(r2)
 relation_classes(r2)
 as.ranking(r2)

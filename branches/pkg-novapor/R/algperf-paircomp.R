@@ -123,7 +123,7 @@ LeFriedmanTestPaircomp <- proto(FriedmanTestPaircomp, expr = {
       for ( p in sigpairs )
         result[p[1], p[2]] <- 1
     }
-    
+
     PaircompDecision(result, "<", list(globaltest = gt, pairwisetest = pt))
   }
 })
@@ -140,7 +140,7 @@ EqFriedmanTestPaircomp <- proto(FriedmanTestPaircomp, expr = {
       pt <- .$pairwiseTest()
 
       pval <- pvalue(pt, method = "single-step")
-      
+
       desc <- pval > .$significance
       sigpairs <- strsplit(rownames(desc)[desc], ' - ')
 
@@ -185,13 +185,18 @@ LmerTestPaircomp <- proto(TestPaircomp, expr = {
   }
 
   globalTest <- function(.) {
-    # glht(.$model, linfct = c("algorithms = 0"))
-    # TODO: ask Fabian
-    -Inf
+    K <- diag(length(fixef(.$model)))[-1,]
+    rownames(K) <- names(fixef(.$model))[-1]
+
+    glht(.$model, linfct = K)
   }
 
   pairwiseTest <- function(.) {
     glht(.$model, linfct = mcp(algorithms = "Tukey"))
+  }
+
+  globalTest.pvalue <- function(., test) {
+    as.numeric(summary(test, test = Chisqtest())$test$pvalue)
   }
 })
 
@@ -203,7 +208,7 @@ LeLmerTestPaircomp <- proto(LmerTestPaircomp, expr = {
     gt <- .$globalTest()
     pt <- NULL
 
-    if ( gt < .$significance ) {
+    if ( .$globalTest.pvalue(gt) < .$significance ) {
       pt <- .$pairwiseTest()
 
       ci <- confint(pt, level = 1 - .$significance)$confint
@@ -215,7 +220,7 @@ LeLmerTestPaircomp <- proto(LmerTestPaircomp, expr = {
       sigpairs <- strsplit(rownames(ci)[desc], ' - ')
       sigpairs[sigdirs == 1] <- lapply(sigpairs[sigdirs == 1], rev)
 
-      for ( p in sigpairs ) 
+      for ( p in sigpairs )
         result[p[1], p[2]] <- 1
     }
 
@@ -233,7 +238,7 @@ EqLmerTestPaircomp <- proto(LmerTestPaircomp, expr = {
     gt <- .$globalTest()
     pt <- NULL
 
-    if ( gt < .$significance ) {
+    if ( .$globalTest.pvalue(gt) < .$significance ) {
       pt <- .$pairwiseTest()
 
       ci <- confint(pt, level = 1 - .$significance)$confint
@@ -322,7 +327,7 @@ LePercintTestPaircomp <- proto(PercintTestPaircomp, expr = {
       pt <- .$pairwiseTest()
 
       desc <- pt != TRUE
-      
+
       sigpairs <- strsplit(rownames(desc)[desc], ' - ')
 
       # TODO: direction
