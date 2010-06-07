@@ -1,10 +1,10 @@
 
 
-bewarehouse <- function(datasets, B,
-                        algorithms = NULL,
-                        performances = NULL,
-                        characteristics = NULL,
-                        results = NULL) {
+warehouse <- function(datasets, B,
+                      algorithms = NULL,
+                      performances = NULL,
+                      characteristics = NULL,
+                      results = NULL) {
 
   if ( length(datasets) != length(B) )
     B <- rep(B, length(datasets))
@@ -26,12 +26,13 @@ bewarehouse <- function(datasets, B,
                  algorithms = algorithms,
                  performances = performances,
                  characteristics = characteristics,
-                 results = results)
+                 results = results,
+                 algorithm_colors = default_algorithm_colors(algorithms))
 
   setViewAlgorithmPerformance(a)
 
 
-  structure(a, class = c("bewarehouse", class(a)))
+  structure(a, class = c("warehouse", class(a)))
 }
 
 
@@ -70,7 +71,8 @@ setViewAlgorithmPerformance <- function(object) {
     view <- view[, c("samples", "datasets", "algorithms", "performances", "value")]
 
 
-    structure(view, class = c("AlgorithmPerformance", class(view)))
+    structure(view, class = c("AlgorithmPerformance", class(view)),
+              algorithm_colors = .$meta$algorithm_colors)
   }
 
   invisible()
@@ -80,7 +82,7 @@ setViewAlgorithmPerformance <- function(object) {
 
 ### Internal data structures: ########################################
 
-BeWarehouseArray <- function(B, ..., class) {
+WarehouseArray <- function(B, ..., class) {
   d <- list(...)
 
   dim <- c(B, sapply(d, length))
@@ -94,22 +96,22 @@ BeWarehouseArray <- function(B, ..., class) {
 
 
 AlgorithmPerformanceArray <- function(B, algorithms, performances) {
-  BeWarehouseArray(B, algorithms = algorithms, performances = performances,
-                   class = "AlgorithmPerformanceArray")
+  WarehouseArray(B, algorithms = algorithms, performances = performances,
+                 class = "AlgorithmPerformanceArray")
 }
 
 
 
 DatasetCharacterizationArray <- function(B, characteristics) {
-  BeWarehouseArray(B, characteristics = characteristics,
-                   class = "DatasetCharacterizationArray")
+  WarehouseArray(B, characteristics = characteristics,
+                 class = "DatasetCharacterizationArray")
 }
 
 
 
 TestResultArray <- function(B, results) {
-  BeWarehouseArray(B, results = results,
-                   class = "TestResultArray")
+  WarehouseArray(B, results = results,
+                 class = "TestResultArray")
 }
 
 
@@ -123,7 +125,8 @@ DatasetList <- function(dataset, B,
   a <- list()
 
   if ( !is.null(algorithms) & !is.null(performances) )
-    a$AlgorithmPerformance <- AlgorithmPerformanceArray(B, algorithms, performances)
+    a$AlgorithmPerformance <- AlgorithmPerformanceArray(B, algorithms,
+                                                        performances)
 
   if ( !is.null(characteristics) )
     a$DatasetCharacterization <- DatasetCharacterizationArray(B, characteristics)
@@ -136,5 +139,29 @@ DatasetList <- function(dataset, B,
             dataset = dataset)
 }
 
+
+
+### Internal functions: ##############################################
+
+default_algorithm_colors <- function(algorithms) {
+  # Based on ggplot2:::ScaleHue
+  h <- c(0, 360) + 15
+  l <- 65
+  c <- 100
+
+  start <- 1
+  direction <- -1
+
+  rotate <- function(x) (x + start) %% 360 * direction
+
+  n <- length(algorithms)
+  if ( (diff(h) %% 360) < 1 ) {
+    h[2] <- h[2] - 360 / n
+  }
+
+  structure(grDevices::hcl(h = rotate(seq(h[1], h[2], length = n)), 
+                           c = c, l = l),
+            names = algorithms)
+}
 
 

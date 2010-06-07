@@ -1,5 +1,4 @@
 
-
 subset.AlgorithmPerformance <- function(x, datasets = NULL,
                                         algorithms = NULL,
                                         performances = NULL) {

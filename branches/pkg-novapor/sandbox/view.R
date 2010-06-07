@@ -2,19 +2,17 @@
 library(proto)
 library(reshape)
 library(ggplot2)
+library(relations)
 
-be <- BenchmarkExperiment(sprintf("ds%s", 1:4), 5,
-                          algorithms = sprintf("alg%s", 1:3),
-                          performances = sprintf("perf%s", 1:3))
-
-with(be, debug(viewAlgorithmPerformance))
+sapply(list.files("../R", pattern = ".R", full.names = TRUE), source)
 
 
+### Warehouse: 
 
-bewh <- bewarehouse(c("ds1", "ds2"), 4,
-                    algorithms = c("alg1", "alg2"),
-                    performances = c("perf1"),
-                    characteristics = c("char1"))
+bewh <- warehouse(c("ds1", "ds2"), 4,
+                  algorithms = c("alg1", "alg2"),
+                  performances = c("perf1"),
+                  characteristics = c("char1"))
 
 bewh$viewAlgorithmPerformance()
 bewh$viewAlgorithmPerformance(datasets = "ds1")
@@ -26,9 +24,9 @@ bewh$viewAlgorithmPerformance(datasets = "ds1")
 load("uci621raw.RData")
 
 
-u <- bewarehouse(c("monks3", "BreastCancer"), 250,
-                 algorithms = c("lda", "rf", "knn", "rpart", "svm", "nnet"),
-                 performances = c("Misclassification", "Time"))
+u <- warehouse(c("monks3", "BreastCancer"), 250,
+               algorithms = c("lda", "rf", "knn", "rpart", "svm", "nnet"),
+               performances = c("Misclassification", "Time"))
 
 tmp <- uci621raw[, , , "monks3"]
 names(dimnames(tmp)) <- c("samples", "algorithms", "performances")
@@ -39,12 +37,18 @@ names(dimnames(tmp)) <- c("samples", "algorithms", "performances")
 u$data$BreastCancer$AlgorithmPerformance <- tmp
 
 
-
 dat <- u$viewAlgorithmPerformance()
+
+
+### Visualization:
 
 boxplot(dat)
 boxplot(subset(dat,
-               datasets = "BreastCancer"))
+               datasets = "monks3",
+               performances = "Misclassification"),
+        dependence.show = "outliers",
+        order.by = min)
+
 
 densityplot(dat)
 densityplot(subset(dat,
@@ -53,49 +57,24 @@ densityplot(subset(dat,
 
 stripchart(dat)
 stripchart(subset(dat,
-                  datasets = "monks3",
-                  performances = "Misclassification"))
+                  datasets = "BreastCancer",
+                  performances = "Misclassification"),
+           dependence.show = "all",
+           order.by = function(x) 1/max(x))
+stripchart(subset(dat,
+                  datasets = "BreastCancer",
+                  performances = "Misclassification"), order.by = mean)
 
 pcplot(subset(dat,
               datasets = "monks3",
               performances = "Misclassification"))
 
 
+### Inference:
+
 dat1 <- subset(dat,
                datasets = "monks3",
                performances = "Misclassification")
-
-a <- friedman.ibea(subset(dat,
-                     datasets = "monks3",
-                     performances = "Misclassification"))
-a$globalTest()
-a$pairwiseTest()
-
-ga <- globalTest(a)
-pa <- pairwiseTest(a)
-
-
-
-
-b <- lmer.ibea(subset(dat,
-                      datasets = "monks3",
-                      performances = "Misclassification"))
-b$model
-b$pairwiseTest()
-b$globalTest()
-
-globalTest(b)
-plot(pairwiseTest(b))
-pb <- pairwiseTest(b)
-
-
-
-
-
-sapply(pe, function(a) sapply(pe, function(b) a - b))
-
-
-
 
 engine <- FriedmanTestPaircomp$new(dat1, "<", 0.05)
 engine$decision()
@@ -103,7 +82,7 @@ engine$decision()
 engine <- FriedmanTestPaircomp$new(dat1, "=", 0.05)
 engine$decision()
 
-engine <- GenericPointPaircomp$new(dat1, "=", "mean", tolerance = 0.001)
+engine <- GenericPointPaircomp$new(dat1, "<", "mean", tolerance = 0.001)
 engine$decision()
 
 engine <- LmerTestPaircomp$new(dat1, "<", 0.05, relevance = 0.01)
@@ -123,11 +102,39 @@ engine$desicion()
 plot(engine$ci)
 
 
-ci <- t(sapply(split(dat1$value, dat1$algorithms), pci, 0.05))
+## User interface:
+d1 <- paircomp(dat1, family = FriedmanTestPaircomp, type = "=", significance = 0.05)
+d2 <- paircomp(dat1, family = LmerTestPaircomp, type = "<", significance = 0.05)
+d2b <- paircomp(dat1, family = LmerTestPaircomp, type = "<", significance = 0.05, relevance = 0.01)
+d3 <- paircomp(dat1, family = GenericPointPaircomp, type = "<", estimator = "mean")
 
-which.min(ci[, 'lwr'])
-which.max(ci[, 'upr'])
 
-overlap(ci[which.min(ci[, 'lwr']), ],
-        ci[which.max(ci[, 'upr']), ])
 
+### Preference relations: ############################################
+
+library(relations)
+
+r1 <- as.relation(d1)
+relation_classes(r1)
+as.ranking(r1)
+
+r2 <- as.relation(d2)
+relation_class_ids(r2)
+relation_classes(r2)
+as.ranking(r2)
+
+relation_is_strict_weak_order(r2)
+
+r3 <- as.relation(d3)
+relation_class_ids(r3)
+relation_classes(r3)
+as.ranking(r3)
+
+
+
+### Standard report: #################################################
+
+a <- standard_report()
+a$a
+a$b
+b

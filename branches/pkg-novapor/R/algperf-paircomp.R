@@ -1,31 +1,31 @@
 
-
-
-#paircomp(x, significance = 0.05, family = FriedmanTestPaircomp)
-#paircomp(x, significance = 0.05, relevance = 0.1, family = LmerTestPaircomp)
-#paircomp(x, tolerance = 1000, family = PointPaircomp)
-
-
-
 paircomp <- function(x, family, type = c("<", "="), ...) {
   type <- match.arg(type)
 
-  family$new(x, type, ...)$decision()
+  engine <- do.call(family$new, c(list(x, type), list(...)))
+  engine$decision()
 }
 
 
 
 ### Decision family infrastructure: ##################################
 
-PaircompDecision <- function(decision, base) {
-  structure(list(decision = decision, base = base),
+PaircompDecision <- function(decision, type, base) {
+  structure(list(decision = decision, type = type, base = base),
             class = c("PaircompDecision", "list"))
 }
 
 
 
+print.PaircompDecision <- function(x, ...) {
+  cat(sQuote(x$type), "decision:\n")
+  print(x$decision)
+}
+
+
+
 Paircomp <- proto(expr = {
-  name <- "Generic pairwise comparison method"
+  name <- "Abstract pairwise comparison method"
 
   new <- function(., x, ...) NULL
   decision <- function(., ...) NULL
@@ -46,7 +46,7 @@ Paircomp <- proto(expr = {
 
 
 TestPaircomp <- proto(Paircomp, expr = {
-  name <- "Generic test based pairwise comparison method"
+  name <- "Abstract test based pairwise comparison method"
 
   globalTest <- function(.) NULL
   pairwiseTest <- function(.) NULL
@@ -55,7 +55,7 @@ TestPaircomp <- proto(Paircomp, expr = {
 
 
 PointPaircomp <- proto(Paircomp, expr = {
-  name <- "Generic point estimate based pairwise comparison method"
+  name <- "Abstract point estimate based pairwise comparison method"
 })
 
 
@@ -119,15 +119,12 @@ LeFriedmanTestPaircomp <- proto(FriedmanTestPaircomp, expr = {
       sigdirs <- sign(tstat[desc])
       sigpairs <- strsplit(rownames(desc)[desc], ' - ')
       sigpairs[sigdirs == 1] <- lapply(sigpairs[sigdirs == 1], rev)
-      sigpairs <- do.call(rbind, sigpairs)
 
-      result[sigpairs[, 1], sigpairs[, 2]] <- 1
-
-      result
+      for ( p in sigpairs )
+        result[p[1], p[2]] <- 1
     }
-
-    PaircompDecision(result, list(globaltest = gt,
-                                  pairwisetest = pt))
+    
+    PaircompDecision(result, "<", list(globaltest = gt, pairwisetest = pt))
   }
 })
 
@@ -143,19 +140,15 @@ EqFriedmanTestPaircomp <- proto(FriedmanTestPaircomp, expr = {
       pt <- .$pairwiseTest()
 
       pval <- pvalue(pt, method = "single-step")
-
+      
       desc <- pval > .$significance
       sigpairs <- strsplit(rownames(desc)[desc], ' - ')
-      sigpairs <- do.call(rbind, sigpairs)
 
-      result[sigpairs[, 1], sigpairs[, 2]] <- 1
-      result[sigpairs[, 2], sigpairs[, 1]] <- 1
-
-      result
+      for ( p in sigpairs )
+        result[p[1], p[2]] <- result[p[2], p[1]] <- 1
     }
 
-    PaircompDecision(result, list(globaltest = gt,
-                                  pairwisetest = pt))
+    PaircompDecision(result, "=", list(globaltest = gt, pairwisetest = pt))
   }
 })
 
@@ -221,16 +214,14 @@ LeLmerTestPaircomp <- proto(LmerTestPaircomp, expr = {
       sigdirs <- sign(ci[desc, 'Estimate'])
       sigpairs <- strsplit(rownames(ci)[desc], ' - ')
       sigpairs[sigdirs == 1] <- lapply(sigpairs[sigdirs == 1], rev)
-      sigpairs <- do.call(rbind, sigpairs)
 
-      result[sigpairs[, 1], sigpairs[, 2]] <- 1
-
-      result
+      for ( p in sigpairs ) 
+        result[p[1], p[2]] <- 1
     }
 
 
-    PaircompDecision(result, list(model = .$model, globaltest = gt,
-                                  pairwisetest = pt, confint = ci))
+    PaircompDecision(result, "<", list(model = .$model, globaltest = gt,
+                                       pairwisetest = pt, confint = ci))
   }
 })
 
@@ -251,17 +242,14 @@ EqLmerTestPaircomp <- proto(LmerTestPaircomp, expr = {
       desc <- desc | (ci[, 'lwr'] > -.$relevance & ci[, 'upr'] < .$relevance)
 
       sigpairs <- strsplit(rownames(ci)[desc], ' - ')
-      sigpairs <- do.call(rbind, sigpairs)
 
-      result[sigpairs[, 1], sigpairs[, 2]] <- 1
-      result[sigpairs[, 2], sigpairs[, 1]] <- 1
-
-      result
+      for ( p in sigpairs )
+        result[p[1], p[2]] <- result[p[2], p[1]] <- 1
     }
 
 
-    PaircompDecision(result, list(model = .$model, globaltest = gt,
-                                  pairwisetest = pt, confint = ci))
+    PaircompDecision(result, "=", list(model = .$model, globaltest = gt,
+                                       pairwisetest = pt, confint = ci))
   }
 })
 
@@ -334,18 +322,17 @@ LePercintTestPaircomp <- proto(PercintTestPaircomp, expr = {
       pt <- .$pairwiseTest()
 
       desc <- pt != TRUE
+      
       sigpairs <- strsplit(rownames(desc)[desc], ' - ')
-      sigpairs <- do.call(rbind, sigpairs)
 
-      result[sigpairs[, 1], sigpairs[, 2]] <- 1
-      result[sigpairs[, 2], sigpairs[, 1]] <- 1
+      # TODO: direction
 
-      result
-
+      for ( p in sigpairs )
+        result[p[1], p[2]] <- 1
     }
 
-    PaircompDesicion(result, list(percint = .$ci, globaltest = gt,
-                                  pairwisetest = pt))
+    PaircompDecision(result, "<", list(percint = .$ci, globaltest = gt,
+                                       pairwisetest = pt))
   }
 })
 
@@ -362,18 +349,16 @@ EqPercintTestPaircomp <- proto(PercintTestPaircomp, expr = {
 
       desc <- pt == TRUE
       sigpairs <- strsplit(rownames(desc)[desc], ' - ')
-      sigpairs <- do.call(rbind, sigpairs)
 
-      result[sigpairs[, 1], sigpairs[, 2]] <- 1
-      result[sigpairs[, 2], sigpairs[, 1]] <- 1
-
-      result
+      for ( p in sigpairs )
+        result[p[1], p[2]] <- result[p[2], p[1]] <- 1
     }
 
-    PaircompDesicion(result, list(percint = .$ci, globaltest = gt,
-                                  pairwisetest = pt))
+    PaircompDecision(result, "=", list(percint = .$ci, globaltest = gt,
+                                       pairwisetest = pt))
   }
 })
+
 
 
 plot.percint <- function(x, y = NULL, ...) {
@@ -405,7 +390,7 @@ GenericPointPaircomp <- proto(PointPaircomp, expr = {
   }
 
   decision <- function(.) {
-    estfn <- get(.$estimator)
+    estfn <- match.fun(.$estimator)
 
     val <- sapply(split(.$data$value, .$data$algorithms), estfn)
     pairs <- sapply(val, function(a) sapply(val, function(b) a - b))
@@ -416,7 +401,8 @@ GenericPointPaircomp <- proto(PointPaircomp, expr = {
                      "=" = apply(pairs, c(1, 2), function(x) 0 == x),
                      "<" = apply(pairs, c(1, 2), function(x) 0 < x))
 
-    PaircompDecision(result + 0, list(statistic = values, differences = pairs))
+    PaircompDecision(result + 0, .$type, list(statistic = val,
+                                              differences = pairs))
   }
 })
 
