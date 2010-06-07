@@ -66,7 +66,7 @@ stripchart(subset(dat,
                   performances = "Misclassification"), order.by = mean)
 
 
-
+beplot0(dat1)
 
 
 
@@ -139,3 +139,10 @@ a <- standard_report()
 a$a
 a$b
 b
+
+
+
+
+### Dataset object: ##################################################
+
+ds <- as.dataset(Species ~ ., iris)
