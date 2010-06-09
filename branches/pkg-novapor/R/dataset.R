@@ -6,26 +6,18 @@ as.dataset <- function(formula, data, ordered.as.factor = TRUE,
   call <- match.call()
 
 
-  ## Proto object:
-  ds <- proto(expr = {
-    .data <- data
-    .dataname <- deparse(call$data)
-    .call <- call
-  })
-
-
-  ## Dataset structure:
+  ## Compute dataset structure:
   details <- function(x, which) {
     classes <- sapply(data[, x, drop = FALSE],
                       function(var) {
                         if ( is.ordered(var) & ordered.as.factor )
-                          return('factor')
+                          return("factor")
 
                         if ( is.integer(var) & integer.as.numeric )
-                          return('numeric')
+                          return("numeric")
 
                         class(var)
-                    })
+                      })
 
 
     list(list(structure(list(x), names = which)),
@@ -35,7 +27,7 @@ as.dataset <- function(formula, data, ordered.as.factor = TRUE,
                      structure(list(list(lapply(names(x),
                                                 function(.)
                                                 structure(list(.), names = which)))),
-                               names = '.'))))
+                               names = "."))))
   }
 
   i2r.details <- function(x, y) {
@@ -49,11 +41,11 @@ as.dataset <- function(formula, data, ordered.as.factor = TRUE,
       var.grid <- grid(input = varx,
                        response = vary)
       var.grid <- apply(var.grid, 1, list)
-      var.grid <- lapply(var.grid, '[[', 1)
+      var.grid <- lapply(var.grid, "[[", 1)
       var.grid <- lapply(var.grid, as.list)
 
       list(list(list(input = varx, response = vary)),
-           structure(list(list(var.grid)), names = '.'))
+           structure(list(list(var.grid)), names = "."))
     }
 
     class.grid <- grid(names(x[[2]]), names(y[[2]]))
@@ -63,81 +55,94 @@ as.dataset <- function(formula, data, ordered.as.factor = TRUE,
          structure(apply(class.grid, 1,
                          function(x)
                          grid.details(x[[1]], x[[2]])),
-                   names = apply(class.grid, 1, paste, collapse = '2')))
+                   names = apply(class.grid, 1, paste, collapse = "2")))
   }
 
   formula <- terms(formula, data = data)
-  variables <- as.character(as.list(attr(formula, 'variables'))[-1])
-  response <- variables[attr(formula, 'response')]
+  variables <- as.character(as.list(attr(formula, "variables"))[-1])
+  response <- variables[attr(formula, "response")]
   input  <- setdiff(variables, response)
 
-  input.details <- details(input, 'input')
-  response.details <- details(response, 'response')
-
-  ds$.structure <- list(list(list(variables)),
-                        list(input = input.details,
-                             response = response.details,
-                             input2response = i2r.details(input.details,
-                                                          response.details)))
+  input.details <- details(input, "input")
+  response.details <- details(response, "response")
 
   attributes(formula) <- NULL
-  ds$.formula <- as.formula(formula)
 
 
-  ## Dataset getter:
-  ds$variables <- function(., x = NULL) {
-    m <- paste(sprintf("[[2]]$%s", x), collapse = "")
-    e <- "[[1]]"
-    g <- sprintf(".$.structure%s%s", m, e)
+  ## Dataset proto object:
+  ds <- proto(expr = {
 
-    eval(parse(text = g))
-  }
+    ## Variables:
+    .data = data
+    .formula <- as.formula(formula)
+    .dataname <- deparse(call$data)
+    .call <- call
 
-  ds$dataparts <- function(., x = NULL, index = NULL) {
-    vars <- .$variables(x)
+    .structure <- list(list(list(variables)),
+                       list(input = input.details,
+                            response = response.details,
+                            input2response = i2r.details(input.details,
+                                                         response.details)))
 
-    if ( is.null(index) )
-      index <- seq(length = nrow(.$.data))
 
-    d <- lapply(vars,
-                function(v)
-                structure(lapply(v,
-                                 function(.)
-                                 .$.data[index, ., drop = ('.' %in% x)]),
-                          names = names(v)))
-    d
-  }
+    ## Getter:
+    variables <- function(., x = NULL) {
+      m <- paste(sprintf("[[2]]$%s", x), collapse = "")
+      e <- "[[1]]"
+      g <- sprintf(".$.structure%s%s", m, e)
 
-  ds$formula <- function(.) {
-    .$.formula
-  }
+      eval(parse(text = g))
+    }
 
-  ds$input <- function(., index = NULL) {
-    .$dataparts('input', index = index)[[c(1, 1)]]
-  }
+    dataparts <- function(., x = NULL, index = NULL) {
+      vars <- .$variables(x)
 
-  ds$response <- function(., index = NULL) {
-    .$dataparts('response', index = index)[[c(1, 1)]]
-  }
+      if ( is.null(index) )
+        index <- seq(length = nrow(.$.data))
 
-  ds$data <- function(., index = NULL) {
-    .$dataparts(index = index)[[c(1, 1)]]
-  }
+      d <- lapply(vars,
+                  function(v)
+                  structure(lapply(v,
+                                   function(i)
+                                   .$.data[index, i, drop = ('.' %in% x)]),
+                            names = names(v)))
+      d
+    }
+
+    formula <- function(.) {
+      .$.formula
+    }
+
+    dataname <- function(.) {
+      .$.dataname
+    }
+
+    input <- function(., index = NULL) {
+      .$dataparts("input", index = index)[[c(1, 1)]]
+    }
+
+    response <- function(., index = NULL) {
+      .$dataparts("response", index = index)[[c(1, 1)]]
+    }
+
+    data <- function(., index = NULL) {
+      .$dataparts(index = index)[[c(1, 1)]]
+    }
+
+
+    ## Default proto methods:
+    pprint <- function(., ...) {
+      cat("Dataset object:\n")
+      cat(.$dataname(), "-> ")
+      print(.$formula())
+
+      invisible(.)
+    }
+  })
+
 
   structure(ds, class = c("dataset", class(ds)))
 }
-
-
-
-print.dataset <- function(x, ...) {
-  cat('Dataset object:\n')
-  cat(x$.dataname, '-> ')
-  print(x$.formula)
-
-  invisible(x)
-}
-
-
 
 
 

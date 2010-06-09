@@ -66,15 +66,16 @@ stripchart(subset(dat,
                   performances = "Misclassification"), order.by = mean)
 
 
+dat1 <- subset(dat,
+               datasets = "monks3",
+               performances = "Misclassification")
+
+
 beplot0(dat1)
 
 
 
 ### Inference:
-
-dat1 <- subset(dat,
-               datasets = "monks3",
-               performances = "Misclassification")
 
 engine <- FriedmanTestPaircomp$new(dat1, "<", 0.05)
 engine$decision()
@@ -146,3 +147,13 @@ b
 ### Dataset object: ##################################################
 
 ds <- as.dataset(Species ~ ., iris)
+ds
+ds$dataparts()
+ds$input()
+ds$response()
+ds$dataparts(c("input", "numeric"))
+ds$dataparts(c("input", "factor"))
+
+StatlogCharacteristics
+a <- StatlogCharacteristics$new()
+

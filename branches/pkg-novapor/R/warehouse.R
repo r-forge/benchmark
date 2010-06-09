@@ -159,7 +159,7 @@ default_algorithm_colors <- function(algorithms) {
     h[2] <- h[2] - 360 / n
   }
 
-  structure(grDevices::hcl(h = rotate(seq(h[1], h[2], length = n)), 
+  structure(grDevices::hcl(h = rotate(seq(h[1], h[2], length = n)),
                            c = c, l = l),
             names = algorithms)
 }
