@@ -27,6 +27,9 @@ DatasetCharacteristics <- proto(expr = {
     traverse.tree <- function(tree, level = NULL) {
       l <- lapply(names(tree),
                   function(nodename) {
+                    if ( is.null(tree[[nodename]]) )
+                      return(NULL)
+
                     if ( is(tree[[nodename]], "list") )
                       return(traverse.tree(tree[[nodename]],
                                            c(level, nodename)))

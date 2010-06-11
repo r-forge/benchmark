@@ -170,7 +170,31 @@ u2$viewDatasetCharacterization()
 u2$viewDatasetBasisCharacterization()
 
 u2$data[[1]]$DatasetCharacterization[,] <- runif(10 * 17, 0, 10)
+u2$data[[1]]$DatasetCharacterization[4,3] <- NA
+u2$data[[1]]$DatasetBasisCharacterization[,] <- apply(u2$data[[1]]$DatasetCharacterization, 2, mean)
+
 u2$data[[2]]$DatasetCharacterization[,] <- runif(10 * 17, -4, 6)
+u2$data[[2]]$DatasetBasisCharacterization[,] <- apply(u2$data[[2]]$DatasetCharacterization, 2, mean)
 
 
 x <- u2$viewDatasetCharacterization(dataset = "ds1")
+y <- u2$viewDatasetBasisCharacterization(dataset = "ds1")
+
+plot(x, lines = FALSE)
+
+
+### Benchmark: #######################################################
+
+ds1.bec <- benchmark(ds1, sub.sampling(10, 2/3),
+                     algorithms = c(svm, lda, qda),
+                     performances = c(miscl, fittime, predicttime),
+                     characteristics = StatlogCharacteristics,
+                     verbose = TRUE)
+
+
+
+
+plot(ds1.bec$viewDatasetCharacterization(), lines = FALSE)
+
+
+  basis <- subset(x, subset = samples == "basis0")

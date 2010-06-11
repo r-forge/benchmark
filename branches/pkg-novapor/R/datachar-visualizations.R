@@ -2,12 +2,13 @@
 
 plot.DatasetCharacterization <- function(x, y = NULL, lines = TRUE, points = TRUE,
                                          null.line = TRUE, null.line.col = gray(0.7),
-                                         ...) {
+                                         basis = TRUE, basis.col = NULL, ...) {
 
   stopifnot(nlevels(x$datasets[, drop = TRUE]) == 1)
 
-  data <- dcscale(x)
-
+  x <- ddply(x, "characteristics", dcscale)
+  data <- subset(x, subset = samples != "basis")
+  data.basis <- subset(x, subset = samples == "basis")
 
   p <- ggplot(data, aes(characteristics, value, group = samples))
 
@@ -19,6 +20,19 @@ plot.DatasetCharacterization <- function(x, y = NULL, lines = TRUE, points = TRU
 
   if ( points )
     p <- p + geom_point()
+
+  if ( (nrow(data.basis) > 0) && basis ) {
+    if ( is.null(basis.col) )
+      basis.col <- default_colors(n = 1)
+
+    p <- p + geom_line(data = data.basis,
+                       aes(characteristics, value, group = samples),
+                       colour = basis.col)
+
+    p <- p + geom_point(data = data.basis,
+                        aes(characteristics, value, group = samples),
+                        colour = basis.col)
+  }
 
   p <- p + scale_y_continuous('', breaks = c(-0.2, seq(0, 1, by = 0.2)),
                               labels = c("NA", seq(0, 1, by = 0.2))) +
@@ -39,28 +53,23 @@ plot.DatasetBasisCharacterization <- function(x, y) {
 ### Internal functions: ##############################################
 
 dcscale <- function(x) {
-  x0 <- x
+  x$value <- dcscale0(x$value)
+  x
+}
 
-  x <- do.call(cbind, split(x$value, x$characteristics))
-  rx <- apply(x, 2L, range, na.rm = TRUE)
-  sx <- apply(x, 2L,
-              function(x)
-              (x - min(x, na.rm = TRUE)) /
-              (max(x, na.rm = TRUE) - min(x, na.rm = TRUE)))
 
-  sx[is.na(x)] <- -0.2
 
-  m <- matrix(FALSE, nrow = nrow(x), ncol = ncol(x))
-  m[, apply(rx, 2, function(x) length(unique(x)) == 1)] <- TRUE
-  sx[m] <- 1
+dcscale0 <- function(x) {
+  rx <- range(x, na.rm = TRUE)
 
-  y <- merge(x0, melt(sx),
-             by.x = c("samples", "characteristics"),
-             by.y = c("X1", "X2"), sort = FALSE)
-  y$value.x <- NULL
-  y$value <- y$value.y
-  y$value.y <- NULL
+  if ( rx[1] == rx[2] )
+    return(rep(1, length = length(x)))
 
-  y[, c("samples", "datasets", "characteristics", "value")]
+  sx <- (x - min(x, na.rm = TRUE)) /
+      (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
+
+  sx[is.na(sx)] <- -0.2
+
+  sx
 }
 

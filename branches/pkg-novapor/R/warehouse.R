@@ -27,7 +27,7 @@ warehouse <- function(datasets, B,
                  performances = performances,
                  characteristics = characteristics,
                  tests = tests,
-                 algorithm_colors = default_algorithm_colors(algorithms))
+                 algorithm_colors = default_colors(algorithms = algorithms))
 
 
   if ( !is.null(algorithms) ) {
@@ -92,7 +92,8 @@ setViewDatasetCharacterization <- function(object) {
 
   object$viewDatasetCharacterization <- function(.,
                                                  datasets = NULL,
-                                                 characteristics = NULL) {
+                                                 characteristics = NULL,
+                                                 basis = TRUE) {
 
     if ( is.null(datasets) )
       datasets <- .$meta$datasets
@@ -114,11 +115,15 @@ setViewDatasetCharacterization <- function(object) {
 
     view <- view[, c("samples", "datasets", "characteristics", "value")]
 
-    basis <- .$viewDatasetBasisCharacterization(datasets = datasets,
-                                                characteristics = characteristics)
+    if ( basis ) {
+        basis <- .$viewDatasetBasisCharacterization(datasets = datasets,
+                                                    characteristics = characteristics)
+        basis$samples <- "basis"
+        view <- rbind(view, basis)
+    }
 
-    structure(view, class = c("DatasetCharacterization", class(view)),
-              basis = basis)
+
+    structure(view, class = c("DatasetCharacterization", class(view)))
   }
 
   invisible(NULL)
@@ -204,7 +209,7 @@ DatasetList <- function(dataset, B,
 
   a <- list()
 
-  if ( !is.null(algorithms) & !is.null(performances) ) {
+  if ( !is.null(algorithms) && !is.null(performances) ) {
     a$AlgorithmPerformance <- AlgorithmPerformanceArray(B, algorithms,
                                                         performances)
   }
@@ -227,7 +232,7 @@ DatasetList <- function(dataset, B,
 
 ### Internal functions: ##############################################
 
-default_algorithm_colors <- function(algorithms) {
+default_colors <- function(n = length(algorithms), algorithms = NULL) {
   # Based on ggplot2:::ScaleHue
   h <- c(0, 360) + 15
   l <- 65
@@ -238,7 +243,6 @@ default_algorithm_colors <- function(algorithms) {
 
   rotate <- function(x) (x + start) %% 360 * direction
 
-  n <- length(algorithms)
   if ( (diff(h) %% 360) < 1 ) {
     h[2] <- h[2] - 360 / n
   }
