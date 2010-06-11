@@ -4,7 +4,7 @@ warehouse <- function(datasets, B,
                       algorithms = NULL,
                       performances = NULL,
                       characteristics = NULL,
-                      results = NULL) {
+                      tests = NULL) {
 
   if ( length(datasets) != length(B) )
     B <- rep(B, length(datasets))
@@ -14,7 +14,7 @@ warehouse <- function(datasets, B,
               MoreArgs = list(algorithms = algorithms,
                               performances = performances,
                               characteristics = characteristics,
-                              results = results),
+                              tests = tests),
               SIMPLIFY = FALSE)
   names(a) <- datasets
 
@@ -26,10 +26,18 @@ warehouse <- function(datasets, B,
                  algorithms = algorithms,
                  performances = performances,
                  characteristics = characteristics,
-                 results = results,
+                 tests = tests,
                  algorithm_colors = default_algorithm_colors(algorithms))
 
-  setViewAlgorithmPerformance(a)
+
+  if ( !is.null(algorithms) ) {
+    setViewAlgorithmPerformance(a)
+  }
+
+  if ( !is.null(characteristics) ) {
+    setViewDatasetCharacterization(a)
+    setViewDatasetBasisCharacterization(a)
+  }
 
 
   structure(a, class = c("warehouse", class(a)))
@@ -75,7 +83,79 @@ setViewAlgorithmPerformance <- function(object) {
               algorithm_colors = .$meta$algorithm_colors)
   }
 
-  invisible()
+  invisible(NULL)
+}
+
+
+
+setViewDatasetCharacterization <- function(object) {
+
+  object$viewDatasetCharacterization <- function(.,
+                                                 datasets = NULL,
+                                                 characteristics = NULL) {
+
+    if ( is.null(datasets) )
+      datasets <- .$meta$datasets
+
+    if ( is.null(characteristics) )
+      characteristics <- .$meta$characteristics
+
+
+    view <- lapply(.$data[datasets],
+                   function(ds)
+                   ds$DatasetCharacterization[,
+                                              characteristics,
+                                              drop = FALSE])
+    attr(view, "varname") <- "datasets"
+
+    view <- melt(view)
+    view$datasets <- as.factor(view$datasets)
+    view$samples <- as.factor(view$samples)
+
+    view <- view[, c("samples", "datasets", "characteristics", "value")]
+
+    basis <- .$viewDatasetBasisCharacterization(datasets = datasets,
+                                                characteristics = characteristics)
+
+    structure(view, class = c("DatasetCharacterization", class(view)),
+              basis = basis)
+  }
+
+  invisible(NULL)
+}
+
+
+
+setViewDatasetBasisCharacterization <- function(object) {
+
+  object$viewDatasetBasisCharacterization <- function(.,
+                                                      datasets = NULL,
+                                                      characteristics = NULL) {
+
+    if ( is.null(datasets) )
+      datasets <- .$meta$datasets
+
+    if ( is.null(characteristics) )
+      characteristics <- .$meta$characteristics
+
+
+    view <- lapply(.$data[datasets],
+                   function(ds)
+                   ds$DatasetBasisCharacterization[,
+                                                   characteristics,
+                                                   drop = FALSE])
+    attr(view, "varname") <- "datasets"
+
+    view <- melt(view)
+    view$datasets <- as.factor(view$datasets)
+
+    view <- view[, c("datasets", "characteristics", "value")]
+
+
+    structure(view, class = c("DatasetBasisCharacterization", class(view)))
+  }
+
+  invisible(NULL)
 }
 
 
@@ -120,19 +200,23 @@ DatasetList <- function(dataset, B,
                         algorithms = NULL,
                         performances = NULL,
                         characteristics = NULL,
-                        results = NULL) {
+                        tests = NULL) {
 
   a <- list()
 
-  if ( !is.null(algorithms) & !is.null(performances) )
+  if ( !is.null(algorithms) & !is.null(performances) ) {
     a$AlgorithmPerformance <- AlgorithmPerformanceArray(B, algorithms,
                                                         performances)
+  }
 
-  if ( !is.null(characteristics) )
+  if ( !is.null(characteristics) ) {
     a$DatasetCharacterization <- DatasetCharacterizationArray(B, characteristics)
+    a$DatasetBasisCharacterization <- DatasetCharacterizationArray(1, characteristics)
+  }
 
-  if ( !is.null(results) )
-    a$TestResult <- TestResultArray(B, results)
+  if ( !is.null(tests) ) {
+    a$TestResult <- TestResultArray(B, tests)
+  }
 
 
   structure(a, class = c("DatasetList", class(a)),

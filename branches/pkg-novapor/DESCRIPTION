@@ -1,12 +1,15 @@
 Package: benchmark
 Type: Package
 Title: Benchmark Experiments Toolbox
-Version: 0.1
+Version: 0.3
 Date: 2008-08-10
 Author: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
 Maintainer: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
-Depends: proto, ggplot2, reshape
+Depends: ggplot2, reshape, relations
+Imports: proto
 Suggests: coin, multcomp, lme4
 Description: Benchmark experiment toolbox.
 License: GPL version 2 or newer
 Revision: 0
+LazyLoad: false
+LazyData: true

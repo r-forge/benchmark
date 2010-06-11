@@ -156,4 +156,21 @@ ds$dataparts(c("input", "factor"))
 
 StatlogCharacteristics
 a <- StatlogCharacteristics$new()
+a
+summary(a)
 
+characterize(ds, StatlogCharacteristics)
+
+
+
+u2 <- warehouse(c("ds1", "ds2"), 10,
+                characteristics = StatlogCharacteristics$characteristics())
+
+u2$viewDatasetCharacterization()
+u2$viewDatasetBasisCharacterization()
+
+u2$data[[1]]$DatasetCharacterization[,] <- runif(10 * 17, 0, 10)
+u2$data[[2]]$DatasetCharacterization[,] <- runif(10 * 17, -4, 6)
+
+
+x <- u2$viewDatasetCharacterization(dataset = "ds1")

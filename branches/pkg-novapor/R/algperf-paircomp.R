@@ -1,4 +1,5 @@
 
+
 paircomp <- function(x, family, type = c("<", "="), ...) {
   type <- match.arg(type)
 
