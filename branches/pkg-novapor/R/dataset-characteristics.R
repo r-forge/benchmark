@@ -1,6 +1,26 @@
+#' @include proto.R
+{}
+
 
 
 #' Dataset characteristics.
+#'
+#' "Abstract" proto object with the methods:
+#' \tabular{rl}{
+#'   \code{requirements()} \tab Ensures that all needed packages
+#'     are available\cr
+#'   \code{map()} \tab Returns the list of map functions\cr
+#'   \code{reduce()} \tab Returns the list of reduce functions
+#' }
+#' An implementation has to override these methods.
+#'
+#' Available implementations:
+#' \tabular{rlll}{
+#'   \code{StatlogCharacteristics} \tab Implementation of the StatLog
+#'     project dataset characteristics
+#' }
+#'
+#' @seealso \code{\link{characterize}}, \code{\link{datachar-visualization}}
 #' @rdname DatasetCharacteristics
 DatasetCharacteristics <- proto(expr = {
   name <- "Generic"
@@ -68,6 +88,8 @@ p <- function(fn, args) {
 
 ### Implementation -- StatLog characteristics: #######################
 
+#' @rdname DatasetCharacteristics
+#' @export
 StatlogCharacteristics <- proto(DatasetCharacteristics, expr = {
   name <- "Statlog"
 

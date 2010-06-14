@@ -1,5 +1,20 @@
 
 
+#' A dataset abstraction to simplify the calculation of dataset
+#' characteristics.
+#' @param formula A symbolic description of the dataset
+#' @param data The data frame
+#' @param ordered.as.factor Interpret ordered factors as factors
+#' @param integer.as.numeric Interpret integer variables as numerics
+#' @return A proto object with an additional S3 class \code{dataset}
+#' @examples
+#'   data("iris")
+#'   ds <- as.dataset(Species ~ ., iris)
+#'   ds
+#'
+#'   str(ds$response())
+#'   str(ds$dataparts(c("input", "numeric")))
+#' @export
 as.dataset <- function(formula, data, ordered.as.factor = TRUE,
                        integer.as.numeric = TRUE) {
 

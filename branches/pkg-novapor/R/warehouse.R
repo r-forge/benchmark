@@ -15,17 +15,19 @@
 #'
 #' Implemented views:
 #' \enumerate{
-#'   \item \code{viewAlgorithmPerformance()}: returns a data frame (class
-#'   \code{AlgorithmPerformance}) with columns \code{samples, datasets,
-#'   algorithms, performances} (factors with the corresponding levels)
-#'   and the column \code{value} with the corresponding performance value.
+#'   \item \code{viewAlgorithmPerformance()}: returns a data frame (S3
+#'   class \code{AlgorithmPerformance}) with columns \code{samples,
+#'   datasets, algorithms, performances} (factors with the corresponding
+#'   levels) and the column \code{value} with the corresponding
+#'   performance value.
 #'
 #'   \item \code{viewDatasetCharacterization()}: returns a data frame
-#'   (class \code{DatasetCharacterization}) with columns \code{samples,
+#'   (S3 class \code{DatasetCharacterization}) with columns \code{samples,
 #'   datasets, characteristics, value}.
 #'
 #'   \item \code{viewDatasetBasisCharacterization()}: returns a data
-#'   frame with columns \code{datasets, characteristics, value}.
+#'   frame (S3 class \code{DatasetBasisCharacterization}) with columns
+#'   \code{datasets, characteristics, value}.
 #' }
 #'
 #' @param datasets Names of the datasets
@@ -36,6 +38,8 @@
 #' @param tests Names of the monitored test statistics
 #' @return Proto object with different views (see Details).
 #' @seealso \code{\link{benchmark}}, \code{\link{as.warehouse}}
+#' @aliases AlgorithmPerformance DatasetCharacterization
+#'   DatasetBasisCharacterization
 #' @export
 warehouse <- function(datasets, B,
                       algorithms = NULL,

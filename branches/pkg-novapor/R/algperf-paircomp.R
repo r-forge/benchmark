@@ -1,5 +1,26 @@
+#' @include proto.R
+{}
 
 
+
+#' Pairwise comparison of algorithm performances
+#'
+#' @param x An \code{\link{AlgorithmPerformance}} object
+#' @param family A \code{\link{Paircomp}} object
+#' @param type Draw strict or indifference decision
+#' @param ... Ignored
+#' @return A \code{PaircompDecision} object; a list with the
+#'   elements:
+#'   \tabular{rl}{
+#'     \code{decision} \tab The incidence matrix representing the
+#'       pairwise comparisons\cr
+#'     \code{type} \tab The decision type\cr
+#'     \code{base} \tab A list with information on the decision base
+#'   }
+#'
+#' @aliases PaircompDecision
+#' @rdname algperf-paircomp
+#' @export
 paircomp <- function(x, family, type = c("<", "="), ...) {
   type <- match.arg(type)
 
@@ -18,6 +39,8 @@ PaircompDecision <- function(decision, type, base) {
 
 
 
+#' @nord
+#' @S3method print PaircompDecision
 print.PaircompDecision <- function(x, ...) {
   cat(sQuote(x$type), "decision:\n")
   print(x$decision)
@@ -25,6 +48,26 @@ print.PaircompDecision <- function(x, ...) {
 
 
 
+#' Pairwise comparisons of algorithm performances
+#'
+#' Available \code{TestPaircomp} implementations:
+#' \tabular{rl}{
+#'   \code{FriedmanTestPaircomp} \tab Pairwise comparison based on the
+#'     non parametric friedman test\cr
+#'   \code{LmerTestPaircomp} \tab Pairwise comparison based on a mixed
+#'     effects model (function \code{lmer} in package \code{lme4})\cr
+#'   \code{PercintTestPaircomp} \tab Pairwise comparison based on the
+#'     bootstrap percentile intervals
+#' }
+#'
+#' Available \code{PointPaircomp} implementations:
+#' \tabular{rl}{
+#'   \code{GenericPointPaircomp} \tab Pairwise comparison based on
+#'     point estimates.
+#' }
+#'
+#' @aliases TestPaircomp PointPaircomp
+#' @rdname Paircomp
 Paircomp <- proto(expr = {
   name <- "Abstract pairwise comparison method"
 
@@ -63,6 +106,8 @@ PointPaircomp <- proto(Paircomp, expr = {
 
 ### Implementation -- Friedman test based decision: ##################
 
+#' @rdname Paircomp
+#' @export
 FriedmanTestPaircomp <- proto(TestPaircomp, expr = {
 
   new <- function(., x, type, significance) {
@@ -157,6 +202,8 @@ EqFriedmanTestPaircomp <- proto(FriedmanTestPaircomp, expr = {
 
 ### Implementation -- LMER test based decision: ######################
 
+#' @rdname Paircomp
+#' @export
 LmerTestPaircomp <- proto(TestPaircomp, expr = {
 
   new <- function(., x, type, significance, relevance = 0) {
@@ -263,6 +310,8 @@ EqLmerTestPaircomp <- proto(LmerTestPaircomp, expr = {
 
 ### Implementation -- Percentile interval based decision: ############
 
+#' @rdname Paircomp
+#' @export
 PercintTestPaircomp <- proto(TestPaircomp, expr = {
 
   new <- function(., x, type, significance) {
@@ -378,6 +427,8 @@ plot.percint <- function(x, y = NULL, ...) {
 
 ### Implementation -- Generic point estimate decision: ###############
 
+#' @rdname Paircomp
+#' @export
 GenericPointPaircomp <- proto(PointPaircomp, expr = {
 
   new <- function(., x, type, estimator, tolerance = .Machine$double.eps) {

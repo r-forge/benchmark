@@ -1,0 +1,82 @@
+
+citEntry(entry = "InProceedings",
+         title = "Bench Plot and Mixed Effects Models: First Steps toward a Comprehensive Benchmark Analysis Toolbox",
+	 author = personList(as.person("Manuel J. A. Eugster"),
+	                     as.person("Friedrich Leisch")),
+	 booktitle = "Compstat 2008---Proceedings in Computational Statistics",
+	 editor = "Paula Brito",
+	 publisher = "Physica Verlag, Heidelberg, Germany",
+	 year = "2008",
+	 pages = "299--306",
+	 url = "http://epub.ub.uni-muenchen.de/3206/",
+
+	 header = "To cite package benchmark in publication use:",
+
+	 textVersion = paste("Manuel J. A. Eugster and Friedrich Leisch.",
+	 	     "Bench Plot and Mixed Effects Models: First Steps toward a Comprehensive Benchmark Analysis Toolbox.",
+		     "Compstat 2008---Proceedings in Computational Statistics, 299-306, 2008.",
+		     "http://epub.ub.uni-muenchen.de/3206/")
+)
+
+
+
+citEntry(entry = "techreport",
+	 author = personList(as.person("Manuel J. A. Eugster"),
+	                     as.person("Torsten Hothorn"),
+                             as.person("Friedrich Leisch")),
+	 title = "Exploratory and Inferential Analysis of Benchmark Experiments",
+	 institution = "Institut fuer Statistik, Ludwig-Maximilians-Universitaet Muenchen, Germany",
+	 year = "2008",
+	 type = "Technical Report",
+	 number = "30",
+	 url = "http://epub.ub.uni-muenchen.de/4134/",
+
+	 textVersion=paste("Manuel J. A. Eugster, Torsten Hothorn and Friedrich Leisch.",
+		"Exploratory and Inferential Analysis of Benchmark Experiments",
+		"Technical Report 30, Department of Statistics, Ludwig-Maximilians-Universitaet Muenchen, Germany. 2008.",
+		"http://epub.ub.uni-muenchen.de/4134/")
+)
+
+
+
+citEntry(entry = "techreport",
+	 author = personList(as.person("Manuel J. A. Eugster"),
+                             as.person("Friedrich Leisch")),
+	 title = "Exploratory Analysis of Benchmark Experiments -- An Interactive Approach",
+	 institution = "Institut fuer Statistik, Ludwig-Maximilians-Universitaet Muenchen, Germany",
+	 year = "2009",
+	 number = "56",
+	 url = "http://epub.ub.uni-muenchen.de/10604/",
+
+	 header="To cite interactive analysis of benchmark experiments in publications use:",
+
+	 textVersion=paste("Manuel J. A. Eugster and Friedrich Leisch.",
+		"Exploratory Analysis of Benchmark Experiments -- An Interactive Approach",
+		"Technical Report 56, Department of Statistics, Ludwig-Maximilians-Universitaet Muenchen, Germany. 2009.",
+		"http://epub.ub.uni-muenchen.de/10604/")
+)
+
+
+
+citEntry(entry = "techreport",
+	 author = personList(as.person("Manuel J. A. Eugster"),
+                             as.person("Friedrich Leisch"),
+			     as.person("Carolin Strobl")),
+	 title = "(Psycho-)Analysis of Benchmark Experiments -- A Formal Framework for Investigating the Relationship between Data Sets and Learning Algorithms",
+	 institution = "Institut fuer Statistik, Ludwig-Maximilians-Universitaet Muenchen, Germany",
+	 year = "2010",
+	 number = "78",
+	 url = "http://epub.ub.uni-muenchen.de/11425/",
+
+	 header="To cite dataset characteristics and their relations to algorithm performances in publications use:",
+
+	 textVersion=paste("Manuel J. A. Eugster, Friedrich Leisch and Carolin Strobl.",
+		"(Psycho-)Analysis of Benchmark Experiments -- A Formal Framework for Investigating the Relationship between Data Sets and Learning Algorithms",
+		"Technical Report 78, Department of Statistics, Ludwig-Maximilians-Universitaet Muenchen, Germany. 2010.",
+		"http://epub.ub.uni-muenchen.de/11425/")
+)
+
+
+
+
+

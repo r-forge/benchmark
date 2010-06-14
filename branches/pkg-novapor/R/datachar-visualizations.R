@@ -1,8 +1,27 @@
 
 
+
+#' @param x A \code{\link{DatasetCharacterization}} object
+#' @param y Ignored
+#' @param lines Draw observation dependency lines
+#' @param points Draw observation points
+#' @param null.line Draw null line
+#' @param null.line.col Null line color
+#' @param basis Draw basis characterization of the dataset
+#' @param basis.col Color of basis characterization
+#' @param ... Ignored
+#' @return A \code{\link[ggplot2]{ggplot}} object.
+#' @method plot DatasetCharacterization
+#' @rdname datachar-visualization
+#' @importFrom graphics plot
+#' @S3method plot DatasetCharacterization
 plot.DatasetCharacterization <- function(x, y = NULL, lines = TRUE, points = TRUE,
                                          null.line = TRUE, null.line.col = gray(0.7),
                                          basis = TRUE, basis.col = NULL, ...) {
+
+  ## Make codetools (R CMD check) happy:
+  characteristics <- value <- datasets <- samples <- NULL
+
 
   stopifnot(nlevels(x$datasets[, drop = TRUE]) == 1)
 

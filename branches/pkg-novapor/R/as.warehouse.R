@@ -5,10 +5,10 @@
 
 #' Methods to coerce objects to a benchmark experiment warehouse.
 #'
-#' Coerces a \code{\link[mlr]{bench.result}} object from package
-#' \code{mlr} to a \code{\link{warehouse}} object.
+#' Coerces a \code{bench.result} object from package \code{mlr} to a
+#' \code{\link{warehouse}} object.
 #'
-#' @param x A \code{\link[mlr]{bench.result}} object
+#' @param x A \code{bench.result} object from package \code{mlr}
 #' @param ... Ignored
 #' @return A \code{\link{warehouse}} object
 #' @export

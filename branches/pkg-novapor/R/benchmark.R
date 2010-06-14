@@ -6,8 +6,7 @@
 #' Function to execute benchmark experiments and collect all data the
 #' package can analyze. For more sophisticated benchmark experiments
 #' we suggest the usage of the \code{mlr} package.
-#' 
-#' @title Benchmark experiment execution
+#'
 #' @param datasets List of data.frames
 #' @param sampling Sampling function, see \code{\link{benchmark-sampling}}.
 #' @param algorithms List of algorithms; i.e., functions which take
@@ -20,8 +19,9 @@
 #' @param test \code{\link{TestPaircomp}} object
 #' @param verbose Show information during execution
 #' @return A \code{\link{warehouse}} object
-#' @seealso \code{\link{warehouse}}, \code{\link{benchmark-sampling}},
-#'   \code{\link{benchmark-comptime}}
+#' @seealso \code{\link{warehouse}}, \code{\link{as.warehouse}},
+#'   \code{\link{benchmark-sampling}}, \code{\link{benchmark-comptime}}
+#' @title Benchmark experiment execution
 #' @export
 benchmark <- function(datasets, sampling, algorithms = NULL,
                       performances = NULL, characteristics = NULL,
@@ -167,7 +167,7 @@ bs.sampling <- function(B) {
 
 
 #' @param B Number of learning samples
-#' @param psize Size of subsample 
+#' @param psize Size of subsample
 #' @return List with subsampling learning and test samples
 #' @rdname benchmark-sampling
 #' @export
@@ -204,7 +204,7 @@ cv.sampling <- function(k) {
 
 #' Dummy functions to enable fitting and prediction time as performance
 #' measures.
-#' 
+#'
 #' @param yhat Ignored
 #' @param y Ignored
 #' @return Time (User and System) used for the model fitting
