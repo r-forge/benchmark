@@ -1,8 +1,7 @@
 
 
-
-### Dataset characteristics framework: ###############################
-
+#' Dataset characteristics.
+#' @rdname DatasetCharacteristics
 DatasetCharacteristics <- proto(expr = {
   name <- "Generic"
 

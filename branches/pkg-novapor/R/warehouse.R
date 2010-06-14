@@ -1,5 +1,42 @@
+#' @include proto.R
+{}
 
 
+
+#' Benchmark experiment warehouse.
+#'
+#' \code{warehouse} is the constructor function for a benchmark experiment
+#' warehouse.
+#'
+#' A benchmark experiment warehouse collects all data during a benchmark
+#' experiment (\code{\link{benchmark}} is a proof-of-concept implementation).
+#' Different views (based on the collected data) provide cleaned parts
+#' of the data for further analyses.
+#'
+#' Implemented views:
+#' \enumerate{
+#'   \item \code{viewAlgorithmPerformance()}: returns a data frame (class
+#'   \code{AlgorithmPerformance}) with columns \code{samples, datasets,
+#'   algorithms, performances} (factors with the corresponding levels)
+#'   and the column \code{value} with the corresponding performance value.
+#'
+#'   \item \code{viewDatasetCharacterization()}: returns a data frame
+#'   (class \code{DatasetCharacterization}) with columns \code{samples,
+#'   datasets, characteristics, value}.
+#'
+#'   \item \code{viewDatasetBasisCharacterization()}: returns a data
+#'   frame with columns \code{datasets, characteristics, value}.
+#' }
+#'
+#' @param datasets Names of the datasets
+#' @param B Number of benchmark runs
+#' @param algorithms Names of the candidate algorithms
+#' @param performances Names of the performance measures
+#' @param characteristics Names of the dataset characteristics
+#' @param tests Names of the monitored test statistics
+#' @return Proto object with different views (see Details).
+#' @seealso \code{\link{benchmark}}, \code{\link{as.warehouse}}
+#' @export
 warehouse <- function(datasets, B,
                       algorithms = NULL,
                       performances = NULL,

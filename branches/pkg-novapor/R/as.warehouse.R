@@ -1,5 +1,20 @@
+#' @include warehouse.R
+{}
 
 
+
+#' Methods to coerce objects to a benchmark experiment warehouse.
+#'
+#' Coerces a \code{\link[mlr]{bench.result}} object from package
+#' \code{mlr} to a \code{\link{warehouse}} object.
+#'
+#' @param x A \code{\link[mlr]{bench.result}} object
+#' @param ... Ignored
+#' @return A \code{\link{warehouse}} object
+#' @export
+#' @title as.warehouse
+#' @aliases as.warehouse
+#' @rdname as.warehouse
 as.warehouse.mlr.bench.result <- function(x, ...) {
   perf <- x@perf
 
@@ -18,5 +33,3 @@ as.warehouse.mlr.bench.result <- function(x, ...) {
 
   w
 }
-
-

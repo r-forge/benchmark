@@ -5,9 +5,8 @@ Version: 0.3
 Date: 2008-08-10
 Author: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
 Maintainer: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
-Depends: ggplot2, reshape, relations
-Imports: proto
-Suggests: coin, multcomp, lme4
+Depends: utils, proto, ggplot2, reshape, relations
+Suggests: coin, multcomp, lme4, e1071, entropy
 Description: Benchmark experiment toolbox.
 License: GPL version 2 or newer
 Revision: 0

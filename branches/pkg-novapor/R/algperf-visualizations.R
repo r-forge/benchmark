@@ -1,13 +1,20 @@
-# * DONE algorithms.orderby = mean, median, etc.
-# * TODO strip text by facet for one (change facet_strip, Hadley?)
-# * DONE show sample dependencies
-# * TODO color by algorithms not places
-# * TODO benchplot in ggplot2 style?
 
 
-
-boxplot.AlgorithmPerformance <- function(x, order.by = NULL,
-                                         dependence.show = c("none", "all", "outliers"),
+#' @param x An \code{AlgorithmPerformance} object
+#' @param order.by Function like \code{\link{mean}}, \code{\link{median}},
+#'   or \code{\link{max}} to calculate a display order of the algorithms;
+#'   or \code{NULL} for no specific order.
+#' @param dependence.show Show dependence of observations for all, none or
+#'   outlier observations.
+#' @param dependence.col Color of the dependence line.
+#' @param ... Ignored.
+#' @return A \code{\link[ggplot2]{ggplot}} object.
+#' @method boxplot AlgorithmPerformance
+#' @rdname algperf-visualization
+#' @importFrom graphics boxplot
+#' @S3method boxplot AlgorithmPerformance
+boxplot.AlgorithmPerformance <- function(x, order.by = median,
+                                         dependence.show = c("outliers", "all", "none"),
                                          dependence.col = alpha("black", 0.1), ...) {
 
   dependence.show <- match.arg(dependence.show)
@@ -36,10 +43,22 @@ boxplot.AlgorithmPerformance <- function(x, order.by = NULL,
 
 
 
+#' @param x An object
+#' @param ... Additional arguments
+#' @rdname benchmark-generics
+#' @export
 densityplot <- function(x, ...) {
   UseMethod("densityplot")
 }
 
+
+
+#' @param x An \code{AlgorithmPerformance} object
+#' @param ... Ignored.
+#' @return A \code{\link[ggplot2]{ggplot}} object.
+#' @method densityplot AlgorithmPerformance
+#' @rdname algperf-visualization
+#' @S3method densityplot AlgorithmPerformance
 densityplot.AlgorithmPerformance <- function(x, ...) {
   p <- ggplot(x, aes(x = value, colour = algorithms, group = algorithms))
   p <- p + facet_grid(performances ~ datasets, scales = "free")
@@ -51,7 +70,20 @@ densityplot.AlgorithmPerformance <- function(x, ...) {
 
 
 
-stripchart.AlgorithmPerformance <- function(x, order.by = NULL,
+#' @param x An \code{AlgorithmPerformance} object
+#' @param order.by Function like \code{\link{mean}}, \code{\link{median}},
+#'   or \code{\link{max}} to calculate a display order of the algorithms;
+#'   or \code{NULL} for no specific order.
+#' @param dependence.show Show dependence of observations for all or none
+#'   observations.
+#' @param dependence.col Color of the dependence line.
+#' @param ... Ignored.
+#' @return A \code{\link[ggplot2]{ggplot}} object.
+#' @method stripchart AlgorithmPerformance
+#' @rdname algperf-visualization
+#' @importFrom graphics stripchart
+#' @S3method stripchart AlgorithmPerformance
+stripchart.AlgorithmPerformance <- function(x, order.by = median,
                                             dependence.show = c("none", "all"),
                                             dependence.col = alpha("black", 0.1), ...) {
 

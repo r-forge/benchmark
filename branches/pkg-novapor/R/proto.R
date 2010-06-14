@@ -1,14 +1,14 @@
 
 
-#' @importFrom print.proto ggplot2
+#' @importFrom ggplot2 print.proto
 {}
-# print.proto <- function(x, ...) {
+#print.proto <- function(x, ...) {
 #   x$pprint(...)
 # }
 
 
 
-#' @importFrom pprint ggplot2
+#' @importFrom ggplot2 pprint
 {}
 # pprint <- function (x, ...) {
 #   print(as.list(x), ...)
@@ -16,6 +16,8 @@
 
 
 
+#' @S3method summary proto
+#' @nord
 summary.proto <- function(object, ...) {
   object$psummary(...)
 }

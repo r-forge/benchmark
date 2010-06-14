@@ -1,4 +1,5 @@
 
+
 as.relation.PaircompDecision <- function(x, verbose = TRUE, ...) {
   r <- relation(incidence = x$decision, ...)
 
@@ -96,7 +97,10 @@ patch.relation_class_ids <- function (x) {
   else stop("Can only determine class ids for equivalences and weak orders.")
 }
 
+
+#' @import relations
+library(relations)
 environment(patch.relation_class_ids) <- getNamespace("relations")
-assignInNamespace("relation_class_ids", patch.relation_class_ids, "relations")
+utils:::assignInNamespace("relation_class_ids", patch.relation_class_ids, "relations")
 detach("package:relations")
 library(relations)

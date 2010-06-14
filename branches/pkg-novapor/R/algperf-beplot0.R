@@ -1,4 +1,15 @@
 
+
+#' @param x An object
+#' @param ... Additional arguments
+#' @rdname benchmark-generics
+#' @export
+beplot0 <- function(x, ...) {
+  UseMethod("beplot0")
+}
+
+
+
 #' Benchmark experiment plot.
 #'
 #' The benchmark experiment plot visualizes each benchmark
@@ -9,16 +20,7 @@
 #' an algorithm on a specific position, a bar plot is shown for
 #' each of podium places.
 #'
-#' @param x The object to plot
-#' @param ... Unused
-#' @export
-beplot0 <- function(x, ...) {
-  UseMethod("beplot0")
-}
-
-
-#' @param x A \code{\link{becp}} object
-#' @param col Dot colors
+#' @param x A \code{\link[=warehouse]{AlgorithmPerformance}} object
 #' @param xlab A title for the x axis
 #' @param ylab A title for the y axis
 #' @param lines.show Connect dots of same benchmark runs
@@ -30,10 +32,12 @@ beplot0 <- function(x, ...) {
 #' @param places.lty Type of separator line between podium places
 #' @param places.col Color of separator line between podium places
 #' @param legendfn Function which draws a legend
-#' @method beplot becp
-#' @S3method beplot becp
-#' @rdname beplot
-beplot0.AlgorithmPerformance <- function(x, xlab = "Podium", ylab = NULL,
+#' @param ... Ignored
+#' @return Return value of underlying \code{beplot0.matrix}
+#' @method beplot0 AlgorithmPerformance
+#' @rdname beplot0
+#' @S3method beplot0 AlgorithmPerformance
+beplot0.AlgorithmPerformance <- function(x, xlab = NULL, ylab = NULL,
                                          lines.show = FALSE, lines.alpha = 0.2,
                                          lines.lwd = 1, lines.col = col,
                                          dots.pch = 19, dots.cex = 1,
@@ -48,6 +52,9 @@ beplot0.AlgorithmPerformance <- function(x, xlab = "Podium", ylab = NULL,
 
   m <- do.call(cbind, split(x$value, x$algorithms))
 
+  if ( is.null(xlab) )
+    xlab <- "Podium"
+  
   if ( is.null(ylab) )
     ylab <- levels(x$performances[, drop = TRUE])
 
@@ -61,7 +68,8 @@ beplot0.AlgorithmPerformance <- function(x, xlab = "Podium", ylab = NULL,
 }
 
 
-#' @param x A \code{\link{becp}} object
+
+#' @param x A matrix (row/column = observations/algorithms)
 #' @param col Dot colors
 #' @param xlab A title for the x axis
 #' @param ylab A title for the y axis
@@ -74,17 +82,20 @@ beplot0.AlgorithmPerformance <- function(x, xlab = "Podium", ylab = NULL,
 #' @param places.lty Type of separator line between podium places
 #' @param places.col Color of separator line between podium places
 #' @param legendfn Function which draws a legend
-#' @method beplot matrix
-#' @S3method beplot matrix
-#' @rdname beplot
-beplot0.matrix <- function(x, col = 1:ncol(x), xlab = '', ylab = '',
-                          lines.show = FALSE, lines.alpha = 0.2,
-                          lines.lwd = 1, lines.col = col,
-                          dots.pch = 19, dots.cex = 1,
-                          places.lty = 2, places.col = 1,
-                          legendfn = function(algs, cols){
-                            legend('topleft', algs, lwd = 1, col = cols, bg = 'white')},
-                          ...) {
+#' @param ... Ignored
+#' @return Undefined
+#' @method beplot0 matrix
+#' @rdname beplot0
+#' @S3method beplot0 matrix
+beplot0.matrix <- function(x, col = 1:ncol(x),
+                           xlab = NULL, ylab = NULL,
+                           lines.show = FALSE, lines.alpha = 0.2,
+                           lines.lwd = 1, lines.col = col,
+                           dots.pch = 19, dots.cex = 1,
+                           places.lty = 2, places.col = 1,
+                           legendfn = function(algs, cols){
+                             legend("topleft", algs, lwd = 1, col = cols, bg = "white")},
+                           ...) {
 
   nalgs <- ncol(x)
   algs <- colnames(x)

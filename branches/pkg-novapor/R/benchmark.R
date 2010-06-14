@@ -1,5 +1,28 @@
+#' @include warehouse.R
+{}
 
 
+
+#' Function to execute benchmark experiments and collect all data the
+#' package can analyze. For more sophisticated benchmark experiments
+#' we suggest the usage of the \code{mlr} package.
+#' 
+#' @title Benchmark experiment execution
+#' @param datasets List of data.frames
+#' @param sampling Sampling function, see \code{\link{benchmark-sampling}}.
+#' @param algorithms List of algorithms; i.e., functions which take
+#'   a model formula and a data.frame to fit a model. Note that a
+#'   \code{\link[stats]{predict}} function must be defined as well.
+#' @param performances List of performance measure functions; i.e.,
+#'   functions with arguments \code{yhat} and \code{y}. See, e.g.,
+#'   \code{\link{benchmark-comptime}}.
+#' @param characteristics \code{\link{DatasetCharacteristics}} object
+#' @param test \code{\link{TestPaircomp}} object
+#' @param verbose Show information during execution
+#' @return A \code{\link{warehouse}} object
+#' @seealso \code{\link{warehouse}}, \code{\link{benchmark-sampling}},
+#'   \code{\link{benchmark-comptime}}
+#' @export
 benchmark <- function(datasets, sampling, algorithms = NULL,
                       performances = NULL, characteristics = NULL,
                       test = NULL, verbose = TRUE) {
@@ -120,6 +143,17 @@ benchmark <- function(datasets, sampling, algorithms = NULL,
 
 ### Sampling functions: ##############################################
 
+#' Sampling functions.
+#'
+#' Functions to create a set of learning and test samples using a specific
+#' resampling method.
+#'
+#' @param B Number of learning samples
+#' @return List with bootstrap learning and test samples
+#' @seealso \code{\link{benchmark}}
+#' @rdname benchmark-sampling
+#' @aliases benchmark-sampling
+#' @export
 bs.sampling <- function(B) {
   structure(B = B,
   function(n) {
@@ -132,6 +166,11 @@ bs.sampling <- function(B) {
 
 
 
+#' @param B Number of learning samples
+#' @param psize Size of subsample 
+#' @return List with subsampling learning and test samples
+#' @rdname benchmark-sampling
+#' @export
 sub.sampling <- function(B, psize) {
   structure(B = B, psize = psize,
   function(n) {
@@ -145,12 +184,16 @@ sub.sampling <- function(B, psize) {
 
 
 
+#' @param k Number of cross-validation samples
+#' @return List with cross-validation learning and test samples
+#' @rdname benchmark-sampling
+#' @export
 cv.sampling <- function(k) {
   structure(B = k,
   function(n) {
     T <- split(sample(1:n), rep(1:k, length = n))
 
-    list(L = lapply(T.index, function(.) setdiff(1:n, .)),
+    list(L = lapply(T, function(.) setdiff(1:n, .)),
          T = T)
   })
 }
@@ -159,11 +202,28 @@ cv.sampling <- function(k) {
 
 ### Dummy time performance functions: ################################
 
+#' Dummy functions to enable fitting and prediction time as performance
+#' measures.
+#' 
+#' @param yhat Ignored
+#' @param y Ignored
+#' @return Time (User and System) used for the model fitting
+#' @seealso \code{\link{benchmark}}
+#' @rdname benchmark-comptime
+#' @aliases benchmark-comptime
+#' @export
 fittime <- function(yhat, y) {
   t <- get("ftime", envir = parent.frame())
   t[1] + t[2]
 }
 
+
+
+#' @param yhat Ignored
+#' @param y Ignored
+#' @return Time (User and System) used for the prediction
+#' @rdname benchmark-comptime
+#' @export
 predicttime <- function(yhat, y) {
   t <- get("ptime", envir = parent.frame())
   t[1] + t[2]
