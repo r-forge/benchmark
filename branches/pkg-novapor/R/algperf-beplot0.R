@@ -35,6 +35,9 @@ beplot0 <- function(x, ...) {
 #' @param ... Ignored
 #' @return Return value of underlying \code{beplot0.matrix}
 #' @method beplot0 AlgorithmPerformance
+#' @references
+#'   See \emph{Eugster and Leisch (2008)} and \emph{Eugster et al. (2008)}
+#'   in \code{citation("benchmark")}.
 #' @rdname beplot0
 #' @S3method beplot0 AlgorithmPerformance
 beplot0.AlgorithmPerformance <- function(x, xlab = NULL, ylab = NULL,
@@ -54,7 +57,7 @@ beplot0.AlgorithmPerformance <- function(x, xlab = NULL, ylab = NULL,
 
   if ( is.null(xlab) )
     xlab <- "Podium"
-  
+
   if ( is.null(ylab) )
     ylab <- levels(x$performances[, drop = TRUE])
 

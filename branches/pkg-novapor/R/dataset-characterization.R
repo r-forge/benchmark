@@ -20,6 +20,8 @@
 #'   characterize(ds, StatlogCharacteristics)
 #' @title Dataset characterization framework
 #' @seealso \code{\link{datachar-visualization}}
+#' @references
+#'   See \emph{Eugster et al. (2010)} in \code{citation("benchmark")}.
 #' @export
 characterize <- function(x, y, verbose = FALSE, index = NULL, ...) {
   stopifnot(is(x, 'dataset'))

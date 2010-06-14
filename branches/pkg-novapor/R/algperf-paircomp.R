@@ -19,6 +19,9 @@
 #'   }
 #'
 #' @aliases PaircompDecision
+#' @references
+#'   See \emph{Eugster and Leisch (2008)} and \emph{Eugster et al. (2008)}
+#'   in \code{citation("benchmark")}.
 #' @rdname algperf-paircomp
 #' @export
 paircomp <- function(x, family, type = c("<", "="), ...) {
@@ -67,6 +70,9 @@ print.PaircompDecision <- function(x, ...) {
 #' }
 #'
 #' @aliases TestPaircomp PointPaircomp
+#' @references
+#'   See \emph{Eugster and Leisch (2008)} and \emph{Eugster et al. (2008)}
+#'   in \code{citation("benchmark")}.
 #' @rdname Paircomp
 Paircomp <- proto(expr = {
   name <- "Abstract pairwise comparison method"
