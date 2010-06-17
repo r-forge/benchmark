@@ -28,6 +28,9 @@
 #'   \item \code{viewDatasetBasisCharacterization()}: returns a data
 #'   frame (S3 class \code{DatasetBasisCharacterization}) with columns
 #'   \code{datasets, characteristics, value}.
+#'
+#'   \item \code{viewTestResult()}: returns a data frame (S3 class
+#'   \code{TestResult}) with columns \code{samples, datasets, tests, value}.
 #' }
 #'
 #' @param datasets Names of the datasets
@@ -35,11 +38,11 @@
 #' @param algorithms Names of the candidate algorithms
 #' @param performances Names of the performance measures
 #' @param characteristics Names of the dataset characteristics
-#' @param tests Names of the monitored test statistics
+#' @param tests Names of the monitored test measures
 #' @return Proto object with different views (see Details).
 #' @seealso \code{\link{benchmark}}, \code{\link{as.warehouse}}
 #' @aliases AlgorithmPerformance DatasetCharacterization
-#'   DatasetBasisCharacterization
+#'   DatasetBasisCharacterization TestResult
 #' @export
 warehouse <- function(datasets, B,
                       algorithms = NULL,
@@ -71,8 +74,11 @@ warehouse <- function(datasets, B,
                  algorithm_colors = default_colors(algorithms = algorithms))
 
 
-  if ( !is.null(algorithms) ) {
+  if ( !is.null(algorithms) & !is.null(performances) ) {
     setViewAlgorithmPerformance(a)
+
+    if ( !is.null(tests) )
+      setViewTestResult(a)
   }
 
   if ( !is.null(characteristics) ) {
@@ -206,6 +212,40 @@ setViewDatasetBasisCharacterization <- function(object) {
 
 
 
+setViewTestResult <- function(object) {
+
+  object$viewTestResult <- function(.,
+                                    datasets = NULL,
+                                    tests = NULL) {
+
+    if ( is.null(datasets) )
+      datasets <- .$meta$datasets
+
+    if ( is.null(tests) )
+      tests <- .$meta$tests
+
+
+    view <- lapply(.$data[datasets],
+                   function(ds)
+                   ds$TestResult[,
+                                 tests,
+                                 drop = FALSE])
+    attr(view, "varname") <- "datasets"
+
+    view <- melt(view)
+    view$datasets <- as.factor(view$datasets)
+
+    view <- view[, c("samples", "datasets", "tests", "value")]
+
+
+    structure(view, class = c("TestResult", class(view)))
+  }
+
+  invisible(NULL)
+}
+
+
+
 ### Internal data structures: ########################################
 
 WarehouseArray <- function(B, ..., class) {
@@ -235,8 +275,8 @@ DatasetCharacterizationArray <- function(B, characteristics) {
 
 
 
-TestResultArray <- function(B, results) {
-  WarehouseArray(B, results = results,
+TestResultArray <- function(B, tests) {
+  WarehouseArray(B, tests = tests,
                  class = "TestResultArray")
 }
 

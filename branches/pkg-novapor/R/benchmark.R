@@ -16,7 +16,7 @@
 #'   functions with arguments \code{yhat} and \code{y}. See, e.g.,
 #'   \code{\link{benchmark-comptime}}.
 #' @param characteristics \code{\link{DatasetCharacteristics}} object
-#' @param test \code{\link{TestPaircomp}} object
+#' @param test \code{\link{Test}} object
 #' @param verbose Show information during execution
 #' @return A \code{\link{warehouse}} object
 #' @seealso \code{\link{warehouse}}, \code{\link{as.warehouse}},
@@ -38,7 +38,7 @@ benchmark <- function(datasets, sampling, algorithms = NULL,
 
   doAlgorithmPerformances <- FALSE
   doCharacterization <- FALSE
-  doTests <- FALSE
+  doTest <- FALSE
 
   ndatasets <- deparseArgs(call$datasets)
   nalgorithms <- NULL
@@ -57,6 +57,11 @@ benchmark <- function(datasets, sampling, algorithms = NULL,
     nperformances <- deparseArgs(call$performances)
 
     doAlgorithmPerformances <- TRUE
+
+    if ( !is.null(test) ) {
+      ntests <- c("pvalue", "statistic")
+      doTest <- TRUE
+    }
   }
   else {
     stopifnot(!is.null(algorithms) && !is.null(performances))
@@ -118,16 +123,16 @@ benchmark <- function(datasets, sampling, algorithms = NULL,
                 performances[[p]](pred,
                                   datasets[[m]]$response(index = samples$T[[b]])[[1]])
           }
+        }
 
+        if ( doTest ) {
+          accdat <- warehouse$viewAlgorithmPerformance(dataset = m)
+          accdat <- na.omit(accdat)
+          accdat$samples <- accdat$samples[, drop = TRUE]
 
-          #if ( doTests ) {
-          #  test <- paircomp(warehouse$AlgorithmPerformance(dataset = m,
-          #                                                samples = 1:b),
-          #                 family = tests)
-          #  result <- pc$pairwiseTest()
-          #  # ...
-          #
-          #}
+          acctest <- test$new(accdat)$globalTest()
+          warehouse$data[[m]]$TestResult[b, ] <- c(acctest$getPvalue(),
+                                                   acctest$getStatistic())
         }
       }
     }

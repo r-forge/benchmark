@@ -93,8 +93,6 @@ engine <- LmerTestPaircomp$new(dat1, "=", 0.05)
 engine$decision()
 
 engine <- PercintTestPaircomp$new(dat1, "=", 0.2)
-engine$globalTest()
-engine$pairwiseTest()
 engine$desicion()
 
 engine <- PercintTestPaircomp$new(dat1, "<", 0.49)

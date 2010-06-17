@@ -1,4 +1,5 @@
 #' @include proto.R
+#' @include test.R
 {}
 
 
@@ -51,7 +52,7 @@ print.PaircompDecision <- function(x, ...) {
 
 
 
-#' Pairwise comparisons of algorithm performances
+#' Infrastructure for pairwise comparisons of algorithm performances
 #'
 #' Available \code{TestPaircomp} implementations:
 #' \tabular{rl}{
@@ -73,33 +74,20 @@ print.PaircompDecision <- function(x, ...) {
 #' @references
 #'   See \emph{Eugster and Leisch (2008)} and \emph{Eugster et al. (2008)}
 #'   in \code{citation("benchmark")}.
+#' @seealso \code{\link{Test}}
 #' @rdname Paircomp
 Paircomp <- proto(expr = {
   name <- "Abstract pairwise comparison method"
 
   new <- function(., x, ...) NULL
   decision <- function(., ...) NULL
-
-  emptyLeDecision <- function(.) {
-    matrix(0,
-           nrow = length(.$algorithms),
-           ncol = length(.$algorithms),
-           dimnames = list(.$algorithms, .$algorithms))
-  }
-
-  emptyEqDecision <- function(.) {
-    structure(diag(length(.$algorithms)),
-              dimnames = list(.$algorithms, .$algorithms))
-  }
 })
 
 
 
 TestPaircomp <- proto(Paircomp, expr = {
   name <- "Abstract test based pairwise comparison method"
-
-  globalTest <- function(.) NULL
-  pairwiseTest <- function(.) NULL
+  test <- NULL
 })
 
 
@@ -115,56 +103,35 @@ PointPaircomp <- proto(Paircomp, expr = {
 #' @rdname Paircomp
 #' @export
 FriedmanTestPaircomp <- proto(TestPaircomp, expr = {
-
   new <- function(., x, type, significance) {
-    stopifnot(require("coin"))
-    stopifnot(require("multcomp"))
+    stopifnot(FriedmanTest$requirements())
 
-    stopifnot(nlevels(x$datasets[, drop = TRUE]) == 1)
-    stopifnot(nlevels(x$performances[, drop = TRUE]) == 1)
-
+    test <- FriedmanTest$new(x)
     algorithms <- levels(x$algorithms[, drop = TRUE])
 
     switch(type,
-           "<" = LeFriedmanTestPaircomp$proto(data = x,
+           "<" = LeFriedmanTestPaircomp$proto(test = test,
                                               significance = significance,
                                               algorithms = algorithms),
-           "=" = EqFriedmanTestPaircomp$proto(data = x,
+           "=" = EqFriedmanTestPaircomp$proto(test = test,
                                               significance = significance,
                                               algorithms = algorithms))
-  }
-
-  globalTest <- function(.) {
-    friedman_test(value ~ algorithms | samples, data = .$data)
-  }
-
-  pairwiseTest <- function(.) {
-    symmetry_test(value ~ algorithms | samples, data = .$data,
-                  alternative = "two.sided",
-                  teststat = "max",
-                  xtrafo = function(d) {
-                    trafo(d, factor_trafo = function(x)
-                          model.matrix(~ x - 1) %*% t(contrMat(table(x), "Tukey")))
-                  },
-                  ytrafo = function(d) {
-                    trafo(d, numeric_trafo = rank, block = .$data$samples)
-                  })
   }
 })
 
 LeFriedmanTestPaircomp <- proto(FriedmanTestPaircomp, expr = {
 
   decision <- function(.) {
-    result <- .$emptyLeDecision()
+    result <- emptyLeDecision(.$algorithms)
 
-    gt <- .$globalTest()
+    gt <- .$test$globalTest()
     pt <- NULL
 
-    if ( pvalue(gt) < .$significance ) {
-      pt <- .$pairwiseTest()
+    if ( gt$getPvalue() < .$significance ) {
+      pt <- .$test$pairwiseTest()
 
-      pval <- pvalue(pt, method = "single-step")
-      tstat <- statistic(pt, type = "linear")
+      pval <- pt$getPvalue()
+      tstat <- pt$getStatistic()
 
       desc <- pval < .$significance
 
@@ -176,22 +143,23 @@ LeFriedmanTestPaircomp <- proto(FriedmanTestPaircomp, expr = {
         result[p[1], p[2]] <- 1
     }
 
-    PaircompDecision(result, "<", list(globaltest = gt, pairwisetest = pt))
+    PaircompDecision(result, "<",
+                     list(globaltest = gt, pairwisetest = pt))
   }
 })
 
 EqFriedmanTestPaircomp <- proto(FriedmanTestPaircomp, expr = {
 
   decision <- function(.) {
-    result <- .$emptyEqDecision()
+    result <- emptyEqDecision(.$algorithms)
 
-    gt <- .$globalTest()
+    gt <- .$test$globalTest()
     pt <- NULL
 
-    if ( pvalue(gt) < .$significance ) {
-      pt <- .$pairwiseTest()
+    if ( gt$getPvalue() < .$significance ) {
+      pt <- .$test$pairwiseTest()
 
-      pval <- pvalue(pt, method = "single-step")
+      pval <- pt$getPvalue()
 
       desc <- pval > .$significance
       sigpairs <- strsplit(rownames(desc)[desc], ' - ')
@@ -200,7 +168,8 @@ EqFriedmanTestPaircomp <- proto(FriedmanTestPaircomp, expr = {
         result[p[1], p[2]] <- result[p[2], p[1]] <- 1
     }
 
-    PaircompDecision(result, "=", list(globaltest = gt, pairwisetest = pt))
+    PaircompDecision(result, "=",
+                     list(globaltest = gt, pairwisetest = pt))
   }
 })
 
@@ -213,59 +182,35 @@ EqFriedmanTestPaircomp <- proto(FriedmanTestPaircomp, expr = {
 LmerTestPaircomp <- proto(TestPaircomp, expr = {
 
   new <- function(., x, type, significance, relevance = 0) {
-    stopifnot(require(lme4))
-    stopifnot(require(multcomp))
+    stopifnot(LmerTest$requirements())
 
-    stopifnot(nlevels(x$performances[, drop = TRUE]) == 1)
-
-    model <- {
-      if ( nlevels(x$datasets[, drop = TRUE]) == 1 )
-        lmer(value ~ algorithms + (1 | samples), data = x)
-      else
-        lmer(value ~ algorithms * datasets + (1 | datasets/samples), data = x)
-    }
-
+    test <- LmerTest$new(x)
     algorithms <- levels(x$algorithms[, drop = TRUE])
 
     switch(type,
-           "<" = LeLmerTestPaircomp$proto(model = model,
+           "<" = LeLmerTestPaircomp$proto(test = test,
                                           significance = significance,
                                           relevance = relevance,
                                           algorithms = algorithms),
-           "=" = EqLmerTestPaircomp$proto(model = model,
+           "=" = EqLmerTestPaircomp$proto(test = test,
                                           significance = significance,
                                           relevance = relevance,
                                           algorithms = algorithms))
-  }
-
-  globalTest <- function(.) {
-    K <- diag(length(fixef(.$model)))[-1,]
-    rownames(K) <- names(fixef(.$model))[-1]
-
-    glht(.$model, linfct = K)
-  }
-
-  pairwiseTest <- function(.) {
-    glht(.$model, linfct = mcp(algorithms = "Tukey"))
-  }
-
-  globalTest.pvalue <- function(., test) {
-    as.numeric(summary(test, test = Chisqtest())$test$pvalue)
   }
 })
 
 LeLmerTestPaircomp <- proto(LmerTestPaircomp, expr = {
 
   decision <- function(.) {
-    result <- .$emptyLeDecision()
+    result <- emptyLeDecision(.$algorithms)
 
-    gt <- .$globalTest()
+    gt <- .$test$globalTest()
     pt <- NULL
 
-    if ( .$globalTest.pvalue(gt) < .$significance ) {
-      pt <- .$pairwiseTest()
+    if ( gt$getPvalue() < .$significance ) {
+      pt <- .$test$pairwiseTest()
 
-      ci <- confint(pt, level = 1 - .$significance)$confint
+      ci <- pt$getConfint(1 - .$significance)
 
       desc <- !(ci[, 'lwr'] < 0 & ci[, 'upr'] > 0)
       desc <- desc & !(ci[, 'lwr'] > -.$relevance & ci[, 'upr'] < .$relevance)
@@ -279,23 +224,24 @@ LeLmerTestPaircomp <- proto(LmerTestPaircomp, expr = {
     }
 
 
-    PaircompDecision(result, "<", list(model = .$model, globaltest = gt,
-                                       pairwisetest = pt, confint = ci))
+    PaircompDecision(result, "<",
+                     list(model = .$test$model, globaltest = gt,
+                          pairwisetest = pt, confint = ci))
   }
 })
 
 EqLmerTestPaircomp <- proto(LmerTestPaircomp, expr = {
 
   decision <- function(.) {
-    result <- .$emptyEqDecision()
+    result <- emptyEqDecision(.$algorithms)
 
-    gt <- .$globalTest()
+    gt <- .$test$globalTest()
     pt <- NULL
 
-    if ( .$globalTest.pvalue(gt) < .$significance ) {
-      pt <- .$pairwiseTest()
+    if ( gt$getPvalue() < .$significance ) {
+      pt <- .$test$pairwiseTest()
 
-      ci <- confint(pt, level = 1 - .$significance)$confint
+      ci <- pt$getConfint(1 - .$significance)
 
       desc <- (ci[, 'lwr'] < 0 & ci[, 'upr'] > 0)
       desc <- desc | (ci[, 'lwr'] > -.$relevance & ci[, 'upr'] < .$relevance)
@@ -306,9 +252,9 @@ EqLmerTestPaircomp <- proto(LmerTestPaircomp, expr = {
         result[p[1], p[2]] <- result[p[2], p[1]] <- 1
     }
 
-
-    PaircompDecision(result, "=", list(model = .$model, globaltest = gt,
-                                       pairwisetest = pt, confint = ci))
+    PaircompDecision(result, "=",
+                     list(model = .$test$model, globaltest = gt,
+                          pairwisetest = pt, confint = ci))
   }
 })
 
@@ -321,49 +267,15 @@ EqLmerTestPaircomp <- proto(LmerTestPaircomp, expr = {
 PercintTestPaircomp <- proto(TestPaircomp, expr = {
 
   new <- function(., x, type, significance) {
-    stopifnot(nlevels(x$datasets[, drop = TRUE]) == 1)
-    stopifnot(nlevels(x$performances[, drop = TRUE]) == 1)
+    stopifnot(PercintTest$requirements())
 
+    test <- PercintTest$new(x)
     algorithms <- levels(x$algorithms[, drop = TRUE])
 
-    ci <- t(sapply(split(x$value, x$algorithms), .$pci, significance))
-    ci <- structure(ci, class = c("percint", class(ci)))
-
     switch(type,
-           "<" = LePercintTestPaircomp$proto(ci = ci,
-                                             significance = significance,
-                                             algorithms = algorithms),
-           "=" = EqPercintTestPaircomp$proto(ci = ci,
+           "=" = EqPercintTestPaircomp$proto(test = test,
                                              significance = significance,
                                              algorithms = algorithms))
-  }
-
-  globalTest <- function(.) {
-    .$overlap(.$ci[which.min(.$ci[, 'lwr']), ],
-              .$ci[which.max(.$ci[, 'upr']), ])
-  }
-
-  pairwiseTest <- function(.) {
-    pairs <- t(combn(rownames(.$ci), 2))
-
-    result <- matrix(nrow = nrow(pairs), ncol = 1,
-                     dimnames = list(apply(pairs, 1, paste, collapse = " - "),
-                                     "Overlap"))
-
-    for ( i in seq(length = nrow(result)) ) {
-      result[i, 1] <- .$overlap(.$ci[pairs[i, 1], ],
-                                .$ci[pairs[i, 2], ])
-    }
-
-    result
-  }
-
-  pci <- function(., x, significance) {
-    s <- sort(x)
-    B <- length(x)
-
-    c(lwr = s[ceiling(B * significance)],
-      upr = s[ceiling(B * (1 - significance))])
   }
 
   overlap <- function(., x, y) {
@@ -371,63 +283,24 @@ PercintTestPaircomp <- proto(TestPaircomp, expr = {
   }
 })
 
-LePercintTestPaircomp <- proto(PercintTestPaircomp, expr = {
-
-  desicion <- function(.) {
-    result <- .$emptyLeDecision()
-
-    gt <- .$globalTest()
-    pt <- NULL
-
-    if ( isTRUE(gt) ) {
-      pt <- .$pairwiseTest()
-
-      desc <- pt != TRUE
-
-      sigpairs <- strsplit(rownames(desc)[desc], ' - ')
-
-      # TODO: direction
-
-      for ( p in sigpairs )
-        result[p[1], p[2]] <- 1
-    }
-
-    PaircompDecision(result, "<", list(percint = .$ci, globaltest = gt,
-                                       pairwisetest = pt))
-  }
-})
-
 EqPercintTestPaircomp <- proto(PercintTestPaircomp, expr = {
 
   desicion <- function(.) {
-    result <- .$emptyEqDecision()
+    result <- emptyEqDecision(.$algorithms)
 
-    gt <- .$globalTest()
-    pt <- NULL
+    ci <- .$test$pairwiseTest()$getConfint(1 - .$significance)
 
-    if ( isTRUE(gt) ) {
-      pt <- .$pairwiseTest()
+    desc <- !(ci[, 'lwr'] < 0 & ci[, 'upr'] > 0)
 
-      desc <- pt == TRUE
-      sigpairs <- strsplit(rownames(desc)[desc], ' - ')
+    sigpairs <- strsplit(rownames(ci)[desc], ' - ')
 
-      for ( p in sigpairs )
-        result[p[1], p[2]] <- result[p[2], p[1]] <- 1
-    }
+    for ( p in sigpairs )
+      result[p[1], p[2]] <- result[p[2], p[1]] <- 1
 
-    PaircompDecision(result, "=", list(percint = .$ci, globaltest = gt,
-                                       pairwisetest = pt))
+    PaircompDecision(result, "=",
+                     list(percint = ci))
   }
 })
-
-
-
-plot.percint <- function(x, y = NULL, ...) {
-  stopifnot(require(multcomp))
-
-  t <- list(confint = cbind(Estimate = NA, x))
-  multcomp:::plot.confint.glht(t, main = NA, xlab = NA, ...)
-}
 
 
 
@@ -469,3 +342,20 @@ GenericPointPaircomp <- proto(PointPaircomp, expr = {
   }
 })
 
+
+
+### Internal functions: ##############################################
+
+emptyLeDecision <- function(algorithms) {
+  matrix(0,
+         nrow = length(algorithms),
+         ncol = length(algorithms),
+         dimnames = list(algorithms, algorithms))
+}
+
+
+
+emptyEqDecision <- function(algorithms) {
+  structure(diag(length(algorithms)),
+            dimnames = list(algorithms, algorithms))
+}
