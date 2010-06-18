@@ -59,6 +59,8 @@ benchmark <- function(datasets, sampling, algorithms = NULL,
     doAlgorithmPerformances <- TRUE
 
     if ( !is.null(test) ) {
+      stopifnot(test$requirements())
+
       ntests <- c("pvalue", "statistic")
       doTest <- TRUE
     }
@@ -126,6 +128,8 @@ benchmark <- function(datasets, sampling, algorithms = NULL,
         }
 
         if ( doTest ) {
+          printMsg(sprintf('    test\n'), verbose = verbose)
+
           accdat <- warehouse$viewAlgorithmPerformance(dataset = m)
           accdat <- na.omit(accdat)
           accdat$samples <- accdat$samples[, drop = TRUE]

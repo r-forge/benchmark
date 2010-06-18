@@ -121,7 +121,7 @@ FriedmanPairwiseTestResult <- proto(TestResult, expr = {
 
   .pvalue <- function(.) {
     ret <- as.matrix(pvalue(.$test))
-    rownames(ret) <- paste(levels(mt@statistic@x$algorithms), collapse = " - ")
+    rownames(ret) <- paste(rev(levels(.$test@statistic@x$algorithms)), collapse = " - ")
     colnames(ret) <- ""
 
     ret
@@ -129,7 +129,7 @@ FriedmanPairwiseTestResult <- proto(TestResult, expr = {
 
   .statistic <- function(.) {
     ret <- as.matrix(statistic(.$test))
-    rownames(ret) <- paste(levels(mt@statistic@x$algorithms), collapse = " - ")
+    rownames(ret) <- paste(rev(levels(.$test@statistic@x$algorithms)), collapse = " - ")
     colnames(ret) <- ""
 
     ret
