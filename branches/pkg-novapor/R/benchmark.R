@@ -125,6 +125,7 @@ benchmark <- function(datasets, sampling, algorithms = NULL,
                 performances[[p]](pred,
                                   datasets[[m]]$response(index = samples$T[[b]])[[1]])
           }
+          
         }
 
         if ( doTest ) {

@@ -1,0 +1,13 @@
+#+TAGS: FEATURE BUG
+
+
+
+* TODO Rename 'Test' in 'TestProcedure'				       :FEATURE:
+
+* DONE subset.AlgorithmPerformance: drop levels				   :BUG:
+  CLOSED: [2010-06-22 Tue 17:31]
+
+
+* TODO boxplot.AlgorithmPerformance: order.performance		       :FEATURE:
+  order according to which performance
+  

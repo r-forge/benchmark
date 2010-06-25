@@ -4,6 +4,8 @@
 #' @param order.by Function like \code{\link{mean}}, \code{\link{median}},
 #'   or \code{\link{max}} to calculate a display order of the algorithms;
 #'   or \code{NULL} for no specific order.
+#' @param order.performance Name or index of the reference performance
+#'   measure to calculate the order.
 #' @param dependence.show Show dependence of observations for all, none or
 #'   outlier observations.
 #' @param dependence.col Color of the dependence line.
@@ -13,7 +15,7 @@
 #' @rdname algperf-visualization
 #' @importFrom graphics boxplot
 #' @S3method boxplot AlgorithmPerformance
-boxplot.AlgorithmPerformance <- function(x, order.by = median,
+boxplot.AlgorithmPerformance <- function(x, order.by = median, order.performance = 1,
                                          dependence.show = c("outliers", "all", "none"),
                                          dependence.col = alpha("black", 0.1), ...) {
 
@@ -23,7 +25,7 @@ boxplot.AlgorithmPerformance <- function(x, order.by = median,
 
   dependence.show <- match.arg(dependence.show)
 
-  x <- order.algorithms.by(x, order.by)
+  x <- order.algorithms.by(x, order.by, order.performance)
 
   p <- ggplot(x, aes(algorithms, value))
   p <- p + facet_grid(performances ~ datasets, scales = "free")
@@ -82,6 +84,8 @@ densityplot.AlgorithmPerformance <- function(x, ...) {
 #' @param order.by Function like \code{\link{mean}}, \code{\link{median}},
 #'   or \code{\link{max}} to calculate a display order of the algorithms;
 #'   or \code{NULL} for no specific order.
+#' @param order.performance Name or index of the reference performance
+#'   measure to calculate the order.
 #' @param dependence.show Show dependence of observations for all or none
 #'   observations.
 #' @param dependence.col Color of the dependence line.
@@ -91,7 +95,7 @@ densityplot.AlgorithmPerformance <- function(x, ...) {
 #' @rdname algperf-visualization
 #' @importFrom graphics stripchart
 #' @S3method stripchart AlgorithmPerformance
-stripchart.AlgorithmPerformance <- function(x, order.by = median,
+stripchart.AlgorithmPerformance <- function(x, order.by = median, order.performance = 1,
                                             dependence.show = c("none", "all"),
                                             dependence.col = alpha("black", 0.1), ...) {
 
@@ -119,12 +123,16 @@ stripchart.AlgorithmPerformance <- function(x, order.by = median,
 
 ### Internal functions: ##############################################
 
-order.algorithms.by <- function(x, order.by) {
+order.algorithms.by <- function(x, order.by, order.performance) {
   if ( is.null(order.by) )
     return(x)
 
+  if ( !is.character(order.performance) )
+    order.performance <- levels(x$performances)[order.performance]
+
   order.by <- match.fun(order.by)
 
+  x <- subset(x, performances = order.performance)
   x <- na.omit(x)
 
   o <- order(sapply(split(x$value, x$algorithms), order.by))

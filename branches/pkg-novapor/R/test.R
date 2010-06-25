@@ -29,8 +29,6 @@ Test <- proto(expr = {
 
 
 
-#' @rdname Test
-#' @export
 TestResult <- proto(expr = {
   new <- function(., ...) NULL
   getPvalue <- function(., ...) NULL

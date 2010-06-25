@@ -31,7 +31,11 @@ subset.AlgorithmPerformance <- function(x, datasets = NULL,
          x$algorithms %in% algorithms &
          x$performances %in% performances
 
+  x <- x[idx, ]
+  x$datasets <- x$datasets[, drop = TRUE]
+  x$algorithms <- x$algorithms[, drop = TRUE]
+  x$performances <- x$performances[, drop = TRUE]
 
-  x[idx, ]
+  x
 }
 

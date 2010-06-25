@@ -1,5 +1,6 @@
 
 
+#' Visualization methods for (sequential) test results.
 #' @param x An \code{\link{TestResult}} object
 #' @param ... Ignored.
 #' @return A \code{\link[ggplot2]{ggplot}} object.
