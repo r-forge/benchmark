@@ -2,9 +2,10 @@
 
 
 
-* TODO Rename 'Test' in 'TestProcedure'				       :FEATURE:
+* DONE Rename 'Test' in 'TestProcedure'				    :FEATURE:
+  CLOSED: [2010-07-01 Do 12:00]
 
-* DONE subset.AlgorithmPerformance: drop levels				   :BUG:
+* DONE subset.AlgorithmPerformance: drop levels				:BUG:
   CLOSED: [2010-06-22 Tue 17:31]
 
 * TODO boxplot.AlgorithmPerformance: order.performance 		    :FEATURE:

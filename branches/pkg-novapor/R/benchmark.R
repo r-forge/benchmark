@@ -16,7 +16,7 @@
 #'   functions with arguments \code{yhat} and \code{y}. See, e.g.,
 #'   \code{\link{benchmark-comptime}}.
 #' @param characteristics \code{\link{DatasetCharacteristics}} object
-#' @param test \code{\link{Test}} object
+#' @param test \code{\link{TestProcedure}} object
 #' @param verbose Show information during execution
 #' @return A \code{\link{warehouse}} object
 #' @seealso \code{\link{warehouse}}, \code{\link{as.warehouse}},
@@ -125,7 +125,7 @@ benchmark <- function(datasets, sampling, algorithms = NULL,
                 performances[[p]](pred,
                                   datasets[[m]]$response(index = samples$T[[b]])[[1]])
           }
-          
+
         }
 
         if ( doTest ) {

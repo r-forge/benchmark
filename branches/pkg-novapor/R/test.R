@@ -5,7 +5,7 @@
 
 #' Infrastructure for test procedures.
 #'
-#' Available \code{Test} and corresponding \code{TestResult}
+#' Available \code{TestProcedure} and corresponding \code{TestResult}
 #' implementations:
 #' \tabular{rl}{
 #'   \code{FriedmanTest} \tab Test procedure based on the
@@ -19,8 +19,8 @@
 #' @references
 #'   See \emph{Eugster and Leisch (2008)} and \emph{Eugster et al. (2008)}
 #'   in \code{citation("benchmark")}.
-#' @rdname Test
-Test <- proto(expr = {
+#' @rdname TestProcedure
+TestProcedure <- proto(expr = {
   requirements <- function(., ...) NULL
   new <- function(., ...) NULL
   globalTest <- function(., ...) NULL
@@ -40,9 +40,9 @@ TestResult <- proto(expr = {
 
 ### Implementation -- Friedman test: #################################
 
-#' @rdname Test
+#' @rdname TestProcedure
 #' @export
-FriedmanTest <- proto(Test, expr = {
+FriedmanTest <- proto(TestProcedure, expr = {
 
   requirements <- function(.) {
     stopifnot(require("coin"))
@@ -138,9 +138,9 @@ FriedmanPairwiseTestResult <- proto(TestResult, expr = {
 
 ### Implementation -- Lmer test: #####################################
 
-#' @rdname Test
+#' @rdname TestProcedure
 #' @export
-LmerTest <- proto(Test, expr = {
+LmerTest <- proto(TestProcedure, expr = {
 
   requirements <- function(.) {
     stopifnot(require("lme4"))
@@ -230,7 +230,7 @@ LmerPairwiseTestResult <- proto(TestResult, expr = {
 
 #' @rdname Test
 #' @export
-PercintTest <- proto(Test, expr = {
+PercintTest <- proto(TestProcedure, expr = {
   requirements <- function(.) {
     TRUE
   }
