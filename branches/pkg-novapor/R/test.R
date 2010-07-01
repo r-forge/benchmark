@@ -220,7 +220,7 @@ LmerPairwiseTestResult <- proto(TestResult, expr = {
   }
 
   getConfint <- function(., significance) {
-    confint(.$test, level = 1 - significance)$confint
+    confint(.$test, level = significance)$confint
   }
 })
 

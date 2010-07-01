@@ -8,7 +8,7 @@
 #' @rdname algperf-paircomp
 #' @S3method as.relation PaircompDecision
 #' @export
-as.relation.PaircompDecision <- function(x, verbose = TRUE, ...) {
+as.relation.PaircompDecision <- function(x, verbose = FALSE, ...) {
   r <- relation(incidence = x$decision, ...)
 
 

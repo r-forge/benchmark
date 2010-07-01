@@ -285,7 +285,7 @@ PercintTestPaircomp <- proto(TestPaircomp, expr = {
 
 EqPercintTestPaircomp <- proto(PercintTestPaircomp, expr = {
 
-  desicion <- function(.) {
+  decision <- function(.) {
     result <- emptyEqDecision(.$algorithms)
 
     ci <- .$test$pairwiseTest()$getConfint(1 - .$significance)
