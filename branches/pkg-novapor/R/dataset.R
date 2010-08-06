@@ -125,7 +125,9 @@ as.dataset <- function(formula, data, ordered.as.factor = TRUE,
     }
 
     formula <- function(.) {
-      .$.formula
+      f <- .$.formula
+      attributes(f) <- NULL
+      f
     }
 
     dataname <- function(.) {
@@ -150,8 +152,6 @@ as.dataset <- function(formula, data, ordered.as.factor = TRUE,
       cat("Dataset object:\n")
       cat(.$dataname(), "-> ")
       print(.$formula())
-
-      invisible(.)
     }
   })
 

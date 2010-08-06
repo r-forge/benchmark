@@ -1,3 +1,11 @@
+Changes in benchmark version 0.3-1
+
+  o Added demo and data set for the "benchplot" manuscript.
+
+  o Renamed Test into TestProcedure.
+
+  o Some bugs fixed; especially the proto/pprint/formula bug.
+
 
 Changes in benchmark version 0.3
 

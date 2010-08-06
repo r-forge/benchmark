@@ -105,7 +105,7 @@ stripchart.AlgorithmPerformance <- function(x, order.by = median, order.performa
 
   dependence.show <- match.arg(dependence.show)
 
-  x <- order.algorithms.by(x, order.by)
+  x <- order.algorithms.by(x, order.by, order.performance)
 
   p <- ggplot(x, aes(x = algorithms, y = value, colour = algorithms))
   p <- p + facet_grid(performances ~ datasets, scales = "free")

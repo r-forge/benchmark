@@ -1,5 +1,5 @@
 #' @include proto.R
-#' @include test.R
+#' @include testprocedure.R
 {}
 
 

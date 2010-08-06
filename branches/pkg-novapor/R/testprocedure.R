@@ -228,7 +228,7 @@ LmerPairwiseTestResult <- proto(TestResult, expr = {
 
 ### Implementation -- Percentile interval test: ######################
 
-#' @rdname Test
+#' @rdname TestProcedure
 #' @export
 PercintTest <- proto(TestProcedure, expr = {
   requirements <- function(.) {

@@ -98,7 +98,7 @@ plot(p2$base$pairwisetest$test)
 ## Model diagnostic:
 m <- p2$base$model
 
-op <- par()
+op <- par(no.readonly = TRUE)
 par(mfrow = c(1, 2))
 boxplot(fitted(m) ~ m@frame$algorithms, ylab = "Fitted values")
 boxplot(m@frame$value ~ m@frame$algorithms, ylab = "True values")
@@ -124,7 +124,7 @@ rp2
 ### Statistical test based preferences:
 rt1 <- as.relation(p1)
 rt1
-plot(rt2)
+plot(rt1)
 
 rt2 <- as.relation(p2)
 rt2
