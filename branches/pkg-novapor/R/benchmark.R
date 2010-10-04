@@ -17,6 +17,7 @@
 #'   \code{\link{benchmark-comptime}}.
 #' @param characteristics \code{\link{DatasetCharacteristics}} object
 #' @param test \code{\link{TestProcedure}} object
+#' @param test.burnin Number of burn-in replications
 #' @param verbose Show information during execution
 #' @return A \code{\link{warehouse}} object
 #' @seealso \code{\link{warehouse}}, \code{\link{as.warehouse}},
@@ -25,7 +26,7 @@
 #' @export
 benchmark <- function(datasets, sampling, algorithms = NULL,
                       performances = NULL, characteristics = NULL,
-                      test = NULL, verbose = TRUE) {
+                      test = NULL, test.burnin = 3, verbose = TRUE) {
 
   call <- match.call()
 
@@ -111,7 +112,7 @@ benchmark <- function(datasets, sampling, algorithms = NULL,
           printMsg(sprintf('    k = %s\n', k), verbose = verbose)
 
           ftime <- system.time(
-            fit <- algorithms[[k]](datasets[[m]]$formula(),
+            fit <- algorithms[[k]](as.formula(datasets[[m]]$formula()),
                                    data = datasets[[m]]$data(index = samples$L[[b]])))
 
           ptime <- system.time(
@@ -128,7 +129,7 @@ benchmark <- function(datasets, sampling, algorithms = NULL,
 
         }
 
-        if ( doTest ) {
+        if ( doTest & b > test.burnin ) {
           printMsg(sprintf('    test\n'), verbose = verbose)
 
           accdat <- warehouse$viewAlgorithmPerformance(dataset = m)
