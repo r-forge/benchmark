@@ -1,7 +1,7 @@
 Package: benchmark
 Type: Package
 Title: Benchmark Experiments Toolbox
-Version: 0.3-1
+Version: 0.3-2
 Date: 2010-08-06
 Author: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
 Maintainer: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
