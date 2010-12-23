@@ -81,7 +81,11 @@ bsgraph.dist <- function(x, ndists.show = length(sort(unique(x))),
 #' @rdname bsgraph
 bsgraph.graphNEL <- function(x, layoutType = 'neato', ...) {
 
-  agraph <- agopen(x, '', layoutType=layoutType, ...)
+  attrs <- getDefaultAttrs(layoutType=layoutType)
+  attrs$node$fixedsize <- TRUE
+  attrs$node$fontsize <- 20
+
+  agraph <- agopen(x, '', layoutType=layoutType, attrs = attrs, ...)
   plot(agraph)
 
   # Redraw nodes for beauty:

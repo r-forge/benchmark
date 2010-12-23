@@ -21,13 +21,18 @@ bsplot <- function(x, ...) {
 #' @method bsplot relation_ensemble
 #' @S3method bsplot relation_ensemble
 #' @rdname bsplot
-bsplot.relation_ensemble <- function(x, stat = NULL, ds.order = NULL, ...) {
+bsplot.relation_ensemble <- function(x, stat = NULL, ds.order = NULL, alg.order = NULL, ...) {
   rm <- ranking(x)
 
   if ( !is.null(ds.order) ) {
     rm <- rm[,ds.order]
     stat <- stat[,ds.order]
   }
+  if ( !is.null(alg.order) ) {
+    rm <- rm[alg.order,]
+    stat <- stat[alg.order,]
+  }
+
 
   bsplot(rm, stat=stat, ...)
 }
@@ -48,7 +53,7 @@ bsplot.matrix <- function(x, stat = NULL,
                            col = structure(seq_len(nrow(x)) + 1,
                            names = rownames(x)),
                            ylab = 'Datasets', xlab = 'Podium', sig.lwd = 4,
-                           stat.col = NULL, ...) {
+                           stat.col = NULL, ylab.las = NULL, ...) {
 
   griddim <- dim(x)
   nalgs <- griddim[1]
@@ -104,12 +109,12 @@ bsplot.matrix <- function(x, stat = NULL,
 
   ### Plot:
   plot(1, type='n', xlim=c(0,nalgs), ylim=c(0,nds),
-       axes=FALSE, xlab=xlab, ylab=ylab)
+       axes=FALSE, xlab=xlab, ylab=ylab, ...)
 
   axis(1, labels=FALSE)
   mtext(paste(seq_len(nalgs), '.', sep=''),1,
         at=0.5+(seq_len(nalgs)-1), line=1)
-  axis(2, at=0.5+(seq_len(nds)-1), labels=colnames(x))
+  axis(2, at=0.5+(seq_len(nds)-1), labels=colnames(x), las = ylab.las)
   box()
 
   rect(gxleft, gybottom, gxright, gytop,
