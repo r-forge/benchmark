@@ -67,7 +67,7 @@ benchmark <- function(datasets, sampling, algorithms = NULL,
     }
   }
   else {
-    stopifnot(!is.null(algorithms) && !is.null(performances))
+    stopifnot(is.null(algorithms) && is.null(performances))
   }
 
   if ( !is.null(characteristics) ) {
