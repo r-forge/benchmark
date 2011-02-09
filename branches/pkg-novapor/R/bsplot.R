@@ -18,6 +18,7 @@ bsplot0 <- function(x, ...) {
 #' @param stat A matrix with statistics to display (rows are
 #'   the algorithms, columns the data sets)
 #' @param ds.order Data set order
+#' @param alg.order Algorithm order
 #' @method bsplot0 relation_ensemble
 #' @S3method bsplot0 relation_ensemble
 #' @rdname bsplot0
@@ -46,6 +47,7 @@ bsplot0.relation_ensemble <- function(x, stat = NULL, ds.order = NULL, alg.order
 #' @param ylab A title for the y axis
 #' @param sig.lwd Line width of the significance sperator line
 #' @param stat.col Colors of the statistics
+#' @param ylab.las \code{las} of the labels of the y axis
 #' @method bsplot0 matrix
 #' @S3method bsplot0 matrix
 #' @rdname bsplot0

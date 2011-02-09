@@ -19,7 +19,7 @@ bsgraph0 <- function(x, ...) {
 #' @param edge.col The color of edges (one or one for each distance level)
 #' @param edge.lwd The line width of edges (one or one for each distance level)
 #' @param node.fill The colors of nodes
-#' @return The return value of \code{\link{bsgraph.graphNEL}}
+#' @return The return value of \code{\link{bsgraph0.graphNEL}}
 #' @method bsgraph0 dist
 #' @S3method bsgraph0 dist
 #' @rdname bsgraph0
@@ -75,7 +75,7 @@ bsgraph0.dist <- function(x, ndists.show = length(sort(unique(x))),
 
 #' @param x A \code{\link[graph]{graphNEL} object
 #' @param layoutType Defines the layout engine
-#' @return Invisible return of the \code{\link[graph]{Ragraph}} object
+#' @return Invisible return of the \code{\link[Rgraphviz]{Ragraph}} object
 #' @method bsgraph0 graphNEL
 #' @S3method bsgraph0 graphNEL
 #' @rdname bsgraph0
@@ -85,17 +85,17 @@ bsgraph0.graphNEL <- function(x, layoutType = 'neato', ...) {
   attrs$node$fixedsize <- TRUE
   attrs$node$fontsize <- 20
 
-  agraph <- agopen(x, '', layoutType=layoutType, attrs = attrs, ...)
-  plot(agraph)
+  ag <- agopen(x, '', layoutType=layoutType, attrs = attrs, ...)
+  plot(ag)
 
   # Redraw nodes for beauty:
   par(new=TRUE)
-  agraph2 <- agraph
-  agraph2@AgEdge <- list()
-  plot(agraph2)
+  ag2 <- ag
+  ag2@AgEdge <- list()
+  plot(ag2)
 
 
-  invisible(agraph)
+  invisible(ag)
 }
 
 
