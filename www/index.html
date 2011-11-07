@@ -20,10 +20,63 @@
     In statistical learning benchmarking is the methodology of
     comparing learners or algorithms with respect to a certain
     performance measure. The benchmarking process abstractly consists
-    of three levels: Setup, Execution and Analysis. In each level
-    different statistical and computational aspects play a role.
+    of three levels: Setup, Execution and Analysis. (1) The Setup
+    defines the design of a benchmark experiment; data set, candidate
+    algorithms, performance measures and a suitable resampling
+    strategy are declared. (2) In the Execution level the defined
+    setup is executed. Here, computational aspects play a major role;
+    an important example is the parallel computation of the experiment
+    on different computers. (3) In the Analysis level the computed raw
+    performance measures are analyzed using exploratory and
+    inferential methods. This package is mainly concerned with the
+    Analysis level; in what the derivation of a statistically correct
+    order of the candidate algorithms is a major objective.
   </p>
 
+
+  <h2>Demonstration</h2>
+  <h3>Exploratory analysis of benchmark experiments</h3>
+
+  <p>
+  <a href="http://www.statistik.lmu.de/~eugster/publications/thesis-2011-phd.pdf#page=41"><img src="beplot.png" /></a>
+  <a href="http://www.statistik.lmu.de/~eugster/publications/thesis-2011-phd.pdf#page=82"><img src="bsgraph.png" /></a>
+  </p>
+
+  <p>
+    See for example the demos <tt>benchplot</tt>
+    and <tt>lsbenchplot-cs621</tt> for the analysis of six common
+    learning algorithms
+    on <a href="http://archive.ics.uci.edu/ml/">UCI</a> data sets:
+    <blockquote>
+    <pre>
+R> demo("benchplot")
+R> demo("lsbenchplot-cs621")
+    </pre>
+    </blockquote>
+  </p>
+
+
+  <h3>Archetypal analysis of benchmark experiments</h3>
+
+  <p>
+  <a href="http://www.statistik.lmu.de/~eugster/publications/thesis-2011-phd.pdf#page=89"><img src="atypes.png" /></a>
+  </p>
+
+  <p>
+    In general, comparing algorithms often means comparing with a
+    "best" or "worst" algorithm, i.e., comparing with an extreme
+    algorithm (the benchmark). However, in case of of more than one
+    performance measure or more than one data set no uniquely defined
+    extreme values are
+    available---<a href="http://archetypes.r-forge.r-project.org/">archetypal
+    analysis</a> can be used to compute data-driven benchmark algorithms:
+    <blockquote>
+    <pre>
+R> demo("lsbenchplot-cs621-atypes")
+    </pre>
+    </blockquote>
+  </p>
+  
 
   <h2>Download</h2>
 
@@ -42,7 +95,6 @@ R> install.packages("benchmark")
     The <b>development version</b> is available on
     <a href="https://r-forge.r-project.org/projects/benchmark/">R-Forge</a>.
   </p>
-
 
   <p class="footer">
     Created by <a href="http://www.statistik.lmu.de/~eugster"
