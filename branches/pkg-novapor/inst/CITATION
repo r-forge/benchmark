@@ -41,26 +41,6 @@ citEntry(key = "benchplot2010",
 
 
 
-citEntry(key = "ibenchplot2009",
-         entry = "techreport",
-	 author = personList(as.person("Manuel J. A. Eugster"),
-                             as.person("Friedrich Leisch")),
-	 title = "Exploratory Analysis of Benchmark Experiments -- An Interactive Approach",
-	 institution = "Institut fuer Statistik, Ludwig-Maximilians-Universitaet Muenchen, Germany",
-	 year = "2009",
-	 number = "56",
-	 url = "http://epub.ub.uni-muenchen.de/10604/",
-
-	 header="To cite interactive analysis of benchmark experiments in publications use:",
-
-	 textVersion=paste("Manuel J. A. Eugster and Friedrich Leisch.",
-		"Exploratory Analysis of Benchmark Experiments -- An Interactive Approach",
-		"Technical Report 56, Department of Statistics, Ludwig-Maximilians-Universitaet Muenchen, Germany. 2009.",
-		"http://epub.ub.uni-muenchen.de/10604/")
-)
-
-
-
 citEntry(key = "psychobench2010",
          entry = "techreport",
 	 author = personList(as.person("Manuel J. A. Eugster"),
@@ -82,5 +62,46 @@ citEntry(key = "psychobench2010",
 
 
 
+citEntry(key = "ibenchplot2011",
+         entry = "article",
+	 author = personList(as.person("Manuel J. A. Eugster"),
+                             as.person("Friedrich Leisch")),
+	 title = "Exploratory Analysis of Benchmark Experiments -- An Interactive Approach",
+         journal = "Computational Statistics",
+	 year = "2011",
+         volume = "26",
+	 number = "4",
+         pages = "699--710",
+         doi = "10.1007/s00180-010-0227-z",
+	 url = "http://epub.ub.uni-muenchen.de/10604/",
 
+	 header="To cite interactive analysis of benchmark experiments in publications use:",
+
+	 textVersion=paste("Manuel J. A. Eugster and Friedrich Leisch.",
+		"Exploratory Analysis of Benchmark Experiments -- An Interactive Approach",
+		"Computational Statistics, 26(4):699-710, 2011. DOI 10.1007/s00180-010-0227-z.",
+		"http://epub.ub.uni-muenchen.de/10604/")
+)
+
+
+citEntry(key = "lsbenchplot2012",
+         entry = "article",
+         author = personList(as.person("Manuel J. A. Eugster"),
+	                     as.person("Torsten Hothorn"),
+                             as.person("Friedrich Leisch")),
+         title = "Domain-Based Benchmark Experiments: Exploratory and Inferential Analysis",
+         journal = "Austrian Journal of Statistics",
+         year = "2012",
+         volume = "41",
+         number = "1",
+         pages = "5--26",
+         url = "http://www.stat.tugraz.at/AJS/ausg121/121Leisch.pdf",
+
+         header = "To cite domain-based benchmark experiments in publications use:",
+
+         textVersion = paste("Manuel J. A. Eugster, Torsten Hothorn, and Friedrich Leisch.",
+                             "Domain-based benchmark experiments: Exploratory and inferential analysis.",
+                             "Austrian Journal of Statistics, 41(1):5-26, 2012.",
+                             "http://www.stat.tugraz.at/AJS/ausg121/121Leisch.pdf")
+)
 

@@ -1,8 +1,8 @@
 Package: benchmark
 Type: Package
 Title: Benchmark Experiments Toolbox
-Version: 0.3-2
-Date: 2011-02-09
+Version: 0.3-3
+Date: 2012-01-30
 Author: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
 Maintainer: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
 Depends: utils, proto, ggplot2, reshape, relations
@@ -15,3 +15,5 @@ License: GPL version 2 or newer
 Revision: 59
 LazyLoad: false
 LazyData: true
+URL: http://benchmark.r-forge.r-project.org/
+

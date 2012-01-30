@@ -1,18 +1,15 @@
 
 
-#' @importFrom ggplot2 print.proto
-{}
-#print.proto <- function(x, ...) {
-#   x$pprint(...)
-# }
+
+print.proto <- function(x, ...) {
+  x$pprint(...)
+}
 
 
 
-#' @importFrom ggplot2 pprint
-{}
-# pprint <- function (x, ...) {
-#   print(as.list(x), ...)
-# }
+pprint <- function (x, ...) {
+  print(as.list(x), ...)
+}
 
 
 
