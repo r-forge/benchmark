@@ -1,4 +1,83 @@
+#' @include proto.R
+{}
 
+
+
+#' Dataset characteristics.
+#'
+#' "Abstract" proto object with the methods:
+#' \tabular{rl}{
+#'   \code{requirements()} \tab Ensures that all needed packages
+#'     are available\cr
+#'   \code{map()} \tab Returns the list of map functions\cr
+#'   \code{reduce()} \tab Returns the list of reduce functions
+#' }
+#' An implementation has to override these methods.
+#'
+#' Available implementations:
+#' \tabular{rlll}{
+#'   \code{StatlogCharacteristics} \tab Implementation of the StatLog
+#'     project dataset characteristics
+#' }
+#'
+#' @seealso \code{\link{characterize}}, \code{\link{datachar-visualization}}
+#' @references
+#'   See \emph{Eugster et al. (2010)} in \code{citation("benchmark")}.
+#'
+#'   R. D. King, C. Feng and A. Sutherland. STATLOG: Comparison of
+#'   classification algorithms on large real-world problems. Applied
+#'   Artifical Intelligence, 9, 1995.
+#' @rdname DatasetCharacteristics
+DatasetCharacteristics <- proto(expr = {
+  name <- "Generic"
+
+  requirements <- function(., ...) NULL
+
+  map <- function(., ...) list()
+  reduce <- function(., ...) list()
+
+
+  pprint <- function(., ...) {
+    cat(.$name, "characteristics\n")
+  }
+
+  psummary <- function(., ...) {
+    chars <- .$characteristics(which = "reduce", flat = TRUE)
+
+    .$print(...)
+    cat(paste(" ", chars, collapse = "\n"), "\n")
+  }
+
+  characteristics <- function(., which = c("reduce", "map"), flat = TRUE, ...) {
+    traverse.tree <- function(tree, level = NULL) {
+      l <- lapply(names(tree),
+                  function(nodename) {
+                    if ( is.null(tree[[nodename]]) )
+                      return(NULL)
+
+                    if ( is(tree[[nodename]], "list") )
+                      return(traverse.tree(tree[[nodename]],
+                                           c(level, nodename)))
+
+                    NA
+                })
+
+      structure(l, names = names(tree))
+    }
+
+    which <- match.arg(which)
+    chars <- traverse.tree(do.call(which, list(), envir = .))
+
+    if ( flat )
+      names(unlist(chars))
+    else
+      chars
+  }
+})
+
+
+
+### Definition helper functions: #####################################
 
 o <- function(...) {
   fs <- list(...)
@@ -6,107 +85,86 @@ o <- function(...) {
 }
 
 
+
 p <- function(fn, args) {
   structure(list(fn = fn, args = args), class = 'p')
 }
 
 
-characteristics <- function() {
-  structure(list(map = list(),
-                 reduce = list()), class = 'characteristics')
-}
 
+### Implementation -- StatLog characteristics: #######################
 
-print.characteristics <- function(x, ...) {
-  cat(sQuote(attr(x, 'name')), 'characteristics\n')
-}
+#' @rdname DatasetCharacteristics
+#' @export
+StatlogCharacteristics <- proto(DatasetCharacteristics, expr = {
+  name <- "Statlog"
 
+  requirements <- function(., ...) {
+    stopifnot(require(e1071))
+    stopifnot(require(entropy))
 
-summary.characteristics <- function(object, ...) {
-  traverse.tree <- function(tree, level = NULL) {
-    lapply(names(tree),
-           function(nodename) {
-             class <- class(tree[[nodename]])
-             ws <- paste(rep('  ', length(level)), collapse = '')
-
-             cat(sprintf('%s%s%s%s',
-                         ws,
-                         ifelse(class != 'list', '', ''),
-                         nodename,
-                         ifelse(class == 'list', ':', '')), '\n')
-
-             if ( class == 'list' )
-               return(traverse.tree(tree[[nodename]],
-                                    c(level, nodename)))
-           })
+    TRUE
   }
 
-  cat(sQuote(attr(object, 'name')), 'characteristics:\n\n')
-  invisible(traverse.tree(object$map))
-}
+  map <- function(.) {
+    map <- list()
+
+    map$input <- list(n = nrow,
+                      attr = ncol,
+                      factor = list(attr = ncol,
+                                    . = list(nlevels = nlevels,
+                                             entropy = o(na.omit, as.integer,
+                                                         entropy.empirical))),
+                      numeric = list(attr = ncol,
+                                     mac = mac,
+                                     . = list(skewness = o(na.omit, skewness),
+                                              kurtosis = o(na.omit, kurtosis))))
+
+    map$response <- list(factor = list(. = list(cl = nlevels,
+                                                entropy = o(na.omit, as.integer,
+                                                            entropy.empirical))))
+
+    map$input2response <- list(numeric2factor = list(fcc = fcc,
+                                                     frac1 = frac1),
+                               factor2factor = list(. = list(mi = mi)))
+    map
+  }
+
+  reduce <- function(.) {
+    reduce <- list()
+
+    reduce$input <- list(n = identity,
+                         attr = identity,
+                         factor = list(attr = na0,
+                                       . = list(bin = p(binary, list(c("input", "factor", ".", "nlevels"))),
+                                                entropy = mean,
+                                                nlevels = NULL)),
+                         numeric = list(attr = na0,
+                                        mac = mean,
+                                        . = list(skewness = mean,
+                                                 kurtosis = mean)))
+
+    reduce$response <- list(factor = list(. = list(cl = identity,
+                                                   entropy = identity)))
+
+    reduce$input2response <- list(numeric2factor = list(fcc = identity,
+                                                        frac1 = identity),
+                                  factor2factor = list(. = list(mi = mean),
+                                                       enattr = p(enattr, list(c("response", "factor", ".", "entropy"),
+                                                                               c("input2response", "factor2factor", ".", "mi"))),
+                                                       nsratio = p(nsratio, list(c("input", "factor", ".", "entropy"),
+                                                                                 c("input2response", "factor2factor", ".", "mi")))))
+    reduce
+  }
+})
+
+StatlogCharacteristics <- structure(StatlogCharacteristics,
+                                    class = c("characteristics",
+                                              class(StatlogCharacteristics)))
 
 
 
-### Statlog characteristics:
-
-statlog <- function() {
-  library(e1071)
-  library(entropy)
-
-  ch <- characteristics()
-
-  ### Map:
-  ch$map$input <- list(n = nrow,
-                       attr = ncol,
-                       factor = list(attr = ncol,
-                                     . = list(nlevels = nlevels,
-                                              entropy = o(na.omit, as.integer,
-                                                          entropy.empirical))),
-                       numeric = list(attr = ncol,
-                                      mac = mac,
-                                      . = list(skewness = o(na.omit, skewness),
-                                               kurtosis = o(na.omit, kurtosis))))
-
-  ch$map$response <- list(factor = list(. = list(cl = nlevels,
-                                                 entropy = o(na.omit, as.integer,
-                                                             entropy.empirical))))
-
-  ch$map$input2response <- list(numeric2factor = list(fcc = fcc,
-                                                      frac1 = frac1),
-                                factor2factor = list(. = list(mi = mi)))
-
-
-  ### Reduce:
-  ch$reduce$input <- list(n = identity,
-                          attr = identity,
-                          factor = list(attr = na0,
-                                        . = list(bin = p(binary, list(c('input', 'factor', '.', 'nlevels'))),
-                                                 entropy = mean,
-                                                 nlevels = NULL)),
-                          numeric = list(attr = na0,
-                                         mac = mean,
-                                         . = list(skewness = mean,
-                                                  kurtosis = mean)))
-
-  ch$reduce$response <- list(factor = list(. = list(cl = identity,
-                                                    entropy = identity)))
-
-  ch$reduce$input2response <- list(numeric2factor = list(fcc = identity,
-                                                         frac1 = identity),
-                                   factor2factor = list(. = list(mi = mean),
-                                                        enattr = p(enattr, list(c('response',
-                                                                                  'factor', '.', 'entropy'),
-                                                                                c('input2response', 'factor2factor', '.', 'mi'))),
-                                                        nsratio = p(nsratio, list(c('input', 'factor', '.', 'entropy'),
-                                                                                  c('input2response', 'factor2factor', '.', 'mi')))))
-
-  structure(ch, name = 'StatLog',
-            class = c('statlog.characteristics', class(ch)))
-}
-
-
-
-### Implementation of needed characteristics:
+### Implementation of needed characteristics: ########################
 
 na0 <- function(x) {
   ifelse(is.na(x), 0, x)

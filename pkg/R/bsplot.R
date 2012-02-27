@@ -9,8 +9,8 @@
 #' @param x The object to plot.
 #' @param ... Unused
 #' @export
-bsplot <- function(x, ...) {
-  UseMethod('bsplot')
+bsplot0 <- function(x, ...) {
+  UseMethod('bsplot0')
 }
 
 
@@ -18,11 +18,12 @@ bsplot <- function(x, ...) {
 #' @param stat A matrix with statistics to display (rows are
 #'   the algorithms, columns the data sets)
 #' @param ds.order Data set order
-#' @method bsplot relation_ensemble
-#' @S3method bsplot relation_ensemble
-#' @rdname bsplot
-bsplot.relation_ensemble <- function(x, stat = NULL, ds.order = NULL, alg.order = NULL, ...) {
-  rm <- ranking(x)
+#' @param alg.order Algorithm order
+#' @method bsplot0 relation_ensemble
+#' @S3method bsplot0 relation_ensemble
+#' @rdname bsplot0
+bsplot0.relation_ensemble <- function(x, stat = NULL, ds.order = NULL, alg.order = NULL, ...) {
+  rm <- bsranking(x)
 
   if ( !is.null(ds.order) ) {
     rm <- rm[,ds.order]
@@ -34,7 +35,7 @@ bsplot.relation_ensemble <- function(x, stat = NULL, ds.order = NULL, alg.order 
   }
 
 
-  bsplot(rm, stat=stat, ...)
+  bsplot0(rm, stat=stat, ...)
 }
 
 
@@ -46,10 +47,11 @@ bsplot.relation_ensemble <- function(x, stat = NULL, ds.order = NULL, alg.order 
 #' @param ylab A title for the y axis
 #' @param sig.lwd Line width of the significance sperator line
 #' @param stat.col Colors of the statistics
-#' @method bsplot matrix
-#' @S3method bsplot matrix
-#' @rdname bsplot
-bsplot.matrix <- function(x, stat = NULL,
+#' @param ylab.las \code{las} of the labels of the y axis
+#' @method bsplot0 matrix
+#' @S3method bsplot0 matrix
+#' @rdname bsplot0
+bsplot0.matrix <- function(x, stat = NULL,
                            col = structure(seq_len(nrow(x)) + 1,
                            names = rownames(x)),
                            ylab = 'Datasets', xlab = 'Podium', sig.lwd = 4,
@@ -133,6 +135,15 @@ bsplot.matrix <- function(x, stat = NULL,
   invisible(NULL)
 }
 
+
+bsranking <- function(x) {
+  algs <- unlist(relation_domain(x)[[1]])
+  rm <- sapply(x,
+               function(r)
+               sort(rank(relation_scores(r, decreasing = FALSE),
+                         ties.method = "min"))[algs])
+  rm
+}
 
 
 
