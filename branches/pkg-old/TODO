@@ -1,0 +1,7 @@
+
+o add an `empty.bench()` function which construct a correct bench
+  array.
+
+o rearrange array dimensions for `bench` and `characterization.array`;
+  measurement should be the last dimension.
+
