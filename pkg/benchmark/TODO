@@ -1,0 +1,28 @@
+#+TAGS: FEATURE BUG
+
+
+
+* DONE Rename 'Test' in 'TestProcedure'				    :FEATURE:
+  CLOSED: [2010-07-01 Do 12:00]
+
+* DONE subset.AlgorithmPerformance: drop levels				:BUG:
+  CLOSED: [2010-06-22 Tue 17:31]
+
+* TODO boxplot.AlgorithmPerformance: order.performance 		    :FEATURE:
+  order according to which performance
+
+* DONE Include benchplot-manuscript code			    :FEATURE:
+  CLOSED: [2010-07-01 Do 11:54]
+
+* TODO Include ibenchplot-manuscript code			    :FEATURE:
+
+* TODO PercintPaircomp: "desicion" 					:BUG:
+
+* TODO GenericPointEstimator: quantiles				    :FEATURE:
+  enable to use only data inside the x% quantile
+
+* DONE as.relation: verbose = FALSE as default				:BUG:
+  CLOSED: [2010-06-30 Mi 11:24]
+
+* DONE LmerTestPaircomp: 1 where no 1 should be				:BUG:
+  CLOSED: [2010-07-01 Do 10:43]
