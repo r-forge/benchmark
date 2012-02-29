@@ -1,4 +1,0 @@
-benchplot    Analysis of a benchmark experiment on the monks3 dataset with six algorithms and two performance measures
-lsbenchplot-cs621    Analysis of the UCI domain benchmark experiment with six algorithms and two performance measures
-lsbenchplot-cs621-atypes    Archetypal analysis of the UCI domain benchmark experiment
-lsbenchplot-gh    Analysis of the Grasshopper domain benchmark experiment with six algorithms and two performance measures
