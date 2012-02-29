@@ -149,7 +149,7 @@ as.dataset <- function(formula, data, ordered.as.factor = TRUE,
 
     ## Default proto methods:
     pprint <- function(., ...) {
-      cat("Dataset object:\n")
+      cat("Dataset object\n")
       cat(.$dataname(), "-> ")
       print(.$formula())
     }

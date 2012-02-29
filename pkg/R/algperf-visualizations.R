@@ -132,7 +132,7 @@ order.algorithms.by <- function(x, order.by, order.performance) {
 
   order.by <- match.fun(order.by)
 
-  x <- subset(x, performances = order.performance)
+  x <- subset(x, performances == order.performance)
   x <- na.omit(x)
 
   o <- order(sapply(split(x$value, x$algorithms), order.by))

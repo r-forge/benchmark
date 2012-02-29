@@ -92,6 +92,25 @@ warehouse <- function(datasets, B,
 
 
 
+#' @S3method print warehouse
+print.warehouse <- function(x, ...) {
+  out <- matrix(NA_character_, nrow = 2, ncol = 2)
+  out[1, ] <- c("Algorithms", paste(x$meta$algorithms, collapse = ", "))
+  out[2, ] <- c("Datasets", paste(x$meta$datasets, collapse = ", "))
+
+  out2 <- x$meta[4:6]
+  out2 <- !sapply(out2, is.null)
+
+  cat("Warehouse object\n")
+  writeLines(formatDL(out, style = "list"))
+  cat("Data:\n")
+  print(out2)
+
+  invisible(x)
+}
+
+
+
 ### Data views: ######################################################
 
 setViewAlgorithmPerformance <- function(object) {

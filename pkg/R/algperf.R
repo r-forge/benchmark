@@ -14,35 +14,18 @@
 #'   selected observations
 #' @method subset AlgorithmPerformance
 #' @S3method subset AlgorithmPerformance
-subset.AlgorithmPerformance <- function(x, datasets = NULL,
-                                        algorithms = NULL,
-                                        performances = NULL,
-                                        samples = NULL, ...) {
+subset.AlgorithmPerformance <- function(x, subset,  ...) {
+  subset <- substitute(subset)
 
-  if ( is.null(datasets) )
-    datasets <- levels(x$datasets)
+  y <- subset.data.frame(x, eval(subset), ...)
+  y$datasets <- y$datasets[, drop = TRUE]
+  y$algorithms <- y$algorithms[, drop = TRUE]
+  y$performances <- y$performances[, drop = TRUE]
+  y$samples <- y$samples[, drop = TRUE]
 
-  if ( is.null(algorithms) )
-    algorithms <- levels(x$algorithms)
+  attr(y, "algorithm_colors") <- attr(x, "algorithm_colors")
+  attr(y, "class") <- attr(x, "class")
 
-  if ( is.null(performances) )
-    performances <- levels(x$performances)
-
-  if ( is.null(samples) )
-    samples <- levels(x$samples)
-
-
-  idx <- x$datasets %in% datasets &
-         x$algorithms %in% algorithms &
-         x$performances %in% performances &
-         x$samples %in% samples
-
-  x <- x[idx, ]
-  x$datasets <- x$datasets[, drop = TRUE]
-  x$algorithms <- x$algorithms[, drop = TRUE]
-  x$performances <- x$performances[, drop = TRUE]
-  x$samples <- x$samples[, drop = TRUE]
-
-  x
+  y
 }
 

@@ -19,10 +19,6 @@ plot.DatasetCharacterization <- function(x, y = NULL, lines = TRUE, points = TRU
                                          null.line = TRUE, null.line.col = gray(0.7),
                                          basis = TRUE, basis.col = NULL, ...) {
 
-  ## Make codetools (R CMD check) happy:
-  characteristics <- value <- datasets <- samples <- NULL
-
-
   stopifnot(nlevels(x$datasets[, drop = TRUE]) == 1)
 
   x <- ddply(x, "characteristics", dcscale)
@@ -59,12 +55,6 @@ plot.DatasetCharacterization <- function(x, y = NULL, lines = TRUE, points = TRU
            theme_update(axis.text.x = theme_text(angle = 90, hjust = 1))
 
   p
-}
-
-
-
-plot.DatasetBasisCharacterization <- function(x, y) {
-
 }
 
 
