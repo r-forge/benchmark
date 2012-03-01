@@ -1,0 +1,21 @@
+Package: psychobench
+Type: Package
+Title: Supplementary package "(Psycho-)Analysis of Benchmark Experiments"
+Version: 0.1
+Date: 2012-03-01
+Author: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
+Maintainer: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
+Depends:
+    utils
+Suggests:
+    benchmark (>= 0.3-4),
+    psychotree,
+    e1071,
+    class,
+    entropy,
+    classInt
+Description: Supplementary package for the article "(Psycho-)Analysis
+    of Benchmark Experiments: A Formal Framework for Investigating the
+    Relationship between Data Sets and Learning Algorithms" by
+    Eugster, Leisch, and Strobl (see citation("psychobench").
+License: GPL (>= 2)
