@@ -43,6 +43,8 @@ as.psychobench <- function(x, comparisons = TRUE) {
     ret <- subset.data.frame(ret, select = -c(samples, datasets, performances))
   }
 
+  class(ret) <- "data.frame"
+
   ret
 }
 
