@@ -8,7 +8,7 @@ Maintainer: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
 Depends:
     utils
 Suggests:
-    benchmark (>= 0.3-4),
+    benchmark,
     psychotree,
     e1071,
     class,
