@@ -4,20 +4,26 @@
 
 
 #' Return subsets of \code{AlgorithmPerformance} objects
+#'
 #' @param x An \code{\link{AlgorithmPerformance}} object
-#' @param datasets Selected datasets
-#' @param algorithms Selected algorithms
-#' @param performances Selected performances
-#' @param samples Selected samples
-#' @param ... Ignored
+#' @param subset Logical expression indicating rows to keep
+#' @param ... Passed to the underlying \code{\link{subset.data.frame}}
+#'   call
+#'
 #' @return An \code{\link{AlgorithmPerformance}} object with just the
 #'   selected observations
+#'
 #' @method subset AlgorithmPerformance
+#'
 #' @S3method subset AlgorithmPerformance
 subset.AlgorithmPerformance <- function(x, subset,  ...) {
-  subset <- substitute(subset)
+  e <- substitute(subset)
+  r <- eval(e, x, parent.frame())
+  if (!is.logical(r))
+    stop("'subset' must evaluate to logical")
+  r <- r & !is.na(r)
 
-  y <- subset.data.frame(x, eval(subset), ...)
+  y <- x[r, ]
   y$datasets <- y$datasets[, drop = TRUE]
   y$algorithms <- y$algorithms[, drop = TRUE]
   y$performances <- y$performances[, drop = TRUE]

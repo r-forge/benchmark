@@ -4,24 +4,31 @@
 
 
 
-#' Implements a map/reduce approach to characterize a dataset with
-#' given dataset characteristics.
+#' Dataset characterization framework
+#'
+#' Implementation of a map/reduce approach to characterize a dataset
+#' with given dataset characteristics.
 #'
 #' @param x A \code{\link[=as.dataset]{dataset}} object
-#' @param y A \code{\link{DatasetCharacteristics}} object
+#' @param y A \code{DatasetCharacteristics} object; e.g.,
+#'   \code{\link{StatlogCharacteristics}}
 #' @param verbose Show information during execution
 #' @param index Characterize only a subset
 #' @param ... Ignored
+#'
 #' @return The characterization matrix (1 row and as many columns as
 #'   characteristics
+#'
 #' @examples
 #'   data("iris")
 #'   ds <- as.dataset(Species ~ ., iris)
 #'   characterize(ds, StatlogCharacteristics)
-#' @title Dataset characterization framework
-#' @seealso \code{\link{datachar-visualization}}
+#'
+#' @family dataset-characterization
+#'
 #' @references
 #'   See \emph{Eugster et al. (2010)} in \code{citation("benchmark")}.
+#'
 #' @export
 characterize <- function(x, y, verbose = FALSE, index = NULL, ...) {
   stopifnot(is(x, 'dataset'))

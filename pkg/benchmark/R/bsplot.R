@@ -6,23 +6,26 @@
 #' data sets, the x-axis a podium with as many places as
 #' candidate algorithms.
 #'
-#' @param x The object to plot.
-#' @param ... Unused
+#' @family algperf-visualization
+#'
 #' @export
 bsplot0 <- function(x, ...) {
   UseMethod('bsplot0')
 }
 
 
-#' @param x A \code{\link{becp}} object
+
+#' @param x A \code{\link[relations]{relation_ensemble}} or matrix object
 #' @param stat A matrix with statistics to display (rows are
 #'   the algorithms, columns the data sets)
 #' @param ds.order Data set order
 #' @param alg.order Algorithm order
+#' @param ... Arguments passed to underlying function
 #' @method bsplot0 relation_ensemble
 #' @S3method bsplot0 relation_ensemble
 #' @rdname bsplot0
-bsplot0.relation_ensemble <- function(x, stat = NULL, ds.order = NULL, alg.order = NULL, ...) {
+bsplot0.relation_ensemble <- function(x, stat = NULL, ds.order = NULL,
+                                      alg.order = NULL, ...) {
   rm <- bsranking(x)
 
   if ( !is.null(ds.order) ) {
@@ -39,9 +42,6 @@ bsplot0.relation_ensemble <- function(x, stat = NULL, ds.order = NULL, alg.order
 }
 
 
-#' @param x A \code{\link{becp}} object
-#' @param stat A matrix with statistics to display (rows are
-#'   the algorithms, columns the data sets)
 #' @param col Colors of the algorithms
 #' @param xlab A title for the x axis
 #' @param ylab A title for the y axis

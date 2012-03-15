@@ -1,21 +1,27 @@
-\name{benchmark-comptime}
-\alias{fittime}
-\title{Dummy functions to enable fitting and prediction time as performance...}
-\usage{fittime(yhat, y)
-predicttime(yhat, y)
-}
-\description{Dummy functions to enable fitting and prediction time as performance
-measures.}
-\value{\code{fittime}: Time (User and System) used for the model fitting
-
-\code{predicttime}: Time (User and System) used for the prediction
-
-
-}
-\seealso{\code{\link{benchmark}}}
+\name{fittime}
 \alias{benchmark-comptime}
-\arguments{\item{yhat}{Ignored}
-\item{y}{Ignored}
-}
+\alias{fittime}
 \alias{predicttime}
+\title{Performance measures}
+\usage{
+  fittime(yhat, y)
+
+  predicttime(yhat, y)
+}
+\arguments{
+  \item{yhat}{Ignored}
+
+  \item{y}{Ignored}
+}
+\value{
+  Time (User and System) used for the model fitting or
+  prediction
+}
+\description{
+  Dummy functions to enable fitting and prediction time as
+  performance measures.
+}
+\seealso{
+  \code{\link{benchmark}}
+}
 

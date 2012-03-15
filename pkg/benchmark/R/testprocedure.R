@@ -1,26 +1,32 @@
 
 
-
-### Test procedure infrastructure: ###################################
-
-#' Infrastructure for test procedures.
+#' Test procedures infrastructure
 #'
-#' Available \code{TestProcedure} and corresponding \code{TestResult}
-#' implementations:
-#' \tabular{rl}{
-#'   \code{FriedmanTest} \tab Test procedure based on the
-#'     non parametric friedman test\cr
-#'   \code{LmerTest} \tab Test procedure based on a mixed
-#'     effects model (function \code{lmer} in package \code{lme4})\cr
-#'   \code{PercintTest} \tab Test procedure based on the
-#'     bootstrap percentile intervals
-#' }
+#' @details
+#'   Implemented \code{TestProcedure} and corresponding
+#'   \code{TestResult} are:
+#'   \tabular{rl}{
+#'     \code{FriedmanTest} \tab Test procedure based on the
+#'       non parametric friedman test\cr
+#'     \code{LmerTest} \tab Test procedure based on a mixed
+#'       effects model (function \code{lmer} in package \code{lme4})\cr
+#'     \code{PercintTest} \tab Test procedure based on the
+#'       bootstrap percentile intervals
+#'   }
+#'
+#' @usage
+#'   FriedmanTest
+#'   LmerTest
+#'   PercintTest
+#'
+#' @aliases FriedmanTest LmerTest PercintTest
 #'
 #' @references
 #'   See \emph{Eugster and Leisch (2008)} and \emph{Eugster et al. (2008)}
 #'   in \code{citation("benchmark")}.
+#'
 #' @rdname TestProcedure
-TestProcedure <- proto(expr = {
+TestProcedure <- proto::proto(expr = {
   requirements <- function(., ...) NULL
   new <- function(., ...) NULL
   globalTest <- function(., ...) NULL
@@ -29,7 +35,7 @@ TestProcedure <- proto(expr = {
 
 
 
-TestResult <- proto(expr = {
+TestResult <- proto::proto(expr = {
   new <- function(., ...) NULL
   getPvalue <- function(., ...) NULL
   getStatistic <- function(., ...) NULL
@@ -40,9 +46,8 @@ TestResult <- proto(expr = {
 
 ### Implementation -- Friedman test: #################################
 
-#' @rdname TestProcedure
 #' @export
-FriedmanTest <- proto(TestProcedure, expr = {
+FriedmanTest <- proto::proto(TestProcedure, expr = {
 
   requirements <- function(.) {
     stopifnot(require("coin"))
@@ -82,7 +87,7 @@ FriedmanTest <- proto(TestProcedure, expr = {
 
 
 
-FriedmanGlobalTestResult <- proto(TestResult, expr = {
+FriedmanGlobalTestResult <- proto::proto(TestResult, expr = {
   new <- function(., test) {
     .$proto(test = test)
   }
@@ -98,7 +103,7 @@ FriedmanGlobalTestResult <- proto(TestResult, expr = {
 
 
 
-FriedmanPairwiseTestResult <- proto(TestResult, expr = {
+FriedmanPairwiseTestResult <- proto::proto(TestResult, expr = {
   new <- function(., test) {
     .$proto(test = test)
   }
@@ -138,9 +143,8 @@ FriedmanPairwiseTestResult <- proto(TestResult, expr = {
 
 ### Implementation -- Lmer test: #####################################
 
-#' @rdname TestProcedure
 #' @export
-LmerTest <- proto(TestProcedure, expr = {
+LmerTest <- proto::proto(TestProcedure, expr = {
 
   requirements <- function(.) {
     stopifnot(require("lme4"))
@@ -180,7 +184,7 @@ LmerTest <- proto(TestProcedure, expr = {
 
 
 
-LmerGlobalTestResult <- proto(TestResult, expr = {
+LmerGlobalTestResult <- proto::proto(TestResult, expr = {
   new <- function(., test) {
     .$proto(test = test)
   }
@@ -196,7 +200,7 @@ LmerGlobalTestResult <- proto(TestResult, expr = {
 
 
 
-LmerPairwiseTestResult <- proto(TestResult, expr = {
+LmerPairwiseTestResult <- proto::proto(TestResult, expr = {
   new <- function(., test) {
     .$proto(test = test)
   }
@@ -228,9 +232,8 @@ LmerPairwiseTestResult <- proto(TestResult, expr = {
 
 ### Implementation -- Percentile interval test: ######################
 
-#' @rdname TestProcedure
 #' @export
-PercintTest <- proto(TestProcedure, expr = {
+PercintTest <- proto::proto(TestProcedure, expr = {
   requirements <- function(.) {
     TRUE
   }
@@ -248,7 +251,7 @@ PercintTest <- proto(TestProcedure, expr = {
 })
 
 
-PercintPairwiseTestResult <- proto(TestResult, expr = {
+PercintPairwiseTestResult <- proto::proto(TestResult, expr = {
   new <- function(., data) {
     .$proto(data = data)
   }

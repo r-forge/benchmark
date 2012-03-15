@@ -1,3 +1,12 @@
+Changes in benchmark version 0.3-4
+
+  o Adapted to ggplot2 0.9.0.
+
+  o Dataset characterization released.
+
+  o roxygen2-ified.
+
+
 Changes in benchmark version 0.3-1
 
   o Added demo and data set for the "benchplot" manuscript.

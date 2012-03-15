@@ -1,6 +1,8 @@
 
 
 
+#' Visualization of dataset characteristics
+#'
 #' @param x A \code{\link{DatasetCharacterization}} object
 #' @param y Ignored
 #' @param lines Draw observation dependency lines
@@ -10,9 +12,15 @@
 #' @param basis Draw basis characterization of the dataset
 #' @param basis.col Color of basis characterization
 #' @param ... Ignored
+#'
 #' @return A \code{\link[ggplot2]{ggplot}} object.
+#'
 #' @method plot DatasetCharacterization
+#'
+#' @family dataset-characterization
+#'
 #' @rdname datachar-visualization
+#'
 #' @importFrom graphics plot
 #' @S3method plot DatasetCharacterization
 plot.DatasetCharacterization <- function(x, y = NULL, lines = TRUE, points = TRUE,

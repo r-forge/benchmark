@@ -3,18 +3,22 @@
 
 
 
-#' Methods to coerce objects to a benchmark experiment warehouse.
+#' Coerce objects to benchmark experiment warehouse
 #'
-#' Coerces a \code{bench.result} object from package \code{mlr} to a
-#' \code{\link{warehouse}} object.
+#' @details
+#'   \code{as.warehouse.mlr.bench.result}: Coerces a
+#'   \code{bench.result} object from package \code{mlr} to a
+#'   \code{\link{warehouse}} object.
 #'
-#' @param x A \code{bench.result} object from package \code{mlr}
+#' @param x An object to coerce
 #' @param ... Ignored
+#'
 #' @return A \code{\link{warehouse}} object
-#' @export
-#' @title as.warehouse
+#'
 #' @aliases as.warehouse
 #' @rdname as.warehouse
+#'
+#' @export
 as.warehouse.mlr.bench.result <- function(x, ...) {
   perf <- x@perf
 
@@ -36,17 +40,14 @@ as.warehouse.mlr.bench.result <- function(x, ...) {
 
 
 
-#' Methods to coerce objects to a benchmark experiment warehouse.
+#' @details
+#'   \code{as.warehouse.array4dim}: Coerces a four dimensional array
+#'   (1st: sampling, 2nd: algorithms, 3rd: performance measures, 4th:
+#'   datasets) to a \code{\link{warehouse}} object.
 #'
-#' Coerces a four dimensional array (1st: sampling, 2nd: algorithms,
-#' 3rd: performance measures, 4th: datasets) to a
-#' \code{\link{warehouse}} object.
-#'
-#' @param x A four dimensional array
-#' @param ... Ignored
-#' @return A \code{\link{warehouse}} object
-#' @export
 #' @rdname as.warehouse
+#'
+#' @export
 as.warehouse.array4dim <- function(x, ...) {
   stopifnot(length(dim(x)) == 4)
 

@@ -1,13 +1,19 @@
 
 
+#' Relations based on pairwise comparisons
+#'
+#' Infer a \code{\link[relations]{relation}} based on pairwise
+#' decisions.
+#'
 #' @param x A \code{\link{PaircompDecision}} object
 #' @param verbose Show information during execution
 #' @param ... Ignored
-#' @return A \code{relation} object
+#'
+#' @return A \code{\link[relations]{relation}} object
+#'
 #' @method as.relation PaircompDecision
-#' @rdname algperf-paircomp
+#'
 #' @S3method as.relation PaircompDecision
-#' @export
 as.relation.PaircompDecision <- function(x, verbose = FALSE, ...) {
   r <- relation(incidence = x$decision, ...)
 
@@ -39,7 +45,6 @@ as.relation.PaircompDecision <- function(x, verbose = FALSE, ...) {
 
 
 
-#' @nord
 #' @S3method print indiffpref
 print.indiffpref <- function(x, ...) {
   cat("Indifference preference relation:\n")
@@ -51,7 +56,6 @@ print.indiffpref <- function(x, ...) {
 
 
 
-#' @nord
 #' @S3method print strictpref
 print.strictpref <- function(x, ...) {
   cat("Strict preference relation:\n")
@@ -84,7 +88,7 @@ check_strict_preference <- function(x) {
 
 ### Patch 'relations' package: #######################################
 
-#' @rdname algperf-paircomp
+#' @rdname as.relation.PaircompDecision
 #' @export
 relation_is_strict_weak_order <- function(x) {
   (relation_is_endorelation(x) &&
@@ -113,7 +117,7 @@ patch.relation_class_ids <- function (x) {
 
 
 #' @import relations
-library(relations)
+library("relations")
 environment(patch.relation_class_ids) <- getNamespace("relations")
 utils:::assignInNamespace("relation_class_ids", patch.relation_class_ids, "relations")
 detach("package:relations")

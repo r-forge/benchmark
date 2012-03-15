@@ -1,12 +1,13 @@
-### Exploratory and inferential analysis of the UCI domain benchmark
-### experiment.
-###
-### Analysis used in 'Analysis of Domain-based Benchmark Experiments'
-### by Manuel J. A. Eugster, Torsten Hothorn and Friedrich Leisch.
-###
-### Note that domain-based benchmark experiments are not fully
-### integrated in benchmark v0.3-2. Therefore, the one or the other
-### HACK might be available.
+#' @demo Exploratory and inferential analysis of the UCI domain
+#' benchmark experiment.
+#'
+#' @details
+#'   Analysis used in 'Analysis of Domain-based Benchmark Experiments'
+#'   by Manuel J. A. Eugster, Torsten Hothorn and Friedrich Leisch.
+#'
+#'   Note that domain-based benchmark experiments are not fully
+#'   integrated in the workflow provided by benchmark
+#'   v0.3-2. Therefore, the one or the other HACK might be available.
 
 library("benchmark")
 

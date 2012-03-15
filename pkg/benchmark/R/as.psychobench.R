@@ -1,5 +1,12 @@
 
 
+#' Coerce benchmark experiment warehouse to preference table
+#'
+#' @param x A \code{\link{warehouse}} object
+#' @param comparisons Return preference or performance table
+#'
+#' @return Data.frame with preference or performance table
+#'
 #' @export
 as.psychobench <- function(x, comparisons = TRUE) {
   stopifnot(is(x, "warehouse"))

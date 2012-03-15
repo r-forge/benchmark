@@ -1,30 +1,31 @@
-\name{benchmark-sampling}
-\alias{bs.sampling}
-\title{Sampling functions.}
-\usage{bs.sampling(B)
-sub.sampling(B, psize)
-cv.sampling(k)
-}
-\description{Sampling functions.}
-\details{\code{bs.sampling}: Functions to create a set of learning and test samples using a specific
-resampling method.
-
-}
-\value{\code{bs.sampling}: List with bootstrap learning and test samples
-
-\code{sub.sampling}: List with subsampling learning and test samples
-
-
-\code{cv.sampling}: List with cross-validation learning and test samples
-
-
-}
-\seealso{\code{\link{benchmark}}}
+\name{bs.sampling}
 \alias{benchmark-sampling}
-\arguments{\item{B}{Number of learning samples}
-\item{psize}{Size of subsample}
-\item{k}{Number of cross-validation samples}
-}
-\alias{sub.sampling}
+\alias{bs.sampling}
 \alias{cv.sampling}
+\alias{sub.sampling}
+\title{Sampling functions}
+\usage{
+  bs.sampling(B)
+
+  sub.sampling(B, psize)
+
+  cv.sampling(k)
+}
+\arguments{
+  \item{B}{Number of learning samples}
+
+  \item{psize}{Size of subsample}
+
+  \item{k}{Number of cross-validation samples}
+}
+\value{
+  List with corresponding learning and test samples
+}
+\description{
+  Functions to create a set of learning and test samples
+  using a specific resampling method.
+}
+\seealso{
+  \code{\link{benchmark}}
+}
 

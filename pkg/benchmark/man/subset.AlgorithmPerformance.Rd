@@ -1,16 +1,22 @@
 \name{subset.AlgorithmPerformance}
 \alias{subset.AlgorithmPerformance}
-\title{Return subsets of AlgorithmPerformance objects...}
-\usage{\method{subset}{AlgorithmPerformance}(x, datasets, algorithms, performances, samples, ...)
+\title{Return subsets of \code{AlgorithmPerformance} objects}
+\usage{
+  \method{subset}{AlgorithmPerformance} (x, subset, ...)
 }
-\description{Return subsets of \code{AlgorithmPerformance} objects}
-\value{An \code{\link{AlgorithmPerformance}} object with just the
-selected observations}
-\arguments{\item{x}{An \code{\link{AlgorithmPerformance}} object}
-\item{datasets}{Selected datasets}
-\item{algorithms}{Selected algorithms}
-\item{performances}{Selected performances}
-\item{samples}{Selected samples}
-\item{...}{Ignored}
+\arguments{
+  \item{x}{An \code{\link{AlgorithmPerformance}} object}
+
+  \item{subset}{Logical expression indicating rows to keep}
+
+  \item{...}{Passed to the underlying
+  \code{\link{subset.data.frame}} call}
+}
+\value{
+  An \code{\link{AlgorithmPerformance}} object with just
+  the selected observations
+}
+\description{
+  Return subsets of \code{AlgorithmPerformance} objects
 }
 

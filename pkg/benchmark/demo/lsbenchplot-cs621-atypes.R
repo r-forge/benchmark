@@ -1,8 +1,9 @@
-### Archetypal analysisof the UCI domain benchmark experiment.
-###
-### Note that domain-based benchmark experiments are not fully
-### integrated in benchmark v0.3-2. Therefore, the one or the other
-### HACK might be available.
+#' @demo Archetypal analysisof the UCI domain benchmark experiment.
+#'
+#' @details
+#'   Note that domain-based benchmark experiments are not fully
+#'   integrated in the workflow provided by benchmark
+#'   v0.3-2. Therefore, the one or the other HACK might be available.
 
 library("benchmark")
 library("archetypes")

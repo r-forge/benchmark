@@ -1,9 +1,10 @@
-### Exploratory and inferential analysis of the monks3 benchmark
-### experiment.
-###
-### Analysis used in 'Exploratory and Inferential Analysis of Benchmark
-### Experiments' by Manuel J. A. Eugster, Torsten Hothorn and Friedrich
-### Leisch.
+#' @demo Exploratory and inferential analysis of the monks3 benchmark
+#'   experiment.
+#'
+#' @details
+#'   Analysis used in 'Exploratory and Inferential Analysis of
+#'   Benchmark Experiments' by Manuel J. A. Eugster, Torsten Hothorn
+#'   and Friedrich Leisch.
 
 library("benchmark")
 

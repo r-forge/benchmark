@@ -1,10 +1,6 @@
 
 
 contsigseq <- function(x, significance) {
-  
-  ## Make codetools (R CMD check) happy:
-  tests <- value <- NULL
-
   x <- subset(x, subset = tests == "pvalue", select = value)
   x <- x < significance
 

@@ -1,26 +1,26 @@
 
-#' Benchmark experiment graph.
+#' Benchmark experiment graph
 #'
 #' The benchmark summary plot takes the individual benchmark
 #' experiment results into account. The y-axis represents the
 #' data sets, the x-axis a podium with as many places as
 #' candidate algorithms.
 #'
-#' @param x The object to plot
-#' @param ... Unused
 #' @export
 bsgraph0 <- function(x, ...) {
   UseMethod('bsgraph0')
 }
 
 
-#' @param x A \code{\link{dist}} object
+#' @param x A \code{\link{dist}} or \code{\link[graph]{graphNEL-class}} object
 #' @param ndists.show The number of distance levels to show
 #' @param edge.col The color of edges (one or one for each distance level)
 #' @param edge.lwd The line width of edges (one or one for each distance level)
 #' @param node.fill The colors of nodes
+#' @param ... Arguments passed to underlying function
 #' @return The return value of \code{\link{bsgraph0.graphNEL}}
 #' @method bsgraph0 dist
+#' @family algperf-visualization
 #' @S3method bsgraph0 dist
 #' @rdname bsgraph0
 bsgraph0.dist <- function(x, ndists.show = length(sort(unique(x))),
@@ -73,9 +73,8 @@ bsgraph0.dist <- function(x, ndists.show = length(sort(unique(x))),
 }
 
 
-#' @param x A \code{\link[graph]{graphNEL} object
+
 #' @param layoutType Defines the layout engine
-#' @return Invisible return of the \code{\link[Rgraphviz]{Ragraph}} object
 #' @method bsgraph0 graphNEL
 #' @S3method bsgraph0 graphNEL
 #' @rdname bsgraph0
