@@ -17,8 +17,7 @@
                sep = "")
 
   pkgs <- packageDescription("psychobench")$Suggests
-  pkgs <- strsplit(pkgs, "\n")[[1]][-(1:2)]
-  pkgs <- paste("field are needed as well: ", paste(pkgs, collapse = " "), sep = "")
+  pkgs <- paste("field are needed as well: ", pkgs, sep = "")
   pkgs <- paste(strwrap(pkgs, width = 60), collapse = "\n")
 
   msg <- paste(msg, pkgs, sep = "")

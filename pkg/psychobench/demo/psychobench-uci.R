@@ -1,5 +1,5 @@
 #' @demo UCI application example
-#' @description Please note that the execution of the benchmark
+#' @details Please note that the execution of the benchmark
 #'   experiment is a very time consuming task. Therefore, in
 #'   this demo we only present the analysis of the precalculated
 #'   benchmark experiment.
