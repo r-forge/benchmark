@@ -10,7 +10,7 @@
 #' @S3method plot TestResult
 plot.TestResult <- function(x, ...) {
   p <- ggplot(x, aes(samples, value))
-  p <- p + facet_grid(tests ~ datasets, scale = "free_y")
+  p <- p + facet_grid(tests ~ datasets, scales = "free_y")
   p <- p + geom_line()
 
   p

@@ -98,7 +98,7 @@ beplot0.matrix <- function(x, col = 1:ncol(x),
 
 
   # Medals table (see table.becp):
-  ranks <- t(apply(x, 1, rank, ties='random'))
+  ranks <- t(apply(x, 1, rank, ties.method='random'))
   nranks <- apply(ranks, 2, function(y)table(factor(y, levels=1:nalgs)))
 
   # Simple rank based global algorithm order
@@ -126,7 +126,7 @@ beplot0.matrix <- function(x, col = 1:ncol(x),
 
   ## Draw it:
   opar <- par(no.readonly = TRUE)
-  layout(matrix(c(1,2), nrow=2, byrow=TRUE), height=c(1,0.4))
+  layout(matrix(c(1,2), nrow=2, byrow=TRUE), heights=c(1,0.4))
   mar <- par('mar')
 
   # Figure 1:
