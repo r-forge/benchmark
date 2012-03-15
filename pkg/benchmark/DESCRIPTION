@@ -2,7 +2,7 @@ Package: benchmark
 Type: Package
 Title: Benchmark Experiments Toolbox
 Version: 0.3-4
-Date: 2012-03-01
+Date: 2012-03-15
 Author: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
 Maintainer: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
 Depends:
@@ -13,6 +13,8 @@ Depends:
     reshape,
     relations,
     psychotools
+Imports:
+    scales
 Suggests:
     coin,
     multcomp,

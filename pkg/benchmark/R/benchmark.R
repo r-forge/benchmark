@@ -91,6 +91,10 @@ benchmark <- function(datasets, sampling, algorithms = NULL,
 
 
   ## Loop:
+  printMsg(sprintf('Benchmark experiment start: %s\n',
+                   Sys.time()), verbose = verbose)
+
+
   for ( m in seq(along = datasets) ) {
     printMsg(sprintf('m = %s\n', m), verbose = verbose)
 
@@ -103,20 +107,19 @@ benchmark <- function(datasets, sampling, algorithms = NULL,
 
 
     for ( b in seq(length = B) ) {
-      printMsg(sprintf('  b = %s\n', b), verbose = verbose)
+      printMsg('*', verbose = verbose, b = b)
 
 
-      if ( doCharacterization )
+      if ( doCharacterization ) {
         warehouse$data[[m]]$DatasetCharacterization[b, ] <-
             characterize(datasets[[m]],
                          characteristics,
                          index = samples$L[[b]])
+      }
 
 
       if ( doAlgorithmPerformances ) {
         for ( k in seq(along = algorithms) ) {
-          printMsg(sprintf('    k = %s\n', k), verbose = verbose)
-
           ftime <- system.time(
             fit <- algorithms[[k]](as.formula(datasets[[m]]$formula()),
                                    data = datasets[[m]]$data(index = samples$L[[b]])))
@@ -126,8 +129,6 @@ benchmark <- function(datasets, sampling, algorithms = NULL,
                             newdata = datasets[[m]]$input(index = samples$T[[b]])))
 
           for ( p in seq(along = performances ) ) {
-            printMsg(sprintf('      p = %s\n', p), verbose = verbose)
-
             warehouse$data[[m]]$AlgorithmPerformance[b, k, p] <-
                 performances[[p]](pred,
                                   datasets[[m]]$response(index = samples$T[[b]])[[1]])
@@ -136,8 +137,6 @@ benchmark <- function(datasets, sampling, algorithms = NULL,
         }
 
         if ( doTest & b > test.burnin ) {
-          printMsg(sprintf('    test\n'), verbose = verbose)
-
           accdat <- warehouse$viewAlgorithmPerformance(dataset = m)
           accdat <- na.omit(accdat)
           accdat$samples <- accdat$samples[, drop = TRUE]
@@ -151,6 +150,10 @@ benchmark <- function(datasets, sampling, algorithms = NULL,
 
     printMsg('\n')
   }
+
+
+  printMsg(sprintf('Benchmark experiment end: %s\n',
+                   Sys.time()), verbose = verbose)
 
 
   warehouse
@@ -250,9 +253,14 @@ predicttime <- function(yhat, y) {
 
 ### Internal functions: ##############################################
 
-printMsg <- function(x = "", newline = FALSE, verbose = TRUE) {
-  if ( verbose )
+printMsg <- function(x = "", newline = FALSE, verbose = TRUE, b = NULL) {
+  if ( verbose ) {
+    if ( !is.null(b) )
+      if ( b %% 10 == 0 )
+        newline <- TRUE
+
     cat(sprintf("%s%s", x, ifelse(newline, "\n", "")))
+  }
 }
 
 

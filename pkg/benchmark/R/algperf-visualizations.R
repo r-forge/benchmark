@@ -21,6 +21,7 @@
 #' @rdname algperf-visualization
 #'
 #' @importFrom graphics boxplot
+#' @importFrom scales alpha
 #' @S3method boxplot AlgorithmPerformance
 boxplot.AlgorithmPerformance <- function(x, order.by = median, order.performance = 1,
                                          dependence.show = c("outliers", "all", "none"),
@@ -75,6 +76,7 @@ densityplot.AlgorithmPerformance <- function(x, ...) {
 
 #' @method stripchart AlgorithmPerformance
 #' @rdname algperf-visualization
+#' @importFrom scales alpha
 #' @importFrom graphics stripchart
 #' @S3method stripchart AlgorithmPerformance
 stripchart.AlgorithmPerformance <- function(x, order.by = median, order.performance = 1,
