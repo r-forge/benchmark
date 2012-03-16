@@ -103,7 +103,7 @@ beplot0.matrix <- function(x, col = 1:ncol(x),
 
   # Simple rank based global algorithm order
   # (see as.ranking.medalstable):
-  barranks <- rank(colSums(x * (nalgs:1)/nalgs), ties='random')
+  barranks <- rank(colSums(x * (nalgs:1)/nalgs), ties.method='random')
   barorder <- order(barranks)
 
 
