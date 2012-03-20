@@ -14,8 +14,6 @@
   <h1>Benchmark Experiments</h1>
   <div id="h1sub">R package <tt>benchmark</tt></div>
 
-  <p class="header"></p>
-
   <p>
     In statistical learning benchmarking is the methodology of
     comparing learners or algorithms with respect to a certain
@@ -33,62 +31,73 @@
     order of the candidate algorithms is a major objective.
   </p>
 
-
-  <h2>Demonstration</h2>
-
-  <p>
+  <p class="header">
     <a href="http://www.statistik.lmu.de/~eugster/publications/thesis-2011-phd.pdf#page=41"><img src="beplot.png" /></a>
     <a href="http://www.statistik.lmu.de/~eugster/publications/thesis-2011-phd.pdf#page=82"><img src="bsgraph.png" /></a>
     <a href="http://www.statistik.lmu.de/~eugster/publications/thesis-2011-phd.pdf#page=89"><img src="atypes.png" /></a>
   </p>
-  
-
-  <h3>Explorative and inferential analysis of benchmark experiments</h3>
-
-  <p>
-    See for example the demos <tt>benchplot</tt>
-    and <tt>lsbenchplot-cs621</tt> for the analysis of six common
-    learning algorithms
-    on <a href="http://archive.ics.uci.edu/ml/">UCI</a> data sets:
-    <blockquote>
-    <pre>
-R> demo("benchplot")
-R> demo("lsbenchplot-cs621")
-    </pre>
-    </blockquote>
-  </p>
 
 
-  <h3>Archetypal analysis of benchmark experiments</h3>
+  <h2>Usage</h2>
 
   <p>
-    In general, comparing algorithms often means comparing with a
-    "best" or "worst" algorithm, i.e., comparing with an extreme
-    algorithm (the benchmark). However, in case of of more than one
-    performance measure or more than one data set no uniquely defined
-    extreme values are
-    available---<a href="http://archetypes.r-forge.r-project.org/">archetypal
-    analysis</a> can be used to compute data-driven benchmark algorithms:
-    <blockquote>
-    <pre>
-R> demo("lsbenchplot-cs621-atypes")
-    </pre>
-    </blockquote>
-  </p>
-  
-
-  <h2>Download</h2>
-
-  <p>
-    The <b>stable version</b> of benchmark is available
+    The <b>stable version</b> of <tt>benchmark</tt> is available
     on <a href="http://cran.r-project.org/package=benchmark">CRAN</a>;
-    issue the following from within R to install it:
+    issue the following from within R to install and load it:
     <blockquote>
-    <pre>
+      <pre class="code">
 R> install.packages("benchmark")
-    </pre>
+R> library("benchmark")</pre>
     </blockquote>
   </p>
+
+
+  <h2>Demos</h2>
+
+  <p>
+    <b>benchplot:</b> Exploratory and inferential analysis of the
+    monks3 benchmark experiment.
+    <blockquote class="code"><pre>
+R> demo("benchplot", package = "benchmark")</pre></blockquote>
+  </p>
+  <p>
+    <b>lsbenchplot-uci621:</b> Exploratory and inferential analysis of
+    the UCI domain benchmark experiment.
+    <blockquote>
+    The analysis of six common learning algorithms on
+    well-known <a href="http://archive.ics.uci.edu/ml/">UCI</a> data
+    sets.
+
+    <pre class="code">
+R> demo("lsbenchplot-uci621", package = "benchmark")</pre></blockquote>
+  </p>
+  <p>
+    <b>lsbenchplot-uci621-atypes:</b> Archetypal analysis of the UCI
+    domain benchmark experiment.
+     <blockquote>
+     In general, comparing algorithms often means comparing with a
+     "best" or "worst" algorithm, i.e., comparing with an extreme
+     algorithm (the benchmark). However, in case of of more than one
+     performance measure or more than one data set no uniquely defined
+     extreme values are
+     available---<a href="http://archetypes.r-forge.r-project.org/">archetypal
+     analysis</a> can be used to compute data-driven benchmark algorithms.
+
+     <pre class="code">
+R> demo("lsbenchplot-uci621-atypes", package = "benchmark")</pre>
+     </blockquote>
+  </p>
+  <p>
+    <b>lsbenchplot-gh:</b> Exploratory and inferential analysis of the
+    Grasshopper domain benchmark experiment.
+    <blockquote>
+     <pre class="code">
+R> demo("lsbenchplot-gh", package = "benchmark")</pre>
+     </blockquote>
+  </p>
+
+
+  <h2>Development</h2>
 
   <p>
     The <b>development version</b> is available on
