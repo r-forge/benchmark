@@ -46,7 +46,7 @@ as.psychobench <- function(x, comparisons = TRUE) {
     ret$preference <- pc
   } else {
     ## Performance table:
-    ret <- merge(ch, ap)
+    ret <- merge(ch, ap, sort = FALSE)
     ret <- subset.data.frame(ret, select = -c(samples, datasets, performances))
   }
 
