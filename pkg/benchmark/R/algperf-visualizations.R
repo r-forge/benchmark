@@ -39,7 +39,7 @@ boxplot.AlgorithmPerformance <- function(x, order.by = median, order.performance
   if ( dependence.show == "outliers" ) {
     # HACK: currently I don't know how to do that ggplot2-like.
     o <- unique(unlist(lapply(split(x$value, x$algorithms), which.outlier)))
-    ox <- x[x$samples %in% o, ]
+    ox <- x[x$sample %in% x$samples[o], ]
 
     p <- p + geom_line(aes(group = samples), data = ox, colour = dependence.col)
   }

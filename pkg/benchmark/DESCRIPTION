@@ -1,10 +1,10 @@
 Package: benchmark
 Type: Package
 Title: Benchmark Experiments Toolbox
-Version: 0.3-4
-Date: 2012-03-15
-Author: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
-Maintainer: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
+Version: 0.3-5
+Date: 2012-12-03
+Authors@R: c(person("Manuel", "J. A. Eugster", role = c("aut", "cre"),
+    email = "manuel.eugster@stat.uni-muenchen.de"))
 Depends:
     R (>= 2.10),
     utils,
@@ -12,8 +12,7 @@ Depends:
     ggplot2,
     reshape,
     relations,
-    psychotools
-Imports:
+    psychotools,
     scales
 Suggests:
     coin,
