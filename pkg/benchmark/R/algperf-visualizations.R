@@ -1,6 +1,4 @@
 
-
-
 #' Common visualizations of algorithm performances
 #'
 #' @param x An \code{\link{AlgorithmPerformance}} object
@@ -113,8 +111,8 @@ order.algorithms.by <- function(x, order.by, order.performance) {
 
   order.by <- match.fun(order.by)
 
-  ##x <- subset(x, performances == order.performance)
-  x <- x[x$performances == order.performances, ]
+  #x <- subset(x, performances == order.performance)
+  x <- x[x$performances == order.performance, ]
   x <- na.omit(x)
 
   o <- order(sapply(split(x$value, x$algorithms), order.by))

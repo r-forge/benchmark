@@ -16,7 +16,8 @@ as.psychobench <- function(x, comparisons = TRUE) {
   ch <- x$viewDatasetCharacterization()
   stopifnot(nrow(ch) > 0)
 
-  ch <- subset(ch, samples != "basis")
+  #ch <- subset(ch, samples != "basis")
+  ch <- ch[ch$samples != "basis", ]
   ch$samples <- ch$samples[, drop = TRUE]
 
   ch <- reshape(ch, direction = "wide", v.names = "value",
@@ -39,15 +40,18 @@ as.psychobench <- function(x, comparisons = TRUE) {
 
   if ( comparisons ) {
     ## Preference table:
-    pc <- subset.data.frame(ap, select = -c(samples, datasets, performances))
+    #pc <- subset.data.frame(ap, select = -c(samples, datasets, performances))
+    pc <- ap[, -match(c("samples", "datasets", "performances"), names(ap))]
     pc <- bttree_paircomp(pc)
 
-    ret <- subset.data.frame(ch, select = -c(samples, datasets))
+    #ret <- subset.data.frame(ch, select = -c(samples, datasets))
+    ret <- ch[, -match(c("samples", "datasets"), names(ch))]
     ret$preference <- pc
   } else {
     ## Performance table:
     ret <- merge(ch, ap, sort = FALSE)
-    ret <- subset.data.frame(ret, select = -c(samples, datasets, performances))
+    #ret <- subset.data.frame(ret, select = -c(samples, datasets, performances))
+    ret <- ret[, -match(c("samples", "datasets", "performances"), names(ret))]
   }
 
   class(ret) <- "data.frame"

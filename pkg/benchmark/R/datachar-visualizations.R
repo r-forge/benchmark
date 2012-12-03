@@ -30,9 +30,11 @@ plot.DatasetCharacterization <- function(x, y = NULL, lines = TRUE, points = TRU
   stopifnot(nlevels(x$datasets[, drop = TRUE]) == 1)
 
   x <- ddply(x, "characteristics", dcscale)
-  data <- subset(x, subset = samples != "basis")
-  data.basis <- subset(x, subset = samples == "basis")
-
+  #data <- subset(x, subset = samples != "basis")
+  data <- x[x$samples != "basis", ]
+  #data.basis <- subset(x, subset = samples == "basis")
+  data.basis <- x[x$samples == "basis", ]
+                                             
   p <- ggplot(data, aes(characteristics, value, group = samples))
 
   if ( null.line )

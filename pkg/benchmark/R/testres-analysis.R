@@ -1,7 +1,8 @@
 
 
 contsigseq <- function(x, significance) {
-  x <- subset(x, subset = tests == "pvalue", select = value)
+  #x <- subset(x, subset = tests == "pvalue", select = value)
+  x <- x[x$tests == "pvalue", "value"]
   x <- x < significance
 
   i <- length(x)
