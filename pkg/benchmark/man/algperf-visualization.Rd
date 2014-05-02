@@ -5,19 +5,17 @@
 \alias{stripchart.AlgorithmPerformance}
 \title{Common visualizations of algorithm performances}
 \usage{
-  \method{boxplot}{AlgorithmPerformance} (x,
-    order.by = median, order.performance = 1,
-    dependence.show = c("outliers", "all", "none"),
-    dependence.col = alpha("black", 0.1), ...)
+\method{boxplot}{AlgorithmPerformance}(x, order.by = median,
+  order.performance = 1, dependence.show = c("outliers", "all", "none"),
+  dependence.col = alpha("black", 0.1), ...)
 
-  densityplot(x, ...)
+densityplot(x, ...)
 
-  \method{densityplot}{AlgorithmPerformance} (x, ...)
+\method{densityplot}{AlgorithmPerformance}(x, ...)
 
-  \method{stripchart}{AlgorithmPerformance} (x,
-    order.by = median, order.performance = 1,
-    dependence.show = c("none", "all"),
-    dependence.col = alpha("black", 0.1), ...)
+\method{stripchart}{AlgorithmPerformance}(x, order.by = median,
+  order.performance = 1, dependence.show = c("none", "all"),
+  dependence.col = alpha("black", 0.1), ...)
 }
 \arguments{
   \item{x}{An \code{\link{AlgorithmPerformance}} object}
@@ -38,18 +36,18 @@
   \item{...}{Ignored.}
 }
 \value{
-  A \code{\link[ggplot2]{ggplot}} object.
+A \code{\link[ggplot2]{ggplot}} object.
 }
 \description{
-  Common visualizations of algorithm performances
+Common visualizations of algorithm performances
 }
 \seealso{
-  Other algperf.visualization: \code{\link{beplot0}},
-  \code{\link{beplot0.AlgorithmPerformance}},
-  \code{\link{beplot0.matrix}}, \code{\link{bsgraph0}},
-  \code{\link{bsgraph0.dist}},
-  \code{\link{bsgraph0.graphNEL}}, \code{\link{bsplot0}},
-  \code{\link{bsplot0.matrix}},
-  \code{\link{bsplot0.relation_ensemble}}
+Other algperf.visualization: \code{\link{beplot0}},
+\code{\link{beplot0.AlgorithmPerformance}},
+\code{\link{beplot0.matrix}}; \code{\link{bsgraph0}},
+\code{\link{bsgraph0.dist}},
+\code{\link{bsgraph0.graphNEL}}; \code{\link{bsplot0}},
+\code{\link{bsplot0.matrix}},
+\code{\link{bsplot0.relation_ensemble}}
 }
 

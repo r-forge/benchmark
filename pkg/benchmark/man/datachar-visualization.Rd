@@ -2,10 +2,9 @@
 \alias{plot.DatasetCharacterization}
 \title{Visualization of dataset characteristics}
 \usage{
-  \method{plot}{DatasetCharacterization} (x, y = NULL,
-    lines = TRUE, points = TRUE, null.line = TRUE,
-    null.line.col = gray(0.7), basis = TRUE,
-    basis.col = NULL, ...)
+\method{plot}{DatasetCharacterization}(x, y = NULL, lines = TRUE,
+  points = TRUE, null.line = TRUE, null.line.col = gray(0.7),
+  basis = TRUE, basis.col = NULL, ...)
 }
 \arguments{
   \item{x}{A \code{\link{DatasetCharacterization}} object}
@@ -27,14 +26,14 @@
   \item{...}{Ignored}
 }
 \value{
-  A \code{\link[ggplot2]{ggplot}} object.
+A \code{\link[ggplot2]{ggplot}} object.
 }
 \description{
-  Visualization of dataset characteristics
+Visualization of dataset characteristics
 }
 \seealso{
-  Other dataset.characterization: \code{\link{as.dataset}},
-  \code{\link{characterize}},
-  \code{\link{StatlogCharacteristics}}
+Other dataset.characterization:
+\code{\link{StatlogCharacteristics}};
+\code{\link{as.dataset}}; \code{\link{characterize}}
 }
 

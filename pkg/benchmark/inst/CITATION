@@ -41,23 +41,24 @@ citEntry(key = "benchplot2010",
 
 
 
-citEntry(key = "psychobench2010",
-         entry = "techreport",
+citEntry(key = "psychobench2014",
+         entry = "article",
 	 author = personList(as.person("Manuel J. A. Eugster"),
                              as.person("Friedrich Leisch"),
 			     as.person("Carolin Strobl")),
 	 title = "(Psycho-)Analysis of Benchmark Experiments -- A Formal Framework for Investigating the Relationship between Data Sets and Learning Algorithms",
-	 institution = "Institut fuer Statistik, Ludwig-Maximilians-Universitaet Muenchen, Germany",
-	 year = "2010",
-	 number = "78",
-	 url = "http://epub.ub.uni-muenchen.de/11425/",
+   journal = "Computational Statistics & Data Analysis",
+	 year = "2014",
+	 number = "71",
+   pages = " 986--1000",
+	 url = "http://www.sciencedirect.com/science/article/pii/S0167947313002946",
 
 	 header="To cite dataset characteristics and their relations to algorithm performances in publications use:",
 
 	 textVersion=paste("Manuel J. A. Eugster, Friedrich Leisch and Carolin Strobl.",
 		"(Psycho-)Analysis of Benchmark Experiments -- A Formal Framework for Investigating the Relationship between Data Sets and Learning Algorithms",
-		"Technical Report 78, Department of Statistics, Ludwig-Maximilians-Universitaet Muenchen, Germany. 2010.",
-		"http://epub.ub.uni-muenchen.de/11425/")
+		"Computational Statistics & Data Analysis, 71:986-1000, 2014.",
+		"http://www.sciencedirect.com/science/article/pii/S0167947313002946")
 )
 
 

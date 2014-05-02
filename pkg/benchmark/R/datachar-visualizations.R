@@ -22,6 +22,7 @@
 #' @rdname datachar-visualization
 #'
 #' @importFrom graphics plot
+#' @importFrom plyr ddply
 #' @S3method plot DatasetCharacterization
 plot.DatasetCharacterization <- function(x, y = NULL, lines = TRUE, points = TRUE,
                                          null.line = TRUE, null.line.col = gray(0.7),

@@ -4,9 +4,9 @@
 \alias{predicttime}
 \title{Performance measures}
 \usage{
-  fittime(yhat, y)
+fittime(yhat, y)
 
-  predicttime(yhat, y)
+predicttime(yhat, y)
 }
 \arguments{
   \item{yhat}{Ignored}
@@ -14,14 +14,14 @@
   \item{y}{Ignored}
 }
 \value{
-  Time (User and System) used for the model fitting or
-  prediction
+Time (User and System) used for the model fitting or
+prediction
 }
 \description{
-  Dummy functions to enable fitting and prediction time as
-  performance measures.
+Dummy functions to enable fitting and prediction time as
+performance measures.
 }
 \seealso{
-  \code{\link{benchmark}}
+\code{\link{benchmark}}
 }
 

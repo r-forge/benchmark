@@ -293,5 +293,7 @@ plot.percint <- function(x, y = NULL, ...) {
   stopifnot(require("multcomp"))
 
   t <- list(confint = cbind(Estimate = NA, x))
-  multcomp:::plot.confint.glht(t, main = NA, xlab = NA, ...)
+  class(t) <- c("confint.glht", class(t))
+  #multcomp:::plot.confint.glht(t, main = NA, xlab = NA, ...)
+  plot(t, main = NA, xlab = NA, ...)
 }

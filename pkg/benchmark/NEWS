@@ -1,3 +1,9 @@
+Changes in benchmark version 0.3-6
+
+  o Updated citations; cleaned dependencies and imports; changed
+    maintainter's email address.
+
+
 Changes in benchmark version 0.3-5
 
   o Fixed boxplot bug.

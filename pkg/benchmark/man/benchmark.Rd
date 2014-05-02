@@ -2,9 +2,8 @@
 \alias{benchmark}
 \title{Benchmark experiment setup and execution}
 \usage{
-  benchmark(datasets, sampling, algorithms = NULL,
-    performances = NULL, characteristics = NULL,
-    test = NULL, test.burnin = 3, verbose = TRUE)
+benchmark(datasets, sampling, algorithms = NULL, performances = NULL,
+  characteristics = NULL, test = NULL, test.burnin = 3, verbose = TRUE)
 }
 \arguments{
   \item{datasets}{List of data.frames}
@@ -31,17 +30,17 @@
   \item{verbose}{Show information during execution}
 }
 \value{
-  A \code{\link{warehouse}} object
+A \code{\link{warehouse}} object
 }
 \description{
-  Function to execute benchmark experiments and to collect
-  all data the package can analyze. For more sophisticated
-  benchmark experiments we suggest the usage of the
-  \code{mlr} package.
+Function to execute benchmark experiments and to collect
+all data the package can analyze. For more sophisticated
+benchmark experiments we suggest the usage of the
+\code{mlr} package.
 }
 \seealso{
-  \code{\link{warehouse}}, \code{\link{as.warehouse}},
-  \code{\link{benchmark-sampling}},
-  \code{\link{benchmark-comptime}}
+\code{\link{warehouse}}, \code{\link{as.warehouse}},
+\code{\link{benchmark-sampling}},
+\code{\link{benchmark-comptime}}
 }
 

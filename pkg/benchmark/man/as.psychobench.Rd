@@ -2,7 +2,7 @@
 \alias{as.psychobench}
 \title{Coerce benchmark experiment warehouse to preference table}
 \usage{
-  as.psychobench(x, comparisons = TRUE)
+as.psychobench(x, comparisons = TRUE)
 }
 \arguments{
   \item{x}{A \code{\link{warehouse}} object}
@@ -11,9 +11,9 @@
   table}
 }
 \value{
-  Data.frame with preference or performance table
+Data.frame with preference or performance table
 }
 \description{
-  Coerce benchmark experiment warehouse to preference table
+Coerce benchmark experiment warehouse to preference table
 }
 

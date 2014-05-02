@@ -47,6 +47,8 @@
 #' @aliases AlgorithmPerformance DatasetCharacterization
 #'   DatasetBasisCharacterization TestResult
 #'
+#' @import proto
+#' @importFrom reshape melt
 #' @export
 warehouse <- function(datasets, B,
                       algorithms = NULL,
